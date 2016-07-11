@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Superstock</title>
+
+  <!-- Bootstrap Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://use.fontawesome.com/69012ee012.js"></script>
+
+  <link rel="stylesheet" href="slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="controls/slick.pager.css" type="text/css"/>
+  <link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="superstock.css" type="text/css"/>
+  <link rel="stylesheet" href="controls/slick.columnpicker.css" type="text/css"/>
+
+  <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+
+  <script src="lib/jquery-1.7.min.js"></script>
+  <script src="lib/firebugx.js"></script>
+
+  <script src="lib/jquery-ui-1.8.16.custom.min.js"></script>
+  <script src="lib/jquery.event.drag-2.2.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+  <!-- jQuery mobile -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css" type="text/css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+
+  <script src="superstock.js"></script>
+  <script src="supertable.js"></script>
+  <script src="newcanslim.js"></script>
+  <script src="auth.js"></script>
+  <link rel="stylesheet" href="css/supertable.css" type="text/css"/>
+  <link rel="stylesheet" href="canslim.css" type="text/css"/>
+  <link rel="stylesheet" href="nav.css" type="text/css"/>
+</head>
+<body>
+
+<div id='superstock'>
+    <div id='superstock_page' data-role="page">
+
+        <div data-role="panel" id="filter_panel" data-position="left" data-display="push">
+        </div>
+
+        <div role="main" class="ui-content">
+
+          <div style="position:relative">
+              <div class="grid-header" style="width:100%">
+                <div class="auth_container">
+                  <div class="user_sign_in_out">
+                    <a id="login" class="" href="#" >
+                        <div class="hidden-md hidden-lg">
+                          <i class="fa fa-user fa-2x"></i>
+                        </div>
+                        <div class="hidden-sm hidden-xs">
+                          <i class="fa fa-user fa-2x"></i>
+                          <span>Đăng nhập</span>
+                        </div>
+                    </a>
+                  </div>
+                  <div class="user_profile">
+                    <img id="user_avatar"></img>
+                    <span id="user_fullname"></span>
+                  </div>
+                </div>
+                <div class="nav_panel">
+                  <a class="" href="./full.html" target="_blank">
+                    <i class="fa fa-home fa-2x"></i>
+                    Đầy Đủ</a>
+                    <!-- Auth -->
+                </div>
+              </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12 canslim_table">
+              <div class='text-center'><h4>Siêu đầu tư</h4></div>
+              <table id="longterm" st-table="longterm" st-safe-src="longterm" class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th st-sort="Symbol">Symbol</th>
+                      <th st-sort="EPS">Giá trị GD</th>
+                      <th st-sort="Change">Thay đổi</th>
+                      <th st-sort="EPS">EPS</th>
+                      <th st-sort="Score">Score</th>
+                      <th st-sort="buypoint1">Điểm mua 1</th>
+                      <th st-sort="buypoint2">Điểm mua 2</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12 canslim_table">
+              <div class='text-center'><h4>Siêu đầu cơ</h4></div>
+              <table id="shortterm" st-table="shorterm" st-safe-src="shorterm" class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th st-sort="Symbol">Symbol</th>
+                      <th st-sort="EPS">Giá trị GD</th>
+                      <th st-sort="Change">Thay đổi</th>
+                      <th st-sort="EPS">EPS</th>
+                      <th st-sort="Score">Score</th>
+                      <th st-sort="buypoint1">Điểm mua 1</th>
+                      <th st-sort="buypoint2">Điểm mua 2</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+<!--
+            <div class="col-md-4">
+              <div class='text-center'><h4>Siêu cổ phiếu</h4></div>
+              <table id="superstock" st-table="superstock" st-safe-src="superstock" class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th st-sort="Symbol">Symbol</th>
+                      <th st-sort="EPS">EPS</th>
+                      <th st-sort="LNST">LNST</th>
+                      <th st-sort="Score">Score</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+ -->
+      </div> <!-- End Grid -->
+    </div>
+
+    </div>
+
+        </div><!-- /content -->
+
+        <div data-role="footer">
+            <h4>Copyright @superstock</h4>
+        </div><!-- /footer -->
+
+    </div><!-- /page -->
+
+</div>
+
+
+
+</div>
+
+</body>
+
+<script>
+
+    $('body').ready(function() {
+      var auth = Auth();
+      auth.bind('#login',
+        function login() {
+          sync_with_firebase();
+        },
+        function logout() {
+          $('#longterm>tbody').empty();
+          $('#shortterm>tbody').empty();
+        });
+    });
+</script>
+</html>

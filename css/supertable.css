@@ -1,0 +1,93 @@
+    .grid-header {
+      border: 1px solid gray;
+      color: black;
+      background: white;
+      height: 40px;
+    }
+
+    .cell-title {
+      font-weight: bold;
+    }
+
+    .cell-effort-driven {
+      text-align: center;
+    }
+
+    .cell-selection {
+      border-right-color: silver;
+      border-right-style: solid;
+      background: white;
+      color: black;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .slick-header-columns {
+      background: none !important;
+    }
+
+    .slick-header-column.ui-state-default {
+      height: 37px;
+      background: none !important;
+      background-color: orange !important;
+    }
+
+    .slick-header-column.ui-state-default span {
+      font-size: 12px;
+      text-shadow: none !important;
+      white-space: normal;
+      font-weight: bold;
+    }
+
+    .slick-row.selected .cell-selection {
+      background-color: transparent; /* show default selected row background */
+    }
+
+    /* overwrite the default style for slider */
+    .ui-panel {
+      width: 300px !important;
+    }
+
+    input.ui-slider-input {
+      width: 70px !important;
+    }
+
+    .ui-slider-track {
+      margin: 0 15px 0 100px !important;
+    }
+
+    #superstock #filter_panel.ui-panel {
+        width: 30em;
+    }
+
+    #superstock_filter{
+      background: url('../images/sieucophieu_logo.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 40px;
+      height: 40px;
+      float: left;
+    }
+
+    #canslim_page{
+      background: url('../images/sieucophieu_logo.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 40px;
+      height: 40px;
+      float: left;
+    }
+
+    #superstock .ui-panel-page-content-position-left,
+    .ui-panel-dismiss-open.ui-panel-dismiss-position-left {
+        left: 30em;
+        right: -30em;
+    }
+
+    #superstock .ui-panel-animate.ui-panel-page-content-position-left.ui-panel-page-content-display-push {
+        left: 0;
+        right: 0;
+        -webkit-transform: translate3d(30em, 0, 0);
+        -moz-transform: translate3d(30em, 0, 0);
+        transform: translate3d(30em, 0, 0);
+    }
