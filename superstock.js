@@ -39,10 +39,16 @@ function create_settings_with_format(fields, titles, formats) {
   return target_fields;
 }
 
+function get_multiply_type(type) {
+    if(type === 'percent') return 0.01;
+    if(type === 'bigNum') return 1000000000;
+    return 1;
+}
+
 function create_filter_settings(format_settings) {
     return format_settings
     .filter(function(item) {
-        return item.type == 'number' || item.type == 'percent'
+        return item.type == 'number' || item.type == 'percent' || item.type == 'bigNum'
     })
     .map(function(item) {
         return {
@@ -53,7 +59,7 @@ function create_filter_settings(format_settings) {
             label: item.name,
             target: item.field,
             // pretty hacky way to filter percent value
-            multiply: item.type == 'percent' ? 0.01 : 1,
+            multiply: get_multiply_type(item.type)
         };
     });
 }
@@ -260,7 +266,7 @@ function number_formatter(row, cell, value, columnDef, dataContext) {
 }
 
 function get_formatter(field) {
-    if(field.type == 'number') {
+    if(field.type === 'number' || field.type === 'bigNum') {
         return number_formatter;
     }
     else if(field.type == 'percent') {
