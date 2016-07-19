@@ -67,5 +67,20 @@ function sync_with_firebase() {
             return obj[symbol]
         });
         render_array_to_table('#shortterm', rows);
+        frozen_grid();
     });
+}
+
+
+function frozen_grid() {
+    var frozen = $('.frozen-outer table thead  tr');
+    var widthValue = 0;
+    frozen.each(function () {
+        first = $(this).find('th:first-child');
+        var count = $(this).find('th').length;
+        widthValue = 100 / count;
+        first.css('width', widthValue + '%');
+    });
+    $('.frozen-outer .frozen-inner').css('margin-left', widthValue + '%');
+    $('.frozen-outer table tr td:first-child').css('width', widthValue + '%');
 }
