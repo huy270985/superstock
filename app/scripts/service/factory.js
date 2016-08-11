@@ -1,7 +1,10 @@
+"use strict";
+
 angular
     .module('superstockApp')
-    .factory('draw', function() {
-        var drawGrid = function(data, config, callback) {
+    .factory('draw', function($firebaseArray) {
+        var drawGrid = function(Ref, config, callback, event) {
+            var data = $firebaseArray(Ref);
             data.$loaded(function() {
                 var lstObj = [];
                 for (var i in data) {
@@ -17,8 +20,38 @@ angular
                     } else break;
                 }
                 callback(lstObj);
+                Ref.on('child_added', function(childSnapshot, prevChildKey) {
+                    console.log('add');
+                    var dataConvert = {};
+                    if (config.idLabel)
+                        dataConvert[config.idLabel] = childSnapshot.key;
+                    var arr = childSnapshot.val().split('|');
+                    for (var j in config.labelList) {
+                        dataConvert[config.labelList[j]] = arr[j];
+                    }
+                    event.added(dataConvert, childSnapshot, prevChildKey);
+                });
+
+                Ref.on('child_changed', function(childSnapshot, prevChildKey) {
+                    console.log('change');
+                    var dataConvert = {};
+                    if (config.idLabel)
+                        dataConvert[config.idLabel] = childSnapshot.key;
+                    var arr = childSnapshot.val().split('|');
+                    for (var j in config.labelList) {
+                        dataConvert[config.labelList[j]] = arr[j];
+                    }
+                    event.changed(dataConvert, childSnapshot, prevChildKey);
+                });
+
+                Ref.on('child_removed', function(oldChildSnapshot) {
+                    console.log('remove');
+                    event.removed(oldChildSnapshot);
+                });
             })
         }
+
+
         return {
             drawGrid: drawGrid
         }

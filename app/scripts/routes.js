@@ -62,70 +62,79 @@ angular.module('superstockApp')
 
 // configure views; whenAuthenticated adds a resolve method to ensure users authenticate
 // before trying to access that route
-  .config(['$routeProvider', function ($routeProvider) {
+.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        resolve: {
-          "currentAuth": ["auth", function (auth) {
-            return auth.$waitForSignIn();
-          }]
-        }
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
-      .when('/login', {
-        templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
-      })
-      .when('/account', {
-        templateUrl: 'views/account.html',
-        controller: 'AccountCtrl',
-        resolve: {
-          "currentAuth": ["auth", function (auth) {
-            // returns a promisse so the resolve waits for it to complete
-            return auth.$requireSignIn();
-          }]
-        }
-      })
-      .when('/chat', {
-        templateUrl: 'views/chat.html',
-        controller: 'Chat',
-        resolve: {
-          "currentAuth": ["auth", function (auth) {
-            return auth.$waitForSignIn();
-          }]
-        }
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
+        .when('/', {
+            templateUrl: 'views/main.html',
+            controller: 'MainCtrl',
+            resolve: {
+                "currentAuth": ["auth", function (auth) {
+                    return auth.$waitForSignIn();
+                }]
+            }
+        })
+        .when('/full', {
+            templateUrl: 'views/full-stock.html',
+            controller: 'FullStockCtrl',
+            resolve: {
+                "currentAuth": ["auth", function(auth) {
+                    return auth.$waitForSignIn();
+                }]
+            }
+        })
+        .when('/about', {
+            templateUrl: 'views/about.html',
+            controller: 'AboutCtrl',
+            controllerAs: 'about'
+        })
+        .when('/login', {
+            templateUrl: 'views/login.html',
+            controller: 'LoginCtrl'
+        })
+        .when('/account', {
+            templateUrl: 'views/account.html',
+            controller: 'AccountCtrl',
+            resolve: {
+                "currentAuth": ["auth", function (auth) {
+                    // returns a promisse so the resolve waits for it to complete
+                    return auth.$requireSignIn();
+                }]
+            }
+        })
+        .when('/chat', {
+            templateUrl: 'views/chat.html',
+            controller: 'Chat',
+            resolve: {
+                "currentAuth": ["auth", function (auth) {
+                    return auth.$waitForSignIn();
+                }]
+            }
+        })
+        .otherwise({
+            redirectTo: '/'
+        });
 
-  }])
+}])
 
-  /**
-   * Apply some route security. Any route's resolve method can reject the promise with
-   * "AUTH_REQUIRED" to force a redirect. This method enforces that and also watches
-   * for changes in auth status which might require us to navigate away from a path
-   * that we can no longer view.
-   */
-  .run(['$rootScope', '$location', 'loginRedirectPath',
+/**
+ * Apply some route security. Any route's resolve method can reject the promise with
+ * "AUTH_REQUIRED" to force a redirect. This method enforces that and also watches
+ * for changes in auth status which might require us to navigate away from a path
+ * that we can no longer view.
+ */
+.run(['$rootScope', '$location', 'loginRedirectPath',
     function ($rootScope, $location, loginRedirectPath, event, next, previous, error) {
 
 
-      // watch for login status changes and redirect if appropriate
-      // auth.$onAuthStateChanged(check);
+        // watch for login status changes and redirect if appropriate
+        // auth.$onAuthStateChanged(check);
 
-      // some of our routes may reject resolve promises with the special {authRequired: true} error
-      // this redirects to the login page whenever that is encountered
-      $rootScope.$on("$routeChangeError", function (event, next, previous, error) {
-        if (error === "AUTH_REQUIRED") {
-          $location.path(loginRedirectPath);
-        }
-      });
+        // some of our routes may reject resolve promises with the special {authRequired: true} error
+        // this redirects to the login page whenever that is encountered
+        $rootScope.$on("$routeChangeError", function (event, next, previous, error) {
+            if (error === "AUTH_REQUIRED") {
+                $location.path(loginRedirectPath);
+            }
+        });
     }
-  ]);
+]);
