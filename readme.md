@@ -23,7 +23,7 @@ The data is stored in Firebase with these endpoints:
 - superstock: main data
 - superstock_fields: names of the corresponding fields
 - superstock_titles: titles of of the corresponding fields
-- superstock_format: format of each field - in <type>:<from>:<value>:<to>
+- superstock_format: format of each field - in [type]:[from]:[value]:[to]
 
 For Tổng hợp:
 - longterm_data
@@ -34,4 +34,4 @@ For Tổng hợp:
 - shortterm_headers
 - shortterm_titles
 
-Data is stored in pipe delimiter format, e.g.: <field1>|<field2>|<field3>etc
+Data is stored in pipe delimiter format, e.g.: [field1]|[field2]|[field3]etc
