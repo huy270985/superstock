@@ -1,92 +1,13 @@
-<!doctype html>
-<html class="no-js">
-
-<head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="styles/vendor.f4c15f4a.css">
-    <link rel="stylesheet" href="styles/main.9058b8c9.css">
-</head>
-
-<body ng-app="superstockApp">
-    <!--[if lt IE 7]>
+<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title></title> <meta name="description" content=""> <meta name="viewport" content="width=device-width"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.f4c15f4a.css"> <link rel="stylesheet" href="styles/main.1569b229.css">  <body ng-app="superstockApp"> <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
   your browser</a> to improve your experience.</p>
-<![endif]-->
-    <div id="wrapper" class="toggled" ng-controller="FilterCtrl">
-        <div id="sidebar-wrapper">
-            <!--<ul class="sidebar-nav">
+<![endif]--> <div id="wrapper" class="toggled" ng-controller="FilterCtrl"> <div id="sidebar-wrapper" style="background:#f9f9f9;overflow-x:hidden"> <!--<ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="#">
                         <div ui-slider="{range: true}" min="100" max="500" step="0.01" use-decimals ng-model="demoVals.sliderExample9"></div>
                     </a>
                 </li>
-            </ul>-->
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand" <a href="#">
-                    <!--{{filters}}-->
-                </li>
-                <li class="menu-slider" ng-repeat="item in $root.filters" ng-if="item.filters">
-                    <div>{{item.displayName}}</div>
-                    <div class="row" style="margin-left:0px">
-                        <div class="col-md-3">
-                            <input type="" ng-change="$root.changeFilter($index)" min="{{item.filters[0].min}}" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
-                            <input type="" ng-change="$root.changeFilter($index)" min="{{item.filters[0].min}}" max="{{item.filters[1].max}}" ng-model="subTerm[$index]" class="form-control" style="padding: 6px 6px">
-                        </div>
-                        <div class="col-md-9" style="padding-top:12px">
-                            <div ui-slider min="{{item.filters[0].min}}" id="{{item.field}}" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" style="width:90%"></div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <!-- Add your site or application content here -->
-        <div class="header" ng-cloak="" ng-controller="MenuCtrl">
-            <div class="navbar navbar-default" role="navigation">
-                <div class="container-fluit">
-                    <div class="navbar-header">
-
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-                        <a class="navbar-brand" href="#/">SuperStock</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="js-navbar-collapse">
-                        <ul class="nav navbar-nav navbar-left">
-                            <li class="" ng-class="{active:($root.link == 'main')}"><a href="#/"><i class="glyphicon glyphicon-th-large"></i> Tổng hợp </a></li>
-                            <li class="" ng-class="{active:($root.link == 'full')}"><a href="#/full"><i class="glyphicon glyphicon-list-alt"></i> Đầy đủ </a></li>
-                            <li class="" id="filter"><a href=""><i class="glyphicon glyphicon-filter"></i> Bộ lọc</a></li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class=""><a href="#/account" ng-show-auth="">Tài khoản</a></li>
-                            <li class=""><a href="#/login" ng-hide-auth="">Đăng nhập</a></li>
-                            <li class=""><a href="" ng-show-auth="" ng-click="logout()">Thoát</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluit">
-
-            <div ng-view=""></div>
-
-        </div>
-
-        <div class="footer">
-            <p>Copyright @superstock</p>
-        </div>
-
-    </div>
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-    <script>
-        ! function(A, n, g, u, l, a, r) {
+            </ul>--> <ul class="sidebar-nav"> <li class="sidebar-brand" style="height:15px"> </li> <li class="menu-slider" ng-repeat="item in $root.filters" ng-if="item.filters"> <div>{{item.displayName}}</div> <div class="row" style="margin-left:0px"> <div class="col-md-3"> <input type="number" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px"> <input type="number" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}" class="form-control subTerm" style="padding: 6px 6px" ng-show="item.filters[0].bigNum"> </div> <div class="col-md-9" style="padding-top:12px"> <div ui-slider min="{{item.filters[0].min}}" id="slide-{{item.field}}" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" style="width:90%" step="{{(item.filters[0].bigNum)?1000000000:1}}"></div> </div> </div> </li> </ul> </div> <!-- Add your site or application content here --> <div class="header" ng-cloak="" ng-controller="MenuCtrl"> <div class="navbar navbar-default" role="navigation"> <div class="container-fluit"> <div class="navbar-header"> <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#/">SuperStock</a> </div> <div class="collapse navbar-collapse" id="js-navbar-collapse"> <ul class="nav navbar-nav navbar-left"> <li class="" ng-class="{active:($root.link == 'main')}"><a href="#/"><i class="glyphicon glyphicon-th-large"></i> Tổng hợp </a></li> <li class="" ng-class="{active:($root.link == 'full')}"><a href="#/full"><i class="glyphicon glyphicon-list-alt"></i> Đầy đủ </a></li> <li class="" id="filter"><a href=""><i class="glyphicon glyphicon-filter"></i> Bộ lọc</a></li> </ul> <ul class="nav navbar-nav navbar-right"> <li class=""><a href="#/account" ng-show-auth="">Tài khoản</a></li> <li class=""><a href="" ng-hide-auth="" ng-click="oauthLogin('facebook')">Đăng nhập</a></li> <li class=""><a href="" ng-show-auth="" ng-click="logout()">Thoát</a></li> </ul> </div> </div> </div> </div> <div class="container-fluit"> <div ng-view=""></div> </div> <div class="footer"> <p>Copyright @superstock</p> </div> </div> <!-- Google Analytics: change UA-XXXXX-X to be your site's ID --> <script>! function(A, n, g, u, l, a, r) {
             A.GoogleAnalyticsObject = l, A[l] = A[l] || function() {
                     (A[l].q = A[l].q || []).push(arguments)
                 }, A[l].l = +new Date, a = n.createElement(g),
@@ -94,13 +15,7 @@
         }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
         ga('create', 'UA-XXXXX-X');
-        ga('send', 'pageview');
-    </script>
-
-    <script src="scripts/vendor.eaa7b70c.js"></script>
-
-    <script>
-        var config = {
+        ga('send', 'pageview');</script> <script src="scripts/vendor.eaa7b70c.js"></script> <script>var config = {
             apiKey: "AIzaSyA_i_1kEu9yJGgReldWXXtEgm3C2Qfm5s4",
             authDomain: "superstock.firebaseapp.com",
             databaseURL: "https://superstock.firebaseio.com",
@@ -121,11 +36,4 @@
         //     storageBucket: "superstock-d10ad.appspot.com",
         // };
 
-        firebase.initializeApp(config);
-    </script>
-
-    <script src="scripts/scripts.2394bd86.js"></script>
-</body>
-
-
-</html>
+        firebase.initializeApp(config);</script> <script src="scripts/scripts.90176d36.js"></script>  
