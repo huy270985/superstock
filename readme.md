@@ -34,4 +34,8 @@ For Tổng hợp:
 - shortterm_headers
 - shortterm_titles
 
+This is the new view (2016-08-20):
+- summary_data
+- summary_headers
+
 Data is stored in pipe delimiter format, e.g.: <field1>|<field2>|<field3>etc
