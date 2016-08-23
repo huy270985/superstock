@@ -62,13 +62,13 @@ angular.module('superstockApp')
 
 // configure views; whenAuthenticated adds a resolve method to ensure users authenticate
 // before trying to access that route
-.config(['$routeProvider', function ($routeProvider) {
+.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'views/main.html',
             controller: 'MainCtrl',
             resolve: {
-                "currentAuth": ["auth", function (auth) {
+                "currentAuth": ["auth", function(auth) {
                     return auth.$waitForSignIn();
                 }]
             }
@@ -95,7 +95,7 @@ angular.module('superstockApp')
             templateUrl: 'views/account.html',
             controller: 'AccountCtrl',
             resolve: {
-                "currentAuth": ["auth", function (auth) {
+                "currentAuth": ["auth", function(auth) {
                     // returns a promisse so the resolve waits for it to complete
                     return auth.$requireSignIn();
                 }]
@@ -105,7 +105,7 @@ angular.module('superstockApp')
             templateUrl: 'views/chat.html',
             controller: 'Chat',
             resolve: {
-                "currentAuth": ["auth", function (auth) {
+                "currentAuth": ["auth", function(auth) {
                     return auth.$waitForSignIn();
                 }]
             }
@@ -122,16 +122,18 @@ angular.module('superstockApp')
  * for changes in auth status which might require us to navigate away from a path
  * that we can no longer view.
  */
-.run(['$rootScope', '$location', 'loginRedirectPath',
-    function ($rootScope, $location, loginRedirectPath, event, next, previous, error) {
+.run(['$rootScope', '$location', 'loginRedirectPath', 'auth',
+    function($rootScope, $location, loginRedirectPath, auth, event, next, previous, error) {
 
 
         // watch for login status changes and redirect if appropriate
-        // auth.$onAuthStateChanged(check);
+        auth.$onAuthStateChanged(function(authData) {
+            $rootScope.user = authData;
+        });
 
         // some of our routes may reject resolve promises with the special {authRequired: true} error
         // this redirects to the login page whenever that is encountered
-        $rootScope.$on("$routeChangeError", function (event, next, previous, error) {
+        $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
             if (error === "AUTH_REQUIRED") {
                 $location.path(loginRedirectPath);
             }

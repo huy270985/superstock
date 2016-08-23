@@ -1,5 +1,3 @@
-"use strict";
-
 angular.module('superstockApp')
     .directive('categoryHeader', function() {
         function link(scope) {
@@ -52,6 +50,8 @@ angular.module('superstockApp')
 
         }
         return {
+
+
             templateUrl: 'scripts/directives/templates/category_header.html',
             link: link
         };
