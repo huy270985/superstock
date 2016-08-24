@@ -8,7 +8,7 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('MainCtrl', function($rootScope, $scope, $firebaseArray, $firebaseObject, Ref, draw, utils, $window) {
+    .controller('MainCtrl', function($rootScope, $scope, $firebaseArray, $firebaseObject, Ref, draw, utils, $window, $sce) {
         $rootScope.link = 'main';
         $window.ga('send', 'event', "Page", "Tổng hợp");
 
@@ -68,7 +68,13 @@ angular.module('superstockApp')
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
                         columnDefs.push(def);
                     }
-                    $rootScope.filters = columnDefs;
+                    for (var i in columnDefs) {
+                        if (columnDefs[i].field == 'symbol') {
+                            columnDefs[i].pinnedLeft = true;
+                            columnDefs[i].cellTemplate = '<div class="chart-pointer"><div ng-click="grid.appScope.symbolClick(row,col)" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>';
+                        }
+                    }
+                    // $rootScope.filters = columnDefs;
                     $scope.gridOptions.columnDefs = columnDefs;
                     draw.drawGrid(Ref.child('summary_data'), config, function(data) {
                         $scope.gridOptions.data.push(data);
@@ -108,7 +114,13 @@ angular.module('superstockApp')
                                 }
                             }
                         }
-                    })
+                    });
+                    $scope.symbolClick = function(row, col) {
+                        $('#myModal').modal('show');
+                        $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
+                        $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
+                        $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+                    }
                 })
             })
         })

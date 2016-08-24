@@ -46,6 +46,7 @@ body {
     border-top: 1px solid #e5e5e5;
     margin: 0;
 }
+
 .footer p {
     padding: 5px;
     margin: 0;
@@ -164,6 +165,7 @@ body {
 .ui-grid-row:nth-child(odd) .ui-grid-cell {
     background-color: #FFF;
 }
+
 
 /*.ui-grid-column-menu-button {
     display: none;
@@ -287,6 +289,7 @@ body {
 .click-row {
     background: #DEDDDD !important;
 }
+
 .profile-photo {
     width: 34px;
     margin-top: 8px;
@@ -298,6 +301,11 @@ body {
     white-space: pre;
 }
 
-.header, .navbar {
+.header,
+.navbar {
     margin-bottom: 0px;
+}
+
+.chart-pointer {
+    cursor: pointer;
 }

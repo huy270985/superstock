@@ -218,9 +218,6 @@ angular.module('superstockApp')
                                 }
                             }
                         }
-                        // else if (fieldsArr[i] == 'symbol') {
-                        //     def.filterHeaderTemplate = '<input ng-model="colFilter.term" style="background:yellow" />'
-                        // }
                         columnDefs.push(def);
                     }
                     for (var i in columnDefs) {
@@ -228,9 +225,6 @@ angular.module('superstockApp')
                             columnDefs[i].pinnedLeft = true;
                             columnDefs[i].cellTemplate = '<div><div ng-click="grid.appScope.symbolClick(row,col)" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>';
                         }
-                        // else if (columnDefs[i].field == 'industry') {
-                        //     columnDefs[i].cellTemplate = '<div><div ng-click="grid.appScope.industryClick(' + i + ',row,col)" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>';
-                        // }
                     }
                     $rootScope.filters = columnDefs;
                     $scope.gridOptions.columnDefs = columnDefs;
