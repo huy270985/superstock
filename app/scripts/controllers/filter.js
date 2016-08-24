@@ -8,26 +8,42 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('FilterCtrl', function($rootScope, $scope) {
-        $scope.demoVals = {
-            sliderExample3: 14
-        }
-
-        $rootScope.abc = 10000;
-        $rootScope.filters = [];
-        $rootScope.subTerm = [];
-        // $rootScope.changeFilter = function(index) {
-        //     console.log(index);
+    .controller('FilterCtrl', function($rootScope, $scope, Ref, $firebaseArray, $compile) {
+        // $scope.demoVals = {
+        //     sliderExample3: 14
         // }
-        $scope.options = [
-            "France",
-            "United Kingdom",
-            "Germany",
-            "Belgium",
-            "Netherlands",
-            "Spain",
-            "Italy",
-            "Poland",
-            "Austria"
-        ]
+
+        // $rootScope.abc = 10000;
+        // $rootScope.filters = [];
+        // $rootScope.subTerm = [];
+        // Ref.child('users/defaultFilter').on('value', function(data){
+        //     console.log(data);
+        // }, function(err){
+        //     console.log(err);
+        // });
+        $scope.defaultFilter = [{"EPS":1000,"maVol30":300000000,"point":7,"profitChange":20,"roe":7,"filterName":"Cơ bản tốt"}];
+        // var html = '<multiselect ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>';
+        // $('.default-filter').html($compile(html)($scope));
+        // $scope.defaultFilter = [];
+        // var defaultFilter = $firebaseArray(Ref.child('users/defaultFilter'));
+        // defaultFilter.$loaded(function(data) {
+        //     var html = '<multiselect ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>';
+        //     for (var i = 0; i < data.length; i++) {
+        //         var obj = {};
+        //         for (var key in data[i]) {
+        //             if (key.indexOf('$') < 0) {
+        //                 obj[key] = data[i][key];
+        //             }
+        //         }
+        //         obj['filterName'] = data[i].$id;
+        //         $scope.defaultFilter.push(obj);
+        //     }
+
+        //     $('.default-filter').html($compile(html)($scope));
+        // });
+        $scope.$watch('filter', function() {
+            if($rootScope.defaultFilter){
+                $rootScope.defaultFilter($scope.filter);
+            }
+        })
     });

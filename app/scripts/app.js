@@ -46,5 +46,6 @@ $(document).on('click', '.ui-grid-row', function() {
         }
     }, 50)
 
-
+    $('.view-containner').css('width', '1366px')
+    console.log($('.view-containner').css('width'));
 })

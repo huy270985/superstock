@@ -8,14 +8,18 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('MainCtrl', function($rootScope, $scope, $firebaseArray, $firebaseObject, Ref, draw, utils) {
+    .controller('MainCtrl', function($rootScope, $scope, $firebaseArray, $firebaseObject, Ref, draw, utils, $window) {
         $rootScope.link = 'main';
+        $window.ga('send', 'event', "Page", "Tổng hợp");
+
+
+        $('.view-containner').css('width', $(document).width() + 'px');
         $("#wrapper").addClass("toggled");
         var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
         var heightWin = $(document).height();
         var heightHead = 30;
         $scope.gridOptions = {
-            minRowsToShow: Math.floor((heightWin - heightOut - 80 - heightHead) / 30),
+            minRowsToShow: Math.floor((heightWin - heightOut - heightHead) / 30),
             data: []
         };
         console.log($scope.gridOptions);

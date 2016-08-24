@@ -9,8 +9,9 @@
  */
 angular.module('superstockApp')
     .controller('FullStockCtrl', function($rootScope, $scope, auth, $firebaseArray,
-        $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth) {
+        $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window) {
         $rootScope.link = 'full';
+        $window.ga('send', 'event', "Page", "Đầy đủ");
         var userFilters = null;
         var user = null;
         var userAuthData = null;
@@ -27,7 +28,20 @@ angular.module('superstockApp')
                 if ($scope.gridOptions.columnDefs) {
                     $scope.gridOptions.columnDefs = filterConvert($scope.gridOptions.columnDefs, filterData);
                 }
-            })
+            });
+
+
+            // defaultFilter.child('defaultFilter').set({
+            //     "Cơ bản tốt": {
+            //         point: 7,
+            //         EPS: 1000,
+            //         profitChange: 20,
+            //         roe: 7,
+            //         maVol30: 300000000
+            //     }
+            // }, function(err) {
+            //     console.log(err);
+            // })
         }
         $("#wrapper").addClass("toggled");
         $scope.iSrc = '';
@@ -43,7 +57,7 @@ angular.module('superstockApp')
             // useExternalFiltering: true,
             excessRows: 50,
             excessColumns: 32,
-            minRowsToShow: Math.floor((heightWin - heightOut - 80 - heightHead) / 30),
+            minRowsToShow: Math.floor((heightWin - heightOut - 30 - heightHead) / 30),
             data: [],
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
@@ -79,7 +93,7 @@ angular.module('superstockApp')
                 filters = {};
                 for (var i in rowDefs) {
                     if (rowDefs[i].filters) {
-                        filters[rowDefs[i].field] = rowDefs[i].filters[0].term;
+                        filters[rowDefs[i].field] = (rowDefs[i].filters[0] && rowDefs[i].filters[0].term) ? rowDefs[i].filters[0].term : null;
                     } else if (rowDefs[i].filter) {
                         filters[rowDefs[i].field] = (rowDefs[i].filter.term) ? rowDefs[i].filter.term : null;
                     }
@@ -220,6 +234,7 @@ angular.module('superstockApp')
                     }
                     $rootScope.filters = columnDefs;
                     $scope.gridOptions.columnDefs = columnDefs;
+                    console.log(columnDefs);
                     if (filterData) {
                         $scope.gridOptions.columnDefs = filterConvert($scope.gridOptions.columnDefs, filterData);
                     }
@@ -284,6 +299,26 @@ angular.module('superstockApp')
                 term: $rootScope.searchTerm
             };
         }
+        $rootScope.defaultFilter = function(filter) {
+            if (filter) filter = filter[0];
+            else return;
+            $window.ga('send', 'event', "Filter", filter.filterName);
+            for (var i in $scope.gridOptions.columnDefs) {
+                var fieldName = $scope.gridOptions.columnDefs[i].field;
+                for (var j in filter) {
+                    if (j != 'filterName') {
+                        if (j == fieldName) {
+                            if ($scope.gridOptions.columnDefs[i].filters) {
+                                $scope.gridOptions.columnDefs[i].filters[0].term = filter[j];
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // var defaultFormat = Ref.children('')
 
         // $scope.industryClick = function(index, row, col) {
         //     var industry = row.entity.industry;

@@ -41,13 +41,13 @@ angular.module('superstockApp')
                     // var obj = {};
                     // obj[authData.uid] = true;
                     // disconnectRef.set(obj);
-                    disconnectRef = firebase.database().ref('title');
-                    disconnectRef.set('test');
-                    console.log(disconnectRef);
-                    disconnectRef.on('value', function(data) {
-                        console.log(data)
-                    });
-                    redirect();
+                    // disconnectRef = firebase.database().ref('title');
+                    // disconnectRef.set('test');
+                    // console.log(disconnectRef);
+                    // disconnectRef.on('value', function(data) {
+                    //     console.log(data)
+                    // });
+                    // redirect();
                 })
                 .catch(function(error) {
                     console.log("login error");
@@ -59,7 +59,7 @@ angular.module('superstockApp')
             // obj[authDataSave.uid] = false;
             // disconnectRef.set(obj);
             auth.$signOut();
-            $location.path('/');
+            // $location.path('/');
         };
 
         // Ref.onDisconnect(function() {
