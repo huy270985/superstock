@@ -126,7 +126,7 @@
                                     </form>
                                 </div>
                             </li>
-                            <li class=""><a>Thời hạn sử dụng: {{timeUse}}</a></li>
+                            <li class="" ng-if="timeUse != null"><a>Thời hạn sử dụng: {{timeUse}}</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class=""><img ng-show="$root.user != null" class="profile-photo" ng-src="{{$root.user.photoURL}}" /></li>
@@ -185,12 +185,12 @@
     <!-- endbuild -->
 
     <script>
-        var config = {
-            apiKey: "AIzaSyA_i_1kEu9yJGgReldWXXtEgm3C2Qfm5s4",
-            authDomain: "superstock.firebaseapp.com",
-            databaseURL: "https://superstock.firebaseio.com",
-            storageBucket: "project-1577832973995685373.appspot.com",
-        };
+        // var config = {
+        //     apiKey: "AIzaSyA_i_1kEu9yJGgReldWXXtEgm3C2Qfm5s4",
+        //     authDomain: "superstock.firebaseapp.com",
+        //     databaseURL: "https://superstock.firebaseio.com",
+        //     storageBucket: "project-1577832973995685373.appspot.com",
+        // };
 
         // var config = {
         //     apiKey: "AIzaSyDICH-hlrUFKqEl8xiy2Pu-Jjrvg0xNAUY",
@@ -199,12 +199,12 @@
         //     storageBucket: "phongdoex.appspot.com",
         // };
 
-        // var config = {
-        //     apiKey: "AIzaSyD7lr3rqWKuOVYlUX86-_anNryjM08JJwE",
-        //     authDomain: "superstock-d10ad.firebaseapp.com",
-        //     databaseURL: "https://superstock-d10ad.firebaseio.com",
-        //     storageBucket: "superstock-d10ad.appspot.com",
-        // };
+        var config = {
+            apiKey: "AIzaSyD7lr3rqWKuOVYlUX86-_anNryjM08JJwE",
+            authDomain: "superstock-d10ad.firebaseapp.com",
+            databaseURL: "https://superstock-d10ad.firebaseio.com",
+            storageBucket: "superstock-d10ad.appspot.com",
+        };
 
         firebase.initializeApp(config);
     </script>

@@ -29,6 +29,7 @@ angular.module('superstockApp')
 
         var timeUse = $firebaseObject(Ref.child('title'));
         timeUse.$loaded(function(data) {
+            console.log(data);
             $scope.timeUse = data.$value;
         })
 
