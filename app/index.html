@@ -128,7 +128,8 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="sss"><a href="" ng-show="$root.user != null">{{$root.user.displayName}}</a></li>
+                            <li class=""><img ng-show="$root.user != null" class="profile-photo" ng-src="{{$root.user.photoURL}}" /></li>
+                            <li class=""><a href="" ng-show="$root.user != null">{{$root.user.displayName}}</a></li>
                             <li class=""><a href="" ng-show="$root.user == null" ng-click="oauthLogin('facebook')">Đăng nhập</a></li>
                             <li class=""><a href="" ng-show="$root.user != null" ng-click="logout()">Thoát</a></li>
                         </ul>

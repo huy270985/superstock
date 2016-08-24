@@ -126,9 +126,9 @@ body {
     content: "%";
 }
 
-#menuitem-3 {
+/*#menuitem-3 {
     display: none
-}
+}*/
 
 #menuitem-5 {
     display: none
@@ -165,9 +165,9 @@ body {
     background-color: #FFF;
 }
 
-.ui-grid-column-menu-button {
+/*.ui-grid-column-menu-button {
     display: none;
-}
+}*/
 
 .ui-grid-header-cell {
     background: #FF9900;

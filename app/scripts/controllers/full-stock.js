@@ -115,10 +115,10 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var sizeArr = [
-                        50, 200, 130, 130, 120, 150, 150, 110,
-                        70, 230, 220, 200, 120, 170, 80, 130,
-                        120, 120, 100, 100, 100, 70, 80, 90,
-                        130, 150, 250, 60, 100, 90, 90, 150
+                        50, 200, 110, 80, 80, 100, 100, 110,
+                        60, 130, 140, 130, 70, 120, 80, 100,
+                        120, 100, 100, 100, 80, 70, 70, 120,
+                        120, 120, 150, 60, 120, 90, 120, 150
                     ];
                     var columnDefs = [];
                     var config = {
@@ -160,7 +160,7 @@ angular.module('superstockApp')
                             }, {
                                 condition: uiGridConstants.filter.LESS_THAN,
                                 placeholder: 'less than',
-                                term: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3]),
+                                term: Infinity,
                                 max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
                             }];
                             def.filters = filters;

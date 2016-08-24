@@ -47,7 +47,7 @@ angular.module('superstockApp')
                     // disconnectRef.on('value', function(data) {
                     //     console.log(data)
                     // });
-                    // redirect();
+                    redirect();
                 })
                 .catch(function(error) {
                     console.log("login error");
@@ -59,7 +59,7 @@ angular.module('superstockApp')
             // obj[authDataSave.uid] = false;
             // disconnectRef.set(obj);
             auth.$signOut();
-            // $location.path('/');
+            $location.path('/');
         };
 
         // Ref.onDisconnect(function() {

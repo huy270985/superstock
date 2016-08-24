@@ -35,6 +35,9 @@ angular.module('superstockApp')
                     console.log(formatArr);
                     console.log(titlesArr);
                     console.log(fieldsArr);
+                    var colWidths = [
+                        70, '*', 200, 80, 80, 70, 100, 80, 80, 80
+                    ]
                     var columnDefs = [];
                     var config = {
                         idLabel: 'Mã',
@@ -58,7 +61,8 @@ angular.module('superstockApp')
                         var def = {
                             field: fieldsArr[i],
                             displayName: titlesArr[i],
-                            cellClass: cellClass
+                            cellClass: cellClass,
+                            width: colWidths[i]
                         }
                         if (formatType) def.cellFilter = formatType;
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
