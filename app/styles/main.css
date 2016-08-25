@@ -127,6 +127,7 @@ body {
     content: "%";
 }
 
+
 /*#menuitem-3 {
     display: none
 }*/
@@ -166,15 +167,34 @@ body {
     background-color: #FFF;
 }
 
-
-/*.ui-grid-column-menu-button {
-    display: none;
-}*/
+.ui-grid-column-menu-button {
+    /*display: none;*/
+    /* center */
+    /*line-height: 40px;*/
+}
 
 .ui-grid-header-cell {
+    /* center */
+    /*text-align: center;*/
     background: #FF9900;
     color: #FFF;
     border-color: #D4D4D4 !important;
+}
+
+
+/* center */
+
+.ui-grid-header-cell span:last-child {
+    /*position: absolute;
+    right: 3px;
+    margin-top: 8px;*/
+}
+
+
+/* center */
+
+.ui-grid-column-menu-button-last-col {
+    /*margin-right: 0px;*/
 }
 
 .grid-cell-green {

@@ -115,10 +115,10 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var sizeArr = [
-                        50, 200, 110, 80, 80, 100, 100, 110,
-                        60, 130, 140, 130, 70, 120, 80, 100,
-                        120, 100, 100, 100, 80, 70, 70, 120,
-                        120, 120, 150, 60, 120, 90, 120, 150
+                        70, 200, 130, 100, 110, 120, 120, 130,
+                        80, 150, 160, 150, 90, 140, 100, 120,
+                        140, 120, 120, 120, 100, 90, 90, 140,
+                        140, 140, 170, 80, 140, 110, 140, 170
                     ];
                     var columnDefs = [];
                     var config = {
@@ -235,6 +235,9 @@ angular.module('superstockApp')
                     draw.drawGrid(Ref.child('superstock'), config, function(data) {
                         $scope.gridOptions.data.push(data);
                     }, function(data) {
+                        setTimeout(function() {
+                            // align();
+                        }, 1000);
                         // columnDefs[0].pinnedLeft = true
                         // $scope.gridOptions.columnDefs = columnDefs;
                         // $scope.gridOptions.data = data;
@@ -317,6 +320,18 @@ angular.module('superstockApp')
         // $scope.industryClick = function(index, row, col) {
         //     var industry = row.entity.industry;
         // }
+        function align() {
+            $('.ui-grid-header-cell').each(function() {
+                var thisTag = $(this);
+                var span = thisTag.find('span');
+                if (span.text().indexOf('\n') < 0) {
+                    span.parent().css('line-height', '40px');
+                    thisTag.css('text-align', 'center');
+                } else {
+                    span.last().css('margin-top', '-2px');
+                }
+            })
+        }
         $(document).ready(function() {
             $(document).on('change', '.subTerm', function() {
                 var subTerm = $(this);
@@ -337,7 +352,7 @@ angular.module('superstockApp')
                     }
                 });
             });
-        })
+        });
     })
     .directive('ngEnter', function() {
         return function(scope, element, attrs) {
