@@ -210,6 +210,10 @@ body {
     color: #C00
 }
 
+.grid-cell-fill{
+    background-color: #B7E1CD;
+}
+
 .navbar-default .navbar-brand {
     color: rgba(46, 112, 159, 1);
 }

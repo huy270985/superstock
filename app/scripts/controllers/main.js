@@ -36,7 +36,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var colWidths = [
-                        70, '*', 200, 80, 80, 70, 100, 80, 80, 80
+                        70, '*', 130, 80, 80, 80, 80, 140, 130, 100, 130
                     ]
                     var columnDefs = [];
                     var config = {
@@ -66,6 +66,7 @@ angular.module('superstockApp')
                         }
                         if (formatType) def.cellFilter = formatType;
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
+                        def.cellTemplate = utils.getCellTemplateSummary(fieldsArr[i], formatArr[i]);
                         columnDefs.push(def);
                     }
                     for (var i in columnDefs) {
@@ -121,6 +122,24 @@ angular.module('superstockApp')
                         $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
                         $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
                         $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+                    }
+
+                    $scope.fillCanslim = function(row) {
+                        if ((row.entity.signal1 != '' || row.entity.signal2 != '')) return true;
+                        return false;
+                    }
+
+                    $scope.colorCanslim = function(row, color) {
+                        if ((row.entity.signal1 != '' || row.entity.signal2 != '')) {
+                            if (row.entity.Canslim != '') {
+                                if (color == 'purple') return true;
+                                return false;
+                            } else {
+                                if (color == 'green') return true;
+                                return false;
+                            }
+                        }
+                        return false;
                     }
 
                     function align() {
