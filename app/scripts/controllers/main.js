@@ -74,6 +74,12 @@ angular.module('superstockApp')
                             columnDefs[i].pinnedLeft = true;
                             columnDefs[i].cellTemplate = '<div class="chart-pointer"><div ng-click="grid.appScope.symbolClick(row,col)" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>';
                         }
+                        if (columnDefs[i].field == 'totalValue') {
+                            columnDefs[i].sort = {
+                                direction: 'desc',
+                                priority: 0
+                            }
+                        }
                     }
                     // $rootScope.filters = columnDefs;
                     $scope.gridOptions.columnDefs = columnDefs;
