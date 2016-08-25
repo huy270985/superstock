@@ -29,6 +29,11 @@ angular
             },
             getCellTemplateSummary: function(fieldName, format) {
                 switch (fieldName) {
+                    case 'symbol':
+                        return '<div class="chart-pointer" title="{{COL_FIELD}}" ng-click="grid.appScope.symbolClick(row,col)" ng-class="{\'ui-grid-cell-contents\': true,\
+                        \'grid-cell-purple\': grid.appScope.colorCanslim(row,\'purple\'), \
+                        \'grid-cell-green\': grid.appScope.colorCanslim(row,\'green\'), \
+                        \'grid-cell-fill\': grid.appScope.fillCanslim(row)}">{{COL_FIELD}}</div>';
                     case 'totalValue':
                         return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true,\
                          \'grid-cell-purple\': COL_FIELD >= 5e9, \'grid-cell-fill\': COL_FIELD >= 5e9}">{{COL_FIELD | number}}</div>';
@@ -45,7 +50,7 @@ angular
                         return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-purple\': COL_FIELD, \'grid-cell-fill\': COL_FIELD}">{{COL_FIELD}}</div>';
                     case 'chart':
                     case 'symbol2':
-                        return '<div title="{{COL_FIELD}}" ng-init="" ng-class="{\'ui-grid-cell-contents\': true,\
+                        return '<div class="chart-pointer" title="{{COL_FIELD}}" ng-click="grid.appScope.symbolClick(row,col)" ng-class="{\'ui-grid-cell-contents\': true,\
                         \'grid-cell-purple\': grid.appScope.colorCanslim(row,\'purple\'), \
                         \'grid-cell-green\': grid.appScope.colorCanslim(row,\'green\'), \
                         \'grid-cell-fill\': grid.appScope.fillCanslim(row)}">{{COL_FIELD}}</div>';
