@@ -80,8 +80,9 @@ angular.module('superstockApp')
                     draw.drawGrid(Ref.child('summary_data'), config, function(data) {
                         $scope.gridOptions.data.push(data);
                     }, function(data) {
-
-                        console.log($scope.gridOptions.data);
+                        setTimeout(function() {
+                            // align();
+                        }, 1000);
                     }, {
                         added: function(data, childSnapshot, id) {
                             var key = childSnapshot.key;
@@ -121,6 +122,19 @@ angular.module('superstockApp')
                         $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
                         $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
                         $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+                    }
+
+                    function align() {
+                        $('.ui-grid-header-cell').each(function() {
+                            var thisTag = $(this);
+                            var span = thisTag.find('span');
+                            if (span.text().indexOf('\n') < 0) {
+                                span.parent().css('line-height', '40px');
+                                thisTag.css('text-align', 'center');
+                            } else {
+                                span.last().css('margin-top', '-2px');
+                            }
+                        })
                     }
                 })
             })
