@@ -36,7 +36,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var colWidths = [
-                        70, '*', 200, 80, 80, 70, 100, 80, 80, 80
+                        70, '*', 130, 80, 80, 80, 80, 140, 130, 100, 130
                     ]
                     var columnDefs = [];
                     var config = {
@@ -66,7 +66,8 @@ angular.module('superstockApp')
                         }
                         if (formatType) def.cellFilter = formatType;
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
-                        columnDefs.push(def);
+                        def.cellTemplate = utils.getCellTemplateSummary(fieldsArr[i], formatArr[i]);
+                        columnDefs.push(def);             
                     }
                     for (var i in columnDefs) {
                         if (columnDefs[i].field == 'symbol') {

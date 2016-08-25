@@ -26,6 +26,33 @@ angular
                             return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD | number}}</div>';
                         return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD}}</div>'; 
                 }
+            },
+            getCellTemplateSummary: function(fieldName, format){
+                switch(fieldName){
+                    case 'totalValue': 
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true,\
+                         \'grid-cell-purple\': COL_FIELD >= 5e9, \'grid-cell-fill\': COL_FIELD >= 5e9}">{{COL_FIELD | number}}</div>';
+                    case 'EPS': 
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 1000, \'grid-cell-green\': COL_FIELD > 1000, \'grid-cell-fill\': COL_FIELD >= 3000}">{{COL_FIELD | number}}</div>';
+                    case 'Canslim': 
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-purple\': COL_FIELD, \'grid-cell-fill\': COL_FIELD }">{{COL_FIELD}}</div>';
+                    case 'pricePeak':///Vượt đỉnh giá, chưa biết server trả về field tên gì 
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \
+                        \'grid-cell-purple\': COL_FIELD && \'cao nhất 30 phiên\' == COL_FIELD.trim().toLowerCase(), \
+                        \'grid-cell-fill\': COL_FIELD && \'cao nhất 30 phiên\' == COL_FIELD.trim().toLowerCase()}">{{COL_FIELD}}</div>';
+                    case 'signal1': 
+                    case 'signal2': 
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-purple\': COL_FIELD, \'grid-cell-fill\': COL_FIELD}">{{COL_FIELD}}</div>';
+                    case 'chart':
+                    case 'symbol2':
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true,\
+                        \'grid-cell-purple\': (row.enity.signal1 || row.enity.signal2) && row.entity.Canslim, \
+                        \'grid-cell-fill\': (row.enity.signal1 || row.enity.signal2) && row.entity.Canslim}">{{COL_FIELD}}</div>';                        
+                    default:
+                        if(format == 'number' || format == 'bigNumber')
+                            return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD | number}}</div>';
+                        return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD}}</div>'; 
+                }
             }
         }
     }); 
