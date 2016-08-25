@@ -57,7 +57,7 @@ angular.module('superstockApp')
             // useExternalFiltering: true,
             excessRows: 50,
             excessColumns: 32,
-            minRowsToShow: Math.floor((heightWin - heightOut - 30 - heightHead) / 30),
+            minRowsToShow: Math.floor((heightWin - heightOut - 30 - 15 - heightHead) / 30),
             data: [],
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;

@@ -38,14 +38,11 @@ $(document).on('click', '.ui-grid-row', function() {
     var thisRow = $(this);
     var classList = thisRow.find('.click-row').length;
     $('.ui-grid-row').find('.ui-grid-cell').removeClass('click-row');
-    setTimeout(function() {
-        if (classList > 0) {
-            thisRow.children().children().removeClass('click-row');
-        } else {
-            thisRow.children().children().addClass('click-row');
-        }
-    }, 50)
-
-    $('.view-containner').css('width', '1366px')
-    console.log($('.view-containner').css('width'));
+    // setTimeout(function() {
+    if (classList > 0) {
+        thisRow.children().children().removeClass('click-row');
+    } else {
+        thisRow.children().children().addClass('click-row');
+    }
+    // }, 50)
 })
