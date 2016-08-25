@@ -170,13 +170,13 @@ body {
 
 .ui-grid-column-menu-button {
     /*display: none;*/
-    /* center */
+     /*center */
     /*line-height: 40px;*/
 }
 
 .ui-grid-header-cell {
-    /* center */
-    /*text-align: center;*/
+     /*center */
+    text-align: center;
     background: #FF9900;
     color: #FFF;
     border-color: #D4D4D4 !important;
@@ -186,8 +186,8 @@ body {
 /* center */
 
 .ui-grid-header-cell span:last-child {
-    /*position: absolute;
-    right: 3px;
+    position: absolute;
+    /*right: 3px;
     margin-top: 8px;*/
 }
 
@@ -195,7 +195,7 @@ body {
 /* center */
 
 .ui-grid-column-menu-button-last-col {
-    /*margin-right: 0px;*/
+    margin-right: 0px;
 }
 
 .grid-cell-green {

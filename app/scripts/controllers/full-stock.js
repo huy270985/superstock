@@ -118,7 +118,8 @@ angular.module('superstockApp')
                         70, 200, 130, 100, 110, 120, 120, 130,
                         80, 150, 160, 150, 90, 140, 100, 120,
                         140, 120, 120, 120, 100, 90, 90, 140,
-                        140, 140, 170, 80, 140, 110, 140, 170
+                        140, 140, 170, 80, 140, 110, 140, 170,
+                        100, 100, 100, 100, 100, 100
                     ];
                     var columnDefs = [];
                     var config = {
@@ -236,7 +237,7 @@ angular.module('superstockApp')
                         $scope.gridOptions.data.push(data);
                     }, function(data) {
                         setTimeout(function() {
-                            // align();
+                            align();
                         }, 1000);
                         // columnDefs[0].pinnedLeft = true
                         // $scope.gridOptions.columnDefs = columnDefs;

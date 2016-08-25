@@ -36,7 +36,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var colWidths = [
-                        70, '*', 130, 80, 80, 80, 80, 140, 130, 100, 130
+                        75, '*', 130, 85, 80, 80, 85, 140, 140, 80, 140
                     ]
                     var columnDefs = [];
                     var config = {
@@ -87,7 +87,7 @@ angular.module('superstockApp')
                         $scope.gridOptions.data.push(data);
                     }, function(data) {
                         setTimeout(function() {
-                            // align();
+                            align();
                         }, 1000);
                     }, {
                         added: function(data, childSnapshot, id) {
