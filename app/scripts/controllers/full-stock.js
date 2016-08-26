@@ -62,6 +62,7 @@ angular.module('superstockApp')
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
                 $scope.gridApi.core.on.filterChanged($scope, function() {
+                    rowIndex = 0;
                     user = Ref.child('users/' + currentAuth.uid);
                     var filter = filterConvert($scope.gridOptions.columnDefs, null);
                     user.child('filter').set(filter, function(err) {
@@ -127,6 +128,14 @@ angular.module('superstockApp')
                         idLabel: 'Mã',
                         labelList: []
                     }
+
+                    columnDefs.push({
+                        field: 'rowIndex',
+                        width: 50,
+                        pinnedLeft: true,
+                        displayName: '#',
+                        cellTemplate: '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 0, \'grid-cell-green\': COL_FIELD >= 0}">{{$parent.rowRenderIndex + 1}}</div>'
+                    });
                     for (var i in titlesArr) {
                         // titlesArr[i] = titlesArr[i].replace('\n', '');
                         config.labelList.push({
