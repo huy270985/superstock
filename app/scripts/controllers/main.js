@@ -36,7 +36,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var colWidths = [
-                        60, '*', 125, 88, 70, 70, 75, 140, 140, 50, 140
+                        75, '*', 125, 95, 75, 75, 90, 140, 140, 60, 140
                     ]
                     var columnDefs = [];
                     var config = {
@@ -67,19 +67,19 @@ angular.module('superstockApp')
                         if (formatType) def.cellFilter = formatType;
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
                         def.cellTemplate = utils.getCellTemplateSummary(fieldsArr[i], formatArr[i]);
-                        columnDefs.push(def);
-                    }
-                    for (var i in columnDefs) {
-                        if (columnDefs[i].field == 'symbol') {
-                            columnDefs[i].pinnedLeft = true;
-                            // columnDefs[i].cellTemplate = '<div class="chart-pointer"><div ng-click="grid.appScope.symbolClick(row,col)" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>';
+                        if (def.field == 'symbol') {
+                            def.pinnedLeft = true;
                         }
-                        if (columnDefs[i].field == 'totalValue') {
-                            columnDefs[i].sort = {
+                        if (def.field == 'totalValue') {
+                            def.sort = {
                                 direction: 'desc',
                                 priority: 0
                             }
                         }
+                        if (def.field == 'industry') {
+                            def.minWidth = 200;
+                        }
+                        columnDefs.push(def);
                     }
                     // $rootScope.filters = columnDefs;
                     $scope.gridOptions.columnDefs = columnDefs;

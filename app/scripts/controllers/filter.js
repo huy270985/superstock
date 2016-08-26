@@ -57,7 +57,9 @@ angular.module('superstockApp')
         });
 
         $scope.$watch('filterEnabled', function() {
-            $rootScope.onOffFilter($scope.filterEnabled);
+            if($rootScope.onOffFilter){
+                $rootScope.onOffFilter($scope.filterEnabled);
+            }
         })
 
     });
