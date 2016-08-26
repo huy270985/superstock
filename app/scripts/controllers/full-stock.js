@@ -129,14 +129,14 @@ angular.module('superstockApp')
                         labelList: []
                     }
 
-                    columnDefs.push({
-                        field: 'rowIndex',
-                        width: 40,
-                        pinnedLeft: true,
-                        enableColumnMenu: false,
-                        displayName: '#',
-                        cellTemplate: '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 0, \'grid-cell-green\': COL_FIELD >= 0}">{{$parent.rowRenderIndex + 1}}</div>'
-                    });
+                    // columnDefs.push({
+                    //     field: 'rowIndex',
+                    //     width: 40,
+                    //     pinnedLeft: true,
+                    //     enableColumnMenu: false,
+                    //     displayName: '#',
+                    //     cellTemplate: '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 0, \'grid-cell-green\': COL_FIELD >= 0}">{{$parent.rowRenderIndex + 1}}</div>'
+                    // });
                     for (var i in titlesArr) {
                         // titlesArr[i] = titlesArr[i].replace('\n', '');
                         config.labelList.push({

@@ -92,8 +92,6 @@ Mã,
 
 * Chỉnh màu tím = `#9900FF` (giống V6)
 
-* Add row index cho bảng Đầy đủ
-
 **Các tính năng chưa có trong build này**
 
 * Hiện số người online (pending)
@@ -101,3 +99,19 @@ Mã,
 * Xem thời hạn sử dụng bảng giá còn bao lâu
 
 * Bảng Tổng hợp trả về vẫn còn thiếu 1 cột `Báo Bán`
+
+* STT cho bảng
+
+## Lưu ý
+
+* Danh sách cột các bảng tổng hợp, đầy đủ phụ thuộc vào server trả về
+
+* Trong phần sort, nếu cột nào server trả về mà không define rõ là datetime, percentage hay number thì mặc định sẽ sort theo text
+
+* Trong phần format datetime hoặc number, nếu server ko define rõ cột đó là number hay datetime, percentage hay number thì mặc định nó là text
+
+* Filter: danh sách các cột cần filter lấy từ server
+
+* Những cột nào rỗng khi filter theo số sẽ không được hiển thị, Ví dụ: mặc định Point filter là 1, các row nào có Point = rỗng sẽ không được hiển thị
+
+* Bộ lọc có sẵn hiện tại chỉ đưa có 1 bộ lọc
