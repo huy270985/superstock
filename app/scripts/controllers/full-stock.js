@@ -153,20 +153,23 @@ angular.module('superstockApp')
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
                         if (formatArr[i] != '') {
                             var arr = formatArr[i].split(':');
-                            var filters = [{
-                                condition: uiGridConstants.filter.GREATER_THAN,
-                                placeholder: 'greater than',
-                                term: (arr[0] == 'bigNum') ? parseFloat(arr[2]) * bigNum : parseFloat(arr[2]),
-                                min: (arr[0] == 'bigNum') ? parseFloat(arr[1]) * bigNum : parseFloat(arr[1]),
-                                bigNum: (arr[0] == 'bigNum') ? true : false
-                            }, {
-                                condition: uiGridConstants.filter.LESS_THAN,
-                                placeholder: 'less than',
-                                term: Infinity,
-                                max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
-                            }];
-                            def.filters = filters;
-                            def.cellTemplate = utils.getCellTemplate(fieldsArr[i], true);
+                            console.log(titlesArr[i], arr[0], arr[1], arr[2], arr[3]);
+                            if(arr.length === 4){
+                                var filters = [{
+                                    condition: uiGridConstants.filter.GREATER_THAN,
+                                    placeholder: 'greater than',
+                                    term: (arr[0] == 'bigNum') ? parseFloat(arr[2]) * bigNum : parseFloat(arr[2]),
+                                    min: (arr[0] == 'bigNum') ? parseFloat(arr[1]) * bigNum : parseFloat(arr[1]),
+                                    bigNum: (arr[0] == 'bigNum') ? true : false
+                                }, {
+                                    condition: uiGridConstants.filter.LESS_THAN,
+                                    placeholder: 'less than',
+                                    term: Infinity,
+                                    max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
+                                }];
+                                def.filters = filters;
+                                def.cellTemplate = utils.getCellTemplate(fieldsArr[i], true);
+                            }
                         } else {
                             def.cellTemplate = utils.getCellTemplate(fieldsArr[i]);
                         }

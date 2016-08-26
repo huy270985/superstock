@@ -27,11 +27,11 @@ angular.module('superstockApp')
         //     console.log('silder');
         // });
 
-        var timeUse = $firebaseObject(Ref.child('title'));
-        timeUse.$loaded(function(data) {
-            console.log(data);
-            $scope.timeUse = data.$value;
-        })
+        // var timeUse = $firebaseObject(Ref.child('title'));
+        // timeUse.$loaded(function(data) {
+        //     console.log(data);
+        //     $scope.timeUse = data.$value;
+        // })
 
         function redirect() {
             $location.path('/');
