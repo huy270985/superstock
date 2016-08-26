@@ -36,7 +36,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var colWidths = [
-                        75, '*', 130, 85, 80, 80, 85, 140, 140, 80, 140
+                        60, '*', 125, 88, 70, 70, 75, 140, 140, 50, 140
                     ]
                     var columnDefs = [];
                     var config = {

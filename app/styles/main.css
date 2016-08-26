@@ -124,6 +124,10 @@ body {
     text-align: center
 }
 
+.ui-grid-cell-contents {
+    font-weight: bold;
+}
+
 .percent .ui-grid-cell-contents::after {
     content: "%";
 }
@@ -203,7 +207,7 @@ body {
 }
 
 .grid-cell-purple {
-    color: #939
+    color: #9900FF;
 }
 
 .grid-cell-red {

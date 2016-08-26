@@ -53,10 +53,10 @@ angular.module('superstockApp')
         $scope.gridOptions = {
             flatEntityAccess: true,
             fastWatch: true,
-            enableFiltering: true,
+            enableFiltering: false,
             // useExternalFiltering: true,
-            excessRows: 50,
-            excessColumns: 32,
+            // excessRows: 50,
+            // excessColumns: 32,
             minRowsToShow: Math.floor((heightWin - heightOut - 30 - 15 - heightHead) / 30),
             data: [],
             onRegisterApi: function(gridApi) {
@@ -116,7 +116,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var sizeArr = [
-                        70, 200, 130, 100, 110, 120, 120, 130,
+                        70, 250, 130, 100, 110, 120, 120, 130,
                         80, 150, 160, 150, 90, 140, 100, 120,
                         140, 120, 120, 120, 100, 90, 90, 140,
                         140, 140, 170, 80, 140, 110, 140, 100,
