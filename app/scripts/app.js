@@ -21,7 +21,8 @@ angular.module('superstockApp', [
         'firebase.auth',
         'firebase.ref',
         'ui.slider',
-        'btorfs.multiselect'
+        'btorfs.multiselect',
+        'uiSwitch'
     ])
     // .run(function() {
     //     $('.navbar-left').children().click(function() {

@@ -170,12 +170,12 @@ body {
 
 .ui-grid-column-menu-button {
     /*display: none;*/
-     /*center */
+    /*center */
     /*line-height: 40px;*/
 }
 
 .ui-grid-header-cell {
-     /*center */
+    /*center */
     text-align: center;
     background: #FF9900;
     color: #FFF;
@@ -210,7 +210,7 @@ body {
     color: #C00
 }
 
-.grid-cell-fill{
+.grid-cell-fill {
     background-color: #B7E1CD;
 }
 
@@ -333,4 +333,9 @@ body {
 
 .chart-pointer {
     cursor: pointer;
+}
+
+.clear-filter {
+    background: none !important;
+    box-shadow: none !important;
 }
