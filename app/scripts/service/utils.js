@@ -7,7 +7,7 @@ angular
             getCellTemplate: function(fieldName, format) {
                 switch (fieldName) {
                     case 'priceChange':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 0, \'grid-cell-green\': COL_FIELD >= 0}">{{COL_FIELD | number}}-{{$parent.rowRenderIndex + 1}}-</div>';
+                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 0, \'grid-cell-green\': COL_FIELD >= 0}">{{COL_FIELD | number}}</div>';
                     case 'EPS':
                         return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 1000, \'grid-cell-green\': COL_FIELD > 1000}">{{COL_FIELD | number}}</div>';
                     case 'revenueChange':
