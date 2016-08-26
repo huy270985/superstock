@@ -10,9 +10,11 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-switch/angular-ui-switch.css" />
     <!-- endbower -->
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
     <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="bower_components\angular-ui-switch\angular-ui-switch.min.css" />
 
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -53,14 +55,26 @@
                     </div>
                 </li>-->
                 <li class="menu-slider">
+                    <div>
+                        Bật/tắt bộ lọc
+                    </div>
+                    <div class="row" style="margin-left:0px">
+                        <div class="col-md-10 default-filter" style="padding-left:0px">
+                            <form>
+                                <switch id="filterEnabled" name="filterEnabled" ng-init="filterEnabled = true" ng-model="filterEnabled" class="green"></switch>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                <li class="menu-slider">
                     <div>Bộ lọc có sẵn</div>
                     <div class="row" style="margin-left:0px">
                         <!--<div class="col-md-3"></div>-->
                         <div class="col-md-10 default-filter" style="padding-left:0px">
-                            <multiselect ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>
+                            <multiselect ng-disabled="!filterEnabled" ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>
                         </div>
                         <div class="col-md-1" style="padding-left:10px">
-                            <button type="button" ng-click="filter = null" style="box-shadow:none" class="close form-control" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <button type="button" ng-disabled="!filterEnabled" ng-click="filter = null" class="close form-control clear-filter" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                     </div>
                 </li>
@@ -68,13 +82,13 @@
                     <div>{{item.displayName}}</div>
                     <div class="row" style="margin-left:0px">
                         <div class="col-md-10" style="padding-left:0px" ng-if="item.filter.typeSearch == 'multiple'">
-                            <multiselect ng-model="item.filter.term" options="item.filter.selectOptions" show-search="false" id-prop="value" display-prop="label"></multiselect>
+                            <multiselect ng-disabled="!filterEnabled" ng-model="item.filter.term" options="item.filter.selectOptions" show-search="false" id-prop="value" display-prop="label"></multiselect>
                         </div>
                         <div class="col-md-10" style="padding-left:0px" ng-if="item.filter.typeSearch != 'multiple'">
-                            <multiselect ng-model="item.filter.term" options="item.filter.selectOptions" class="signle-select" show-search="false" id-prop="value" display-prop="label" selection-limit="1"></multiselect>
+                            <multiselect ng-disabled="!filterEnabled" ng-model="item.filter.term" options="item.filter.selectOptions" class="signle-select" show-search="false" id-prop="value" display-prop="label" selection-limit="1"></multiselect>
                         </div>
                         <div class="col-md-1" style="padding-left:10px">
-                            <button type="button" ng-click="item.filter.term = null" style="box-shadow:none" class="close form-control" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <button type="button" ng-disabled="!filterEnabled" ng-click="item.filter.term = null" class="close form-control  clear-filter" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                     </div>
                 </li>
@@ -82,11 +96,11 @@
                     <div>{{item.displayName}}</div>
                     <div class="row" style="margin-left:0px">
                         <div class="col-md-3">
-                            <input type="number" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
-                            <input type="number" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}" class="form-control subTerm" style="padding: 6px 6px" ng-show="item.filters[0].bigNum">
+                            <input type="number" ng-disabled="!filterEnabled" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
+                            <input type="number" ng-disabled="!filterEnabled" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}" class="form-control subTerm" style="padding: 6px 6px" ng-show="item.filters[0].bigNum">
                         </div>
                         <div class="col-md-9" style="padding-top:12px">
-                            <div ui-slider min="{{item.filters[0].min}}" id="slide-{{item.field}}" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" style="width:90%" step="{{(item.filters[0].bigNum)?1000000000:1}}"></div>
+                            <div ui-slider ng-disabled="!filterEnabled" min="{{item.filters[0].min}}" id="slide-{{item.field}}" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" style="width:90%" step="{{(item.filters[0].bigNum)?1000000000:1}}"></div>
                         </div>
                     </div>
                 </li>
@@ -181,6 +195,7 @@
     <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
     <script src="bower_components/angular-ui-slider/src/slider.js"></script>
     <script src="bower_components/angular-bootstrap-multiselect/index.js"></script>
+    <script src="bower_components/angular-ui-switch/angular-ui-switch.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

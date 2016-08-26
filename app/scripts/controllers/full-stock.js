@@ -115,11 +115,11 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var sizeArr = [
-                        70,  200, 130, 100, 110, 120, 120, 130,
-                        80,  150, 160, 150, 90,  140, 100, 120,
-                        140, 120, 120, 120, 100, 90,  90,  140,
-                        140, 140, 170, 80,  140, 110, 140, 100,
-                        120, 120, 140, 120, 120, 120, 120, 100, 
+                        70, 200, 130, 100, 110, 120, 120, 130,
+                        80, 150, 160, 150, 90, 140, 100, 120,
+                        140, 120, 120, 120, 100, 90, 90, 140,
+                        140, 140, 170, 80, 140, 110, 140, 100,
+                        120, 120, 140, 120, 120, 120, 120, 100,
                         100, 140, 80, 140
                     ];
                     var columnDefs = [];
@@ -154,7 +154,7 @@ angular.module('superstockApp')
                         if (formatArr[i] != '') {
                             var arr = formatArr[i].split(':');
                             console.log(titlesArr[i], arr[0], arr[1], arr[2], arr[3]);
-                            if(arr.length === 4){
+                            if (arr.length === 4) {
                                 var filters = [{
                                     condition: uiGridConstants.filter.GREATER_THAN,
                                     placeholder: 'greater than',
@@ -294,6 +294,13 @@ angular.module('superstockApp')
             $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
             $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
             $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+        }
+
+        $rootScope.onOffFilter = function(value) {
+            setTimeout(function() {
+                $scope.gridOptions.enableFiltering = value;
+                $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+            }, 500)
         }
 
         $rootScope.search = function(searchTerm) {

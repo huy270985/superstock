@@ -21,7 +21,14 @@ angular.module('superstockApp')
         // }, function(err){
         //     console.log(err);
         // });
-        $scope.defaultFilter = [{"EPS":1000,"maVol30":300000000,"point":7,"profitChange":20,"roe":7,"filterName":"Cơ bản tốt"}];
+        $scope.defaultFilter = [{
+            "EPS": 1000,
+            "maVol30": 300000000,
+            "point": 7,
+            "profitChange": 20,
+            "roe": 7,
+            "filterName": "Cơ bản tốt"
+        }];
         // var html = '<multiselect ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>';
         // $('.default-filter').html($compile(html)($scope));
         // $scope.defaultFilter = [];
@@ -42,8 +49,15 @@ angular.module('superstockApp')
         //     $('.default-filter').html($compile(html)($scope));
         // });
         $scope.$watch('filter', function() {
-            if($rootScope.defaultFilter){
-                $rootScope.defaultFilter($scope.filter);
+            if ($rootScope.defaultFilter) {
+                try {
+                    $rootScope.defaultFilter($scope.filter);
+                } catch (e) {}
             }
+        });
+
+        $scope.$watch('filterEnabled', function() {
+            $rootScope.onOffFilter($scope.filterEnabled);
         })
+
     });
