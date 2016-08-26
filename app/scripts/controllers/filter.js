@@ -23,7 +23,7 @@ angular.module('superstockApp')
         // });
         $scope.defaultFilter = [{
             "EPS": 1000,
-            "maVol30": 300000000,
+            "maVol30": 30e3,
             "point": 7,
             "profitChange": 20,
             "roe": 7,
