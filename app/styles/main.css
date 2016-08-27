@@ -7,6 +7,7 @@
 
 body {
     padding: 0;
+    font-family: Arial;
 }
 
 
@@ -109,6 +110,12 @@ body {
     padding-top: 15px;
 }
 
+.chart-icon{
+    width: 15px;
+    height: 15px;
+    vertical-align: top;
+    float: right;
+}
 
 /* custom */
 
@@ -126,6 +133,7 @@ body {
 
 .ui-grid-cell-contents {
     font-weight: bold;
+    font-size: 13px;
 }
 
 .percent .ui-grid-cell-contents::after {

@@ -248,7 +248,8 @@ angular.module('superstockApp')
                     for (var i in columnDefs) {
                         if (columnDefs[i].field == 'symbol') {
                             columnDefs[i].pinnedLeft = true;
-                            columnDefs[i].cellTemplate = '<div><div ng-click="grid.appScope.symbolClick(row,col)" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>';
+                            columnDefs[i].cellTemplate = '<div><div class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}\
+                        <img class=\'chart-icon\' src=\'./images/icon-graph.png\' ng-click="grid.appScope.symbolClick(row,col)"/></div></div>';
                         }
                     }
                     $rootScope.filters = columnDefs;
