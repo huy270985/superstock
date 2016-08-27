@@ -110,12 +110,13 @@ body {
     padding-top: 15px;
 }
 
-.chart-icon{
+.chart-icon {
     width: 15px;
     height: 15px;
     vertical-align: top;
     float: right;
 }
+
 
 /* custom */
 
@@ -354,4 +355,16 @@ body {
 
 .header {
     padding: 0px;
+}
+
+@media(max-width:882px) {
+    .menu-item-text {
+        display: none;
+    }
+}
+
+@media(max-width:767px) {
+    .menu-item-text {
+        display: inline;
+    }
 }
