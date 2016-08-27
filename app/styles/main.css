@@ -343,3 +343,7 @@ body {
     background: none !important;
     box-shadow: none !important;
 }
+
+.header {
+    padding: 0px;
+}
