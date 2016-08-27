@@ -333,6 +333,7 @@ body {
     margin-top: 8px;
     border: 1px solid #ccc;
     padding: 1px;
+    margin-left: 15px;
 }
 
 .ui-grid-header-cell-label {
