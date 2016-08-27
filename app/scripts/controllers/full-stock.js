@@ -10,12 +10,14 @@
 angular.module('superstockApp')
     .controller('FullStockCtrl', function($rootScope, $scope, auth, $firebaseArray,
         $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window) {
-        $rootScope.link = 'full';
+        $rootScope.link = 'full'; //set this page is full-page
         $window.ga('send', 'event', "Page", "Đầy đủ");
         var userFilters = null;
         var user = null;
         var userAuthData = null;
         var filterData = null;
+
+        //check current auth and load user filter
         if (currentAuth) {
             var filter = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/filter'));
             filter.$loaded(function(data) {
@@ -43,10 +45,14 @@ angular.module('superstockApp')
             //     console.log(err);
             // })
         }
+
         $("#wrapper").addClass("toggled");
+        //iframe source convert https
         $scope.iSrc = '';
         $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+
         $scope.uiGridConstants = uiGridConstants;
+        //setting grid height
         var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
         var heightWin = $(document).height();
         var heightHead = 30;
@@ -61,6 +67,7 @@ angular.module('superstockApp')
             data: [],
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
+                //filter change event - save filter to user
                 $scope.gridApi.core.on.filterChanged($scope, function() {
                     rowIndex = 0;
                     user = Ref.child('users/' + currentAuth.uid);
@@ -76,6 +83,9 @@ angular.module('superstockApp')
             }
         };
 
+        /*
+         * convert columnDefs to filters and opposite
+         */
         function filterConvert(rowDefs, filters) {
             if (filters) {
                 for (var i in filters) {
@@ -374,6 +384,19 @@ angular.module('superstockApp')
                         subTerm.prop('value', ui.value / bigNum);
                     }
                 });
+            });
+            $(document).click(function(e) {
+                var container = $("#sidebar-wrapper");
+
+                if (!container.is(e.target) // if the target of the click isn't the container...
+                    && container.has(e.target).length === 0) // ... nor a descendant of the container
+                {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if ($rootScope.link == 'main') return;
+                    if ($("#wrapper").prop('class').indexOf('toggled') > -1) return;
+                    $("#wrapper").toggleClass("toggled");
+                }
             });
         });
     })
