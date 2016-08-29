@@ -13,7 +13,7 @@ angular.module('superstockApp')
         $window.ga('send', 'event', "Page", "Tổng hợp");
 
 
-        $('.view-containner').css('width', $(document).width() + 'px');
+        // $('.view-containner').css('width', $(document).width() + 'px');
         $("#wrapper").addClass("toggled");
         var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
         var heightWin = $(document).height();
@@ -36,7 +36,7 @@ angular.module('superstockApp')
                     console.log(titlesArr);
                     console.log(fieldsArr);
                     var colWidths = [
-                        75, '*', 125, 95, 75, 75, 90, 140, 140, 60, 140
+                        65, 250, 125, 95, 75, 75, 90, 140, 140, 60, 140
                     ]
                     var columnDefs = [];
                     var config = {
