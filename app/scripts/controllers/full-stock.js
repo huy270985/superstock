@@ -54,8 +54,8 @@ angular.module('superstockApp')
         $scope.uiGridConstants = uiGridConstants;
         //setting grid height
         var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
-        var heightWin = $(document).height();
-        var heightHead = 30;
+        var heightWin = $(window).height();
+        var heightHead = $('.ui-grid-header').height() || 50;
         $scope.gridOptions = {
             flatEntityAccess: true,
             fastWatch: true,

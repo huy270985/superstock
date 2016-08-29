@@ -16,8 +16,8 @@ angular.module('superstockApp')
         // $('.view-containner').css('width', $(document).width() + 'px');
         $("#wrapper").addClass("toggled");
         var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
-        var heightWin = $(document).height();
-        var heightHead = 30;
+        var heightWin = $(window).height();
+        var heightHead = $('.ui-grid-header').height() || 50;
         $scope.gridOptions = {
             minRowsToShow: Math.floor((heightWin - heightOut - heightHead) / 30),
             data: []
