@@ -59,7 +59,7 @@ angular.module('superstockApp')
         $scope.gridOptions = {
             flatEntityAccess: true,
             fastWatch: true,
-            enableFiltering: false,
+            enableFiltering: true,
             // useExternalFiltering: true,
             // excessRows: 50,
             // excessColumns: 32,
@@ -69,7 +69,7 @@ angular.module('superstockApp')
                 $scope.gridApi = gridApi;
                 //filter change event - save filter to user
                 $scope.gridApi.core.on.filterChanged($scope, function() {
-                    rowIndex = 0;
+                    // rowIndex = 0;
                     user = Ref.child('users/' + currentAuth.uid);
                     var filter = filterConvert($scope.gridOptions.columnDefs, null);
                     user.child('filter').set(filter, function(err) {
@@ -176,13 +176,17 @@ angular.module('superstockApp')
                             console.log(titlesArr[i], arr[0], arr[1], arr[2], arr[3]);
                             if (arr.length === 4) {
                                 var filters = [{
-                                    condition: uiGridConstants.filter.GREATER_THAN,
+                                    condition: function(searchTerm, cellValue) {
+                                        return !$scope.filterEnabled || cellValue >= searchTerm;
+                                    },
                                     placeholder: 'greater than',
                                     term: (arr[0] == 'bigNum') ? parseFloat(arr[2]) * bigNum : parseFloat(arr[2]),
                                     min: (arr[0] == 'bigNum') ? parseFloat(arr[1]) * bigNum : parseFloat(arr[1]),
                                     bigNum: (arr[0] == 'bigNum') ? true : false
                                 }, {
-                                    condition: uiGridConstants.filter.LESS_THAN,
+                                    condition: function(searchTerm, cellValue) {
+                                        return !$scope.filterEnabled || cellValue <= searchTerm;
+                                    },
                                     placeholder: 'less than',
                                     term: Infinity,
                                     max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
@@ -210,7 +214,7 @@ angular.module('superstockApp')
                                         tempSearchTerm.push(searchTerm[i].value);
                                     }
                                     if (!tempSearchTerm || searchTerm.length == 0) return true;
-                                    return (tempSearchTerm.indexOf(cellValue) > -1);
+                                    return !$scope.filterEnabled || (tempSearchTerm.indexOf(cellValue) > -1);
                                 }
                             }
                         } else if (fieldsArr[i] == 'industry') {
@@ -239,7 +243,7 @@ angular.module('superstockApp')
                                         tempSearchTerm.push(searchTerm[i].value);
                                     }
                                     if (!tempSearchTerm || searchTerm.length == 0) return true;
-                                    return (tempSearchTerm.indexOf(cellValue) > -1);
+                                    return !$scope.filterEnabled ||(tempSearchTerm.indexOf(cellValue) > -1);
                                 }
                             }
                         }
@@ -318,8 +322,9 @@ angular.module('superstockApp')
         }
 
         $rootScope.onOffFilter = function(value) {
+            $scope.filterEnabled = value;
             setTimeout(function() {
-                $scope.gridOptions.enableFiltering = value;
+                // $scope.gridOptions.enableFiltering = value;
                 $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
             }, 500)
         }
