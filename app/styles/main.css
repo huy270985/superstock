@@ -114,7 +114,8 @@ body {
     width: 15px;
     height: 15px;
     vertical-align: top;
-    float: right;
+    position: absolute;
+    right: 5px;
 }
 
 
@@ -383,10 +384,7 @@ body {
 .footer {
     padding: 0;
     margin: 0;
-    /*position: absolute;
-    bottom: 0;
-    width: 100%;*/
 }
-.view-containner {
+/*html, body, #wrapper, #wrapper > .container-fluit, #wrapper .view-containner {
     height: 100%;
-}
+}*/

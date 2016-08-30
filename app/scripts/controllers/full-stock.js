@@ -55,7 +55,10 @@ angular.module('superstockApp')
         //setting grid height
         var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
         var heightWin = $(window).height();
-        var heightHead = $('.ui-grid-header').height() || 50;
+        $('#wrapper .view-containner').height(heightWin - heightOut);
+        // var heightHead = $('.ui-grid-header').height() || 60;
+        // console.log("heightOut", heightOut, "heightWin", heightWin, "heightHead", heightHead);
+        // console.log(Math.floor((heightWin - heightOut - heightHead) / 30));
         $scope.gridOptions = {
             flatEntityAccess: true,
             fastWatch: true,
@@ -63,7 +66,7 @@ angular.module('superstockApp')
             // useExternalFiltering: true,
             // excessRows: 50,
             // excessColumns: 32,
-            minRowsToShow: Math.floor((heightWin - heightOut - heightHead) / 30),
+            // minRowsToShow: Math.floor((heightWin - heightOut - heightHead) / 30),
             data: [],
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
@@ -122,11 +125,11 @@ angular.module('superstockApp')
                     var titlesArr = titles.data.split('|');
                     var fieldsArr = fields.data.split('|');
                     var formatArr = format.data.split('|');
-                    console.log(formatArr);
-                    console.log(titlesArr);
-                    console.log(fieldsArr);
+                    // console.log(formatArr);
+                    // console.log(titlesArr);
+                    // console.log(fieldsArr);
                     var sizeArr = [
-                        65, 250, 130, 100, 110, 120, 120, 130,
+                        70, 250, 130, 100, 110, 120, 120, 130,
                         80, 150, 160, 150, 90, 140, 100, 120,
                         140, 120, 120, 120, 100, 90, 90, 140,
                         140, 140, 170, 80, 140, 110, 140, 100,
@@ -173,7 +176,6 @@ angular.module('superstockApp')
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
                         if (formatArr[i] != '') {
                             var arr = formatArr[i].split(':');
-                            console.log(titlesArr[i], arr[0], arr[1], arr[2], arr[3]);
                             if (arr.length === 4) {
                                 var filters = [{
                                     condition: function(searchTerm, cellValue) {
