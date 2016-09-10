@@ -129,12 +129,12 @@ angular.module('superstockApp')
                     // console.log(titlesArr);
                     // console.log(fieldsArr);
                     var sizeArr = [
-                        70, 250, 130, 100, 110, 120, 120, 130,
-                        80, 150, 160, 150, 90, 140, 100, 120,
-                        140, 120, 120, 120, 100, 90, 90, 140,
-                        140, 140, 170, 80, 140, 110, 140, 100,
-                        120, 120, 140, 120, 120, 120, 120, 100,
-                        100, 140, 80, 140
+                        70, 250, 130, 75, 80, 85, 85, 95,
+                        70, 110, 120, 110, 55, 160, 65, 80,
+                        100, 90, 80, 75, 50, 50, 70, 105,
+          /*Nợ vốn chủ*/95, 115, 135, 50, 85, 80, 80, 40,
+                        105, 105, 110, 95, 95, 85, 80, 75,
+                        125, 95, 50, 120
                     ];
                     var columnDefs = [];
                     var config = {
@@ -170,7 +170,8 @@ angular.module('superstockApp')
                             field: fieldsArr[i],
                             width: sizeArr[i],
                             displayName: titlesArr[i],
-                            cellClass: cellClass
+                            cellClass: cellClass,
+                            headerCellTemplate: "<div role=\"columnheader\" ng-class=\"{ 'sortable': sortable }\" ui-grid-one-bind-aria-labelledby-grid=\"col.uid + '-header-text ' + col.uid + '-sortdir-text'\" aria-sort=\"{{col.sort.direction == asc ? 'ascending' : ( col.sort.direction == desc ? 'descending' : (!col.sort.direction ? 'none' : 'other'))}}\"><div role=\"button\" tabindex=\"0\" class=\"ui-grid-cell-contents ui-grid-header-cell-primary-focus\" col-index=\"renderIndex\" ng-class=\"{'single-line': col.displayName.indexOf('\n') < 0}\" title=\"TOOLTIP\"><span class=\"ui-grid-header-cell-label\" ui-grid-one-bind-id-grid=\"col.uid + '-header-text'\">{{ col.displayName CUSTOM_FILTERS }}</span> <span ui-grid-one-bind-id-grid=\"col.uid + '-sortdir-text'\" ui-grid-visible=\"col.sort.direction\" aria-label=\"{{getSortDirectionAriaLabel()}}\"><i ng-class=\"{ 'ui-grid-icon-up-dir': col.sort.direction == asc, 'ui-grid-icon-down-dir': col.sort.direction == desc, 'ui-grid-icon-blank': !col.sort.direction }\" title=\"{{isSortPriorityVisible() ? i18n.headerCell.priority + ' ' + ( col.sort.priority + 1 )  : null}}\" aria-hidden=\"true\"></i> <sub ui-grid-visible=\"isSortPriorityVisible()\" class=\"ui-grid-sort-priority-number\">{{col.sort.priority + 1}}</sub></span></div><div role=\"button\" tabindex=\"0\" ui-grid-one-bind-id-grid=\"col.uid + '-menu-button'\" class=\"ui-grid-column-menu-button\" ng-if=\"grid.options.enableColumnMenus && !col.isRowHeader  && col.colDef.enableColumnMenu !== false\" ng-click=\"toggleMenu($event)\" ng-class=\"{'ui-grid-column-menu-button-last-col': isLastCol}\" ui-grid-one-bind-aria-label=\"i18n.headerCell.aria.columnMenuButtonLabel\" aria-haspopup=\"true\"><i class=\"ui-grid-icon-angle-down\" aria-hidden=\"true\">&nbsp;</i></div><div ui-grid-filter></div></div>"
                         }
                         if (formatType) def.cellFilter = formatType;
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
@@ -194,7 +195,7 @@ angular.module('superstockApp')
                                     max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
                                 }];
                                 def.filters = filters;
-                                def.cellTemplate = utils.getCellTemplate(fieldsArr[i], true);
+                                def.cellTemplate = utils.getCellTemplate(fieldsArr[i], formatType);
                             }
                         } else {
                             def.cellTemplate = utils.getCellTemplate(fieldsArr[i]);
@@ -267,9 +268,9 @@ angular.module('superstockApp')
                     draw.drawGrid(Ref.child('superstock'), config, function(data) {
                         $scope.gridOptions.data.push(data);
                     }, function(data) {
-                        setTimeout(function() {
-                            align();
-                        }, 1000);
+                        // setTimeout(function() {
+                        //     align();
+                        // }, 1000);
                         // columnDefs[0].pinnedLeft = true
                         // $scope.gridOptions.columnDefs = columnDefs;
                         // $scope.gridOptions.data = data;
@@ -365,10 +366,11 @@ angular.module('superstockApp')
                 var thisTag = $(this);
                 var span = thisTag.find('span');
                 if (span.text().indexOf('\n') < 0) {
-                    span.parent().css('line-height', '40px');
-                    thisTag.css('text-align', 'center');
+                    thisTag.addClass('single-line');
+                    // span.parent().css('line-height', '40px');
+                    // thisTag.css('text-align', 'center');
                 } else {
-                    span.last().css('margin-top', '-2px');
+                    // span.last().css('margin-top', '-2px');
                 }
             })
         }

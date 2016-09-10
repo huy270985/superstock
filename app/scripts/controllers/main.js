@@ -148,6 +148,13 @@ angular.module('superstockApp')
                         return false;
                     }
 
+                    $scope.showSymbolHasSignal = function(row, symbol) {
+                        if (row.entity.signal1 != '' || row.entity.signal2 != '') {
+                            return symbol;
+                        }
+                        return '';
+                    }
+
                     function align() {
                         $('.ui-grid-header-cell').each(function() {
                             var thisTag = $(this);

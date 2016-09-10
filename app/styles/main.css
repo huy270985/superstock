@@ -8,8 +8,19 @@
 body {
     padding: 0;
     font-family: Arial;
+    color: #000;
+}
+.ui-grid-header-cell {
+    height: 50px;
 }
 
+[class^="ui-grid-icon"]:before, [class*=" ui-grid-icon"]:before{
+    width: auto;
+    margin-right: 0;
+}
+.ui-grid-column-menu-button .ui-grid-icon-angle-down{
+    vertical-align: top;
+}
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 
@@ -205,6 +216,14 @@ body {
     height: 50px;
 }
 
+.chart-pointer, .ui-grid-cell-industry, .ui-grid-cell-totalValue, 
+.ui-grid-cell-priceChange, .ui-grid-cell-EPS, .ui-grid-cell-newPoint,
+.ui-grid-cell-Canslim, .ui-grid-cell-pricePeak {
+    background-color: #FFF2CC;
+}
+.ui-grid-cell-signal1, .ui-grid-cell-signal2, .ui-grid-cell-symbol2 {
+    background-color: #D9EAD3
+}
 
 /* center */
 
@@ -391,4 +410,12 @@ body {
 .btn:disabled {
     opacity: 1;
     background: #eee;
+}
+
+.ui-grid-header-cell.single-line{
+    text-align: center
+}
+
+.ui-grid-cell-contents.single-line{
+    line-height: 40px;
 }
