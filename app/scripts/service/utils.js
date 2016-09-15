@@ -40,6 +40,8 @@ angular
                          \'grid-cell-purple\': COL_FIELD >= 5e9, \'grid-cell-fill\': COL_FIELD >= 5e9}">{{COL_FIELD | number:2}}</div>';
                     case 'EPS':
                         return '<div class="ui-grid-cell-' + fieldName + '" title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 1000, \'grid-cell-green\': COL_FIELD > 1000, \'grid-cell-fill grid-cell-purple\': COL_FIELD >= 3000}">{{COL_FIELD | number:2}}</div>';
+                    case 'newPoint':
+                        return '<div class="ui-grid-cell-' + fieldName + '" title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD <= 4, \'grid-cell-green\': COL_FIELD >= 5, \'grid-cell-fill grid-cell-purple\': COL_FIELD >= 7}">{{COL_FIELD | number:2}}</div>';
                     case 'Canslim':
                         return '<div class="ui-grid-cell-' + fieldName + '" title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-purple\': COL_FIELD, \'grid-cell-fill\': COL_FIELD }">{{COL_FIELD}}</div>';
                     case 'pricePeak':

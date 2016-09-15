@@ -419,3 +419,7 @@ body {
 .ui-grid-cell-contents.single-line{
     line-height: 40px;
 }
+
+.summary-header-signal1, .summary-header-signal2, .summary-header-symbol2{
+    background-color: #38761D;
+}
