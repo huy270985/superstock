@@ -34,4 +34,14 @@ For Tổng hợp:
 - shortterm_headers
 - shortterm_titles
 
+Market summary:
+- https://superstock.firebaseio.com/market_summary.json
+
+Company profile:
+In /profile/<symbol>, e.g.:
+- https://superstock.firebaseio.com/profile/SSI.json
+
+Stocks that have sell signals:
+- https://superstock.firebaseio.com/sell_symbols.json
+
 Data is stored in pipe delimiter format, e.g.: [field1]|[field2]|[field3]etc
