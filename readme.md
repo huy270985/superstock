@@ -19,6 +19,10 @@ python -m SimpleHTTPServer
 
 # Firebase Data
 
+This is the new view (2016-08-20):
+- summary_data
+- summary_headers
+
 The data is stored in Firebase with these endpoints:
 - superstock: main data
 - superstock_fields: names of the corresponding fields
