@@ -8,19 +8,8 @@
 body {
     padding: 0;
     font-family: Arial;
-    color: #000;
-}
-.ui-grid-header-cell {
-    height: 50px;
 }
 
-[class^="ui-grid-icon"]:before, [class*=" ui-grid-icon"]:before{
-    width: auto;
-    margin-right: 0;
-}
-.ui-grid-column-menu-button .ui-grid-icon-angle-down{
-    vertical-align: top;
-}
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 
@@ -125,8 +114,7 @@ body {
     width: 15px;
     height: 15px;
     vertical-align: top;
-    position: absolute;
-    right: 5px;
+    float: right;
 }
 
 
@@ -149,8 +137,9 @@ body {
     font-size: 13px;
 }
 
-.percent .ui-grid-cell-contents::after {
+.percent::after {
     content: "%";
+    font-weight: bold;
 }
 
 
@@ -216,14 +205,6 @@ body {
     height: 50px;
 }
 
-.chart-pointer, .ui-grid-cell-industry, .ui-grid-cell-totalValue, 
-.ui-grid-cell-priceChange, .ui-grid-cell-EPS, .ui-grid-cell-newPoint,
-.ui-grid-cell-Canslim, .ui-grid-cell-pricePeak {
-    background-color: #FFF2CC;
-}
-.ui-grid-cell-signal1, .ui-grid-cell-signal2, .ui-grid-cell-symbol2 {
-    background-color: #D9EAD3
-}
 
 /* center */
 
@@ -391,8 +372,34 @@ body {
     }
 }
 
-.ui-grid-header-viewport {
+.ag-header-cell {
     background: #FF9900;
+    color: white;
+    font-weight: bold;
+}
+
+.ag-header-cell.ag-header-cell-green {
+    background: #38761D;
+}
+
+.ag-header-cell-text {
+    white-space: pre;
+}
+
+.ag-cell-orange-bg {
+    background: #FFF2CC;
+}
+
+.ag-cell-green-bg {
+    background: #D9EAD3;
+}
+
+.ag-cell-fill-bg {
+    background: #B7E1CD;
+}
+
+.ag-cell-purple-color {
+    color: #A65EEA;
 }
 
 #gridWraper {
@@ -405,21 +412,56 @@ body {
 .footer {
     padding: 0;
     margin: 0;
+    /*position: absolute;
+    bottom: 0;
+    width: 100%;*/
 }
 
-.btn:disabled {
-    opacity: 1;
-    background: #eee;
+.view-containner {
+    height: 100%;
+    height: calc(100vh - 55px - 30px);
 }
 
-.ui-grid-header-cell.single-line{
-    text-align: center
+.ag-cell-focus {
+    border: none !important;
+    border-right: 1px dotted #808080 !important;
 }
 
-.ui-grid-cell-contents.single-line{
-    line-height: 40px;
+.ag-cell {
+    font-weight: bold;
 }
 
-.summary-header-signal1, .summary-header-signal2, .summary-header-symbol2{
-    background-color: #38761D;
+.ag-menu {
+    top: 45px !important;
+}
+
+
+/*.ag-menu-option:last-child {
+    display: none !important;
+}
+
+.ag-menu-option:nth-child(3) {
+    display: none !important;
+}
+
+.ag-tab:nth-child(2) {
+    display: none !important;
+}
+
+.ag-menu:last-child .ag-menu-option {
+    display: table !important;
+}*/
+
+.ag-tab:nth-child(2) {
+    display: none !important;
+}
+
+.ag-menu-separator + .ag-menu-option,
+.ag-menu-separator + .ag-menu-option + .ag-menu-option {
+    display: none !important;
+}
+
+@decimal-format price {
+    grouping-separator: ",";
+    decimal-separator: "."
 }

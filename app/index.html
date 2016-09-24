@@ -10,11 +10,14 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.min.css" />
     <link rel="stylesheet" href="bower_components/angular-ui-switch/angular-ui-switch.css" />
     <!-- endbower -->
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
     <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="bower_components\angular-ui-switch\angular-ui-switch.min.css" />
+    <link rel="stylesheet" href="bower_components/ag-grid/ag-grid.css" />
+    <link rel="stylesheet" href="bower_components/ag-grid/theme-fresh.css" />
 
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -23,7 +26,7 @@
     <!-- endbuild -->
 </head>
 
-<body ng-app="superstockApp">
+<body ng-app="superstockApp" ng-cloak>
     <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
   your browser</a> to improve your experience.</p>
@@ -71,36 +74,43 @@
                     <div class="row" style="margin-left:0px">
                         <!--<div class="col-md-3"></div>-->
                         <div class="col-sm-10 col-xs-10 col-md-10 default-filter" style="padding-left:0px">
-                            <multiselect ng-disabled="!filterEnabled" ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>
+                            <multiselect ng-disabled="!filterEnabled" ng-model="filter" options="defaultFilter" class="signle-select" selection-limit="1"
+                                id-prop="filterName" display-prop="filterName"></multiselect>
                         </div>
                         <div class="col-sm-1 col-xs-1 col-md-1" style="padding-left:10px">
                             <button type="button" ng-disabled="!filterEnabled" ng-click="filter = null" class="close form-control clear-filter" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                     </div>
                 </li>
-                <li class="menu-slider" ng-repeat="item in $root.filters" ng-if="item.filter">
-                    <div>{{item.displayName}}</div>
+                <li class="menu-slider" ng-repeat="item in $root.filterList" ng-if="item.filter">
+                    <div>{{item.headerName}}</div>
                     <div class="row" style="margin-left:0px">
                         <div class="col-sm-10 col-xs-10 col-md-10" style="padding-left:0px" ng-if="item.filter.typeSearch == 'multiple'">
-                            <multiselect ng-disabled="!filterEnabled" ng-model="item.filter.term" options="item.filter.selectOptions" show-search="false" id-prop="value" display-prop="label"></multiselect>
+                            <multiselect ng-disabled="!filterEnabled || filter" ng-model="item.filter.term" options="item.filter.selectOptions" show-search="false"
+                                id-prop="value" display-prop="label"></multiselect>
                         </div>
                         <div class="col-sm-10 col-xs-10 col-md-10" style="padding-left:0px" ng-if="item.filter.typeSearch != 'multiple'">
-                            <multiselect ng-disabled="!filterEnabled" ng-model="item.filter.term" options="item.filter.selectOptions" class="signle-select" show-search="false" id-prop="value" display-prop="label" selection-limit="1"></multiselect>
+                            <multiselect ng-disabled="!filterEnabled || filter" ng-model="item.filter.term" options="item.filter.selectOptions" class="signle-select"
+                                show-search="false" id-prop="value" display-prop="label" selection-limit="1"></multiselect>
                         </div>
                         <div class="col-sm-1 col-xs-1 col-md-1" style="padding-left:10px">
-                            <button type="button" ng-disabled="!filterEnabled" ng-click="item.filter.term = null" class="close form-control  clear-filter" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <button type="button" ng-disabled="!filterEnabled || filter" ng-click="item.filter.term = null" class="close form-control  clear-filter"
+                                aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                     </div>
                 </li>
-                <li class="menu-slider" ng-repeat="item in $root.filters" ng-if="item.filters">
-                    <div>{{item.displayName}}</div>
+                <li class="menu-slider" ng-repeat="(key, item) in $root.filterList" ng-if="item.filters">
+                    <div>{{item.headerName}}</div>
                     <div class="row" style="margin-left:0px">
                         <div class="col-md-3 col-sm-3 col-xs-3">
-                            <input type="number" ng-disabled="!filterEnabled" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
-                            <input type="number" ng-disabled="!filterEnabled" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}" class="form-control subTerm" style="padding: 6px 6px" ng-show="item.filters[0].bigNum">
+                            <input type="number" ng-disabled="!filterEnabled || filter" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum"
+                                max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
+                            <input type="number" ng-disabled="!filterEnabled || filter" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}"
+                                class="form-control subTerm" data-model="{{key}}" style="padding: 6px 6px" ng-show="item.filters[0].bigNum">
                         </div>
                         <div class="col-md-9 col-sm-9 col-xs-9" style="padding-top:12px">
-                            <div ui-slider ng-disabled="!filterEnabled" min="{{item.filters[0].min}}" id="slide-{{item.field}}" max="{{item.filters[1].max}}" ng-model="item.filters[0].term" style="width:90%" step="{{(item.filters[0].bigNum)?1000000000:1}}"></div>
+                            <div ui-slider ng-disabled="!filterEnabled || filter" min="{{item.filters[0].min}}" id="slide-{{item.field}}" max="{{item.filters[1].max}}"
+                                ng-model="item.filters[0].term" style="width:90%" step="{{(item.filters[0].bigNum)?1000000000:1}}"></div>
                         </div>
                     </div>
                 </li>
@@ -154,7 +164,7 @@
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class=""><img ng-show="$root.user != null" class="profile-photo" ng-src="{{$root.user.photoURL}}" /></li>
-                            <li class=""><a href="" ng-show="$root.user != null">{{$root.user.displayName}}</a></li>
+                            <li class=""><a href="" ng-show="$root.user != null">{{$root.user.headerName}}</a></li>
                             <li class=""><a href="" ng-show="$root.user == null" ng-click="oauthLogin('facebook')">Đăng nhập</a></li>
                             <li class=""><a href="" ng-show="$root.user != null" ng-click="logout()">Thoát</a></li>
                         </ul>
@@ -202,10 +212,12 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+    <script src="bower_components/angular-ui-grid/ui-grid.min.js"></script>
     <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
     <script src="bower_components/angular-ui-slider/src/slider.js"></script>
     <script src="bower_components/angular-bootstrap-multiselect/index.js"></script>
     <script src="bower_components/angular-ui-switch/angular-ui-switch.js"></script>
+    <script src="bower_components/ag-grid-enterprice/index.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -224,6 +236,7 @@
         //     storageBucket: "phongdoex.appspot.com",
         // };
 
+
         // var config = {
         //     apiKey: "AIzaSyD7lr3rqWKuOVYlUX86-_anNryjM08JJwE",
         //     authDomain: "superstock-d10ad.firebaseapp.com",
@@ -232,6 +245,7 @@
         // };
 
         firebase.initializeApp(config);
+        agGrid.initialiseAgGridWithAngular1(angular);
     </script>
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->

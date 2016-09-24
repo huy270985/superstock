@@ -9,41 +9,30 @@
  * Main module of the application.
  */
 angular.module('superstockApp', [
-        // 'ngAnimate',
-        'ngCookies',
-        'ngResource',
-        'ngRoute',
-        'ngSanitize',
-        'ngTouch',
-        'firebase',
-        'ui.grid',
-        'ui.grid.pinning',
-        'firebase.auth',
-        'firebase.ref',
-        'ui.slider',
-        'btorfs.multiselect',
-        'uiSwitch'
-    ])
-    // .run(function() {
-    //     $('.navbar-left').children().click(function() {
-    //         $('.navbar-left').children().removeClass('active');
-    //         if (window.location.href.split('/')[4] == '') {
-    //             $('.navbar-left').children().first().addClass('active')
-    //         } else {
-    //             $('.navbar-left').children().next().first().addClass('active')
-    //         }
-    //     })
-    // })
+    // 'ngAnimate',
+    'ngCookies',
+    'ngResource',
+    'ngRoute',
+    'ngSanitize',
+    'ngTouch',
+    'firebase',
+    'ui.grid',
+    "agGrid",
+    'ui.grid.pinning',
+    'firebase.auth',
+    'firebase.ref',
+    'ui.slider',
+    'btorfs.multiselect',
+    'uiSwitch'
+])
 
-$(document).on('click', '.ui-grid-row', function() {
+$(document).on('click', '.ag-row', function() {
     var thisRow = $(this);
-    var classList = thisRow.find('.click-row').length;
-    $('.ui-grid-row').find('.ui-grid-cell').removeClass('click-row');
-    // setTimeout(function() {
-    if (classList > 0) {
-        thisRow.children().children().removeClass('click-row');
+    var clickRow = thisRow.prop('class').indexOf('click-row');
+    $('.ag-row').removeClass('click-row');
+    if (clickRow > -1) {
+        thisRow.removeClass('click-row');
     } else {
-        thisRow.children().children().addClass('click-row');
+        thisRow.addClass('click-row');
     }
-    // }, 50)
 })

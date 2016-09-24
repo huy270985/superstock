@@ -9,15 +9,18 @@
  */
 angular.module('superstockApp')
     .controller('FullStockCtrl', function($rootScope, $scope, auth, $firebaseArray,
-        $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window) {
+        $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter) {
         $rootScope.link = 'full'; //set this page is full-page
         $window.ga('send', 'event', "Page", "Đầy đủ");
         var userFilters = null;
         var user = null;
         var userAuthData = null;
         var filterData = null;
+        var filterChangeFlag = 0;
+        var filterOnOff = false;
+        $rootScope.filterList = {};
 
-        //check current auth and load user filter
+        //check user login
         if (currentAuth) {
             var filter = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/filter'));
             filter.$loaded(function(data) {
@@ -27,203 +30,235 @@ angular.module('superstockApp')
                         filterData[i] = data[i];
                     }
                 }
-                if ($scope.gridOptions.columnDefs) {
-                    $scope.gridOptions.columnDefs = filterConvert($scope.gridOptions.columnDefs, filterData);
-                }
             });
-
-
-            // defaultFilter.child('defaultFilter').set({
-            //     "Cơ bản tốt": {
-            //         point: 7,
-            //         EPS: 1000,
-            //         profitChange: 20,
-            //         roe: 7,
-            //         maVol30: 300000000
-            //     }
-            // }, function(err) {
-            //     console.log(err);
-            // })
         }
 
-        $("#wrapper").addClass("toggled");
-        //iframe source convert https
-        $scope.iSrc = '';
-        $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
-
-        $scope.uiGridConstants = uiGridConstants;
-        //setting grid height
-        var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
-        var heightWin = $(window).height();
-        $('#wrapper .view-containner').height(heightWin - heightOut);
-        // var heightHead = $('.ui-grid-header').height() || 60;
-        // console.log("heightOut", heightOut, "heightWin", heightWin, "heightHead", heightHead);
-        // console.log(Math.floor((heightWin - heightOut - heightHead) / 30));
+        //setup ag-grid
         $scope.gridOptions = {
-            flatEntityAccess: true,
-            fastWatch: true,
-            enableFiltering: true,
-            // useExternalFiltering: true,
-            // excessRows: 50,
-            // excessColumns: 32,
-            // minRowsToShow: Math.floor((heightWin - heightOut - heightHead) / 30),
+            enableSorting: true,
+            enableFilter: true,
+            rowData: [],
             data: [],
-            onRegisterApi: function(gridApi) {
-                $scope.gridApi = gridApi;
-                //filter change event - save filter to user
-                $scope.gridApi.core.on.filterChanged($scope, function() {
-                    // rowIndex = 0;
-                    user = Ref.child('users/' + currentAuth.uid);
-                    var filter = filterConvert($scope.gridOptions.columnDefs, null);
-                    user.child('filter').set(filter, function(err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('Saved filter');
-                        }
-                    });
+            enableColResize: true,
+            headerHeight: 50,
+            //filter changed event
+            onAfterFilterChanged: function() {
+                user = Ref.child('users/' + currentAuth.uid);
+                var filter = filterConvert($rootScope.filterList, null);
+                //save filter
+                user.child('filter').set(filter, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('Saved filter');
+                    }
                 });
-            }
+            },
+            onCellClicked: function(params) {}
         };
+
+        /**
+         * filter change event into angular $watch ($rootScope.filterList[i]...)
+         */
+        function filterChange(newVal, oldVal) {
+            filterChangeFlag++;
+            if (!filterOnOff) return;
+            if (filterChangeFlag <= Object.keys($rootScope.filterList).length) return;
+            for (var key in $rootScope.filterList) {
+                var filterItem = $rootScope.filterList[key];
+                var filterApi = $scope.gridOptions.api.getFilterApi(key);
+                if (filterItem.filter) {
+                    var term = filterItem.filter.term;
+                    if (term && term.length > 0) {
+                        var model = [];
+                        for (var i in term) {
+                            model.push(term[i].value);
+                        }
+                        if (model.length > 0) {
+                            filterApi.setModel(model);
+
+                        } else {
+                            filterApi.selectEverything();
+                        }
+                    } else {
+                        filterApi.selectEverything();
+                    }
+
+                } else if (filterItem.filters) {
+                    var filterGreater = $scope.gridOptions.api.getFilterApi(key);
+                    filterGreater.setType(filterGreater.GREATER_THAN);
+                    filterGreater.setFilter(filterItem.filters[0].term);
+                }
+            }
+            $scope.gridOptions.api.onFilterChanged();
+        }
 
         /*
          * convert columnDefs to filters and opposite
          */
         function filterConvert(rowDefs, filters) {
             if (filters) {
-                for (var i in filters) {
-                    for (var j in rowDefs) {
-                        if (rowDefs[j].field == i) {
-                            if (rowDefs[j].filters)
-                                rowDefs[j].filters[0].term = filters[i];
-                            else if (rowDefs[j].filter)
-                                rowDefs[j].filter.term = filters[i];
-                            break;
-                        }
+                for (var i in rowDefs) {
+                    if (rowDefs[i].filter) {
+                        if (filter[i])
+                            rowDefs[i].filter.term = filter[i];
+                    }
+                    if (rowDefs[i].filters) {
+                        if (filter[i])
+                            rowDefs[i].filters[0].term = filter[i];
                     }
                 }
                 return rowDefs;
             } else {
-                filters = {};
+                var filters = {};
                 for (var i in rowDefs) {
+                    if (rowDefs[i].filter) {
+                        if (rowDefs[i].filter.term)
+                            filters[i] = rowDefs[i].filter.term;
+                    }
                     if (rowDefs[i].filters) {
-                        filters[rowDefs[i].field] = (rowDefs[i].filters[0] && rowDefs[i].filters[0].term) ? rowDefs[i].filters[0].term : null;
-                    } else if (rowDefs[i].filter) {
-                        filters[rowDefs[i].field] = (rowDefs[i].filter.term) ? rowDefs[i].filter.term : null;
+                        if (rowDefs[i].filters[0].term)
+                            filters[i] = rowDefs[i].filters[0].term;
                     }
                 }
                 return filters;
             }
         }
+
+        //Begin get data for ag-grid
         var bigNum = 1000000000;
         var titles = $firebaseObject(Ref.child('superstock_titles'));
         var fields = $firebaseObject(Ref.child('superstock_fields'));
         var format = $firebaseObject(Ref.child('superstock_format'));
-        fields.$loaded(function() {
-            titles.$loaded(function() {
-                format.$loaded(function() {
+        fields.$loaded(function() { //load superstock_fields
+            titles.$loaded(function() { //load superstock_titles
+                format.$loaded(function() { //load superstock_format
                     var titlesArr = titles.data.split('|');
                     var fieldsArr = fields.data.split('|');
                     var formatArr = format.data.split('|');
+                    var formatList = {};
                     // console.log(formatArr);
                     // console.log(titlesArr);
                     // console.log(fieldsArr);
+                    //set up column size
                     var sizeArr = [
-                        70, 250, 130, 75, 80, 85, 85, 95,
-                        70, 110, 120, 110, 55, 160, 65, 80,
-                        100, 90, 80, 75, 50, 50, 70, 105,
-          /*Nợ vốn chủ*/95, 115, 135, 50, 125, 80, 80, 40,
-                        105, 105, 110, 95, 95, 85, 80, 75,
-                        125, 95, 50, 120
+                        65, 250, 130, 100, 110, 120, 120, 130,
+                        80, 150, 160, 150, 90, 140, 100, 120,
+                        140, 120, 120, 120, 100, 90, 90, 140,
+                        140, 140, 170, 80, 140, 110, 140, 100,
+                        120, 120, 140, 120, 120, 120, 120, 100,
+                        100, 140, 80, 140
                     ];
                     var columnDefs = [];
                     var config = {
                         idLabel: 'Mã',
                         labelList: []
                     }
-
-                    // columnDefs.push({
-                    //     field: 'rowIndex',
-                    //     width: 40,
-                    //     pinnedLeft: true,
-                    //     enableColumnMenu: false,
-                    //     displayName: '#',
-                    //     cellTemplate: '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-red\': COL_FIELD < 0, \'grid-cell-green\': COL_FIELD >= 0}">{{$parent.rowRenderIndex + 1}}</div>'
-                    // });
                     for (var i in titlesArr) {
-                        // titlesArr[i] = titlesArr[i].replace('\n', '');
+                        formatList[fieldsArr[i]] = formatArr[i];
                         config.labelList.push({
                             fieldName: fieldsArr[i],
                             format: formatArr[i]
                         });
                         var formatType = null;
                         var cellClass = null;
+                        var filter = null;
                         if (formatArr[i].indexOf('bigNum') > -1 || formatArr[i].indexOf('number') > -1) {
                             formatType = 'number';
-                            cellClass = 'ui-cell-align-right'
+                            filter = 'number';
                         } else if (formatArr[i].indexOf('percent') > -1) {
-                            cellClass = 'ui-cell-align-right'
-                        } else {
-                            cellClass = 'ui-cell-align-left'
+                            filter = 'number';
                         }
+                        //setup column data
                         var def = {
-                            field: fieldsArr[i],
-                            width: sizeArr[i],
-                            displayName: titlesArr[i],
-                            cellClass: cellClass,
-                            headerCellTemplate: "<div role=\"columnheader\" ng-class=\"{ 'sortable': sortable }\" ui-grid-one-bind-aria-labelledby-grid=\"col.uid + '-header-text ' + col.uid + '-sortdir-text'\" aria-sort=\"{{col.sort.direction == asc ? 'ascending' : ( col.sort.direction == desc ? 'descending' : (!col.sort.direction ? 'none' : 'other'))}}\"><div role=\"button\" tabindex=\"0\" class=\"ui-grid-cell-contents ui-grid-header-cell-primary-focus\" col-index=\"renderIndex\" ng-class=\"{'single-line': col.displayName.indexOf('\n') < 0}\" title=\"TOOLTIP\"><span class=\"ui-grid-header-cell-label\" ui-grid-one-bind-id-grid=\"col.uid + '-header-text'\">{{ col.displayName CUSTOM_FILTERS }}</span> <span ui-grid-one-bind-id-grid=\"col.uid + '-sortdir-text'\" ui-grid-visible=\"col.sort.direction\" aria-label=\"{{getSortDirectionAriaLabel()}}\"><i ng-class=\"{ 'ui-grid-icon-up-dir': col.sort.direction == asc, 'ui-grid-icon-down-dir': col.sort.direction == desc, 'ui-grid-icon-blank': !col.sort.direction }\" title=\"{{isSortPriorityVisible() ? i18n.headerCell.priority + ' ' + ( col.sort.priority + 1 )  : null}}\" aria-hidden=\"true\"></i> <sub ui-grid-visible=\"isSortPriorityVisible()\" class=\"ui-grid-sort-priority-number\">{{col.sort.priority + 1}}</sub></span></div><div role=\"button\" tabindex=\"0\" ui-grid-one-bind-id-grid=\"col.uid + '-menu-button'\" class=\"ui-grid-column-menu-button\" ng-if=\"grid.options.enableColumnMenus && !col.isRowHeader  && col.colDef.enableColumnMenu !== false\" ng-click=\"toggleMenu($event)\" ng-class=\"{'ui-grid-column-menu-button-last-col': isLastCol}\" ui-grid-one-bind-aria-label=\"i18n.headerCell.aria.columnMenuButtonLabel\" aria-haspopup=\"true\"><i class=\"ui-grid-icon-angle-down\" aria-hidden=\"true\">&nbsp;</i></div><div ui-grid-filter></div></div>"
+                            field: fieldsArr[i], //field name
+                            width: sizeArr[i], //column width
+                            headerName: titlesArr[i], //column title
+                            cellClass: cellClass, //css class of cell in column
+                            enableTooltip: true,
+                            tooltipField: fieldsArr[i], //show tolltip
+                            cellRenderer: function(params) { //cell render data
+                                if (!params.value) return '';
+                                if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1)
+                                    return $filter('number')(params.value);
+                                return params.value;
+                            },
+                            headerCellTemplate: function() {
+                                return (
+                                    '<div class="ag-header-cell ag-header-cell-sortable ag-header-cell-sorted-none">' +
+                                    '<table style="width:100%;height:100%">' +
+                                    '<tr>' +
+                                    '<td width="20px" style="vertical-align:top">' +
+                                    '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
+                                    '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
+                                    '<span id="agText" class="ag-header-cell-text"></span>' +
+                                    '</div>' +
+                                    '</td>' +
+                                    '<td width="20px">' +
+                                    '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
+                                    '</td>' +
+                                    '</tr>' +
+                                    '</table>' +
+                                    '</div>'
+                                )
+                            }
                         }
-                        if (formatType) def.cellFilter = formatType;
-                        if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
-                        if (formatArr[i] != '') {
+                        if (formatType) def.cellFilter = formatType; // add cell format (number or string)
+                        if (filter) def.filter = filter; //add filter
+                        if (formatArr[i] != '') { //add filter from A to B
                             var arr = formatArr[i].split(':');
                             if (arr.length === 4) {
                                 var filters = [{
-                                    condition: function(searchTerm, cellValue) {
-                                        return !$scope.filterEnabled || cellValue >= searchTerm;
-                                    },
-                                    placeholder: 'greater than',
+                                    condition: 'GREATER_THAN',
                                     term: (arr[0] == 'bigNum') ? parseFloat(arr[2]) * bigNum : parseFloat(arr[2]),
                                     min: (arr[0] == 'bigNum') ? parseFloat(arr[1]) * bigNum : parseFloat(arr[1]),
                                     bigNum: (arr[0] == 'bigNum') ? true : false
                                 }, {
-                                    condition: function(searchTerm, cellValue) {
-                                        return !$scope.filterEnabled || cellValue <= searchTerm;
-                                    },
-                                    placeholder: 'less than',
+                                    condition: 'LESS_THAN',
                                     term: Infinity,
                                     max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
                                 }];
-                                def.filters = filters;
-                                def.cellTemplate = utils.getCellTemplate(fieldsArr[i], formatType);
+                                $rootScope.filterList[def.field] = {
+                                    headerName: def.headerName,
+                                    filters: filters
+                                }
                             }
-                        } else {
-                            def.cellTemplate = utils.getCellTemplate(fieldsArr[i]);
                         }
+                        if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
+                            def.filter = 'text';
+                            def.pinned = 'left'; //pin column to left
+                            def.cellRenderer = function(params) { // render 'symbol' cell template
+                                var id = params.value;
+                                return '<div><span>' + params.value + '</span>' +
+                                    '<img class="chart-icon" data-symbol="' + id +
+                                    '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' + '</div>';
+                            }
+                        }
+                        //add filter for 'shorttermSignal' (filter selete option)
                         if (fieldsArr[i] == 'shorttermSignal') {
-                            def.filter = {
+                            var filter = {
                                 term: null,
-                                // type: uiGridConstants.filter.SELECT,
                                 selectOptions: [{
                                     value: 'xBán',
                                     label: 'Bán'
                                 }, {
                                     value: 'xMua nếu cơ bản tốt',
                                     label: 'Mua'
-                                }],
-                                condition: function(searchTerm, cellValue) {
-                                    var tempSearchTerm = [];
-                                    for (var i in searchTerm) {
-                                        tempSearchTerm.push(searchTerm[i].value);
-                                    }
-                                    if (!tempSearchTerm || searchTerm.length == 0) return true;
-                                    return !$scope.filterEnabled || (tempSearchTerm.indexOf(cellValue) > -1);
-                                }
+                                }]
                             }
-                        } else if (fieldsArr[i] == 'industry') {
-                            def.filter = {
-                                // term: null,
-                                // type: uiGridConstants.filter.SELECT,
+                            $rootScope.filterList[def.field] = {
+                                headerName: def.headerName,
+                                filter: filter
+                            }
+                        }
+                        //add filter for 'industry' (filter selete option)
+                        else if (fieldsArr[i] == 'industry') {
+                            var filter = {
+                                term: null,
                                 selectOptions: [{
                                     value: 'Bao bì & đóng gói',
                                     label: 'Bao bì & đóng gói'
@@ -237,169 +272,159 @@ angular.module('superstockApp')
                                     value: 'Thực phẩm',
                                     label: 'Thực phẩm'
                                 }],
-                                // selectOptions: ['Bao bì & đóng gói', 'Nông sản và thủy hải sản', 'Ngân hàng', 'Thực phẩm'],
-                                typeSearch: 'multiple',
-                                term: null,
-                                condition: function(searchTerm, cellValue) {
-                                    var tempSearchTerm = [];
-                                    for (var i in searchTerm) {
-                                        tempSearchTerm.push(searchTerm[i].value);
-                                    }
-                                    if (!tempSearchTerm || searchTerm.length == 0) return true;
-                                    return !$scope.filterEnabled ||(tempSearchTerm.indexOf(cellValue) > -1);
-                                }
+                                typeSearch: 'multiple'
                             }
+                            $rootScope.filterList[def.field] = {
+                                headerName: def.headerName,
+                                filter: filter
+                            }
+                        }
+                        //add css class for cell base on cell date (utils factory)
+                        def.cellClass = function(params) {
+                            return utils.getCellClass(params, formatList);
                         }
                         columnDefs.push(def);
                     }
-                    for (var i in columnDefs) {
-                        if (columnDefs[i].field == 'symbol') {
-                            columnDefs[i].pinnedLeft = true;
-                            columnDefs[i].cellTemplate = '<div><div class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}\
-                        <img class=\'chart-icon\' src=\'./images/icon-graph.png\' ng-click="grid.appScope.symbolClick(row,col)"/></div></div>';
-                        }
-                    }
                     $rootScope.filters = columnDefs;
-                    $scope.gridOptions.columnDefs = columnDefs;
-                    console.log(columnDefs);
-                    if (filterData) {
-                        $scope.gridOptions.columnDefs = filterConvert($scope.gridOptions.columnDefs, filterData);
-                    }
                     draw.drawGrid(Ref.child('superstock'), config, function(data) {
-                        $scope.gridOptions.data.push(data);
+                        //loading data
                     }, function(data) {
-                        // setTimeout(function() {
-                        //     align();
-                        // }, 1000);
-                        // columnDefs[0].pinnedLeft = true
-                        // $scope.gridOptions.columnDefs = columnDefs;
-                        // $scope.gridOptions.data = data;
-                        // console.log($scope.gridOptions.data);
+                        //loaded data
+                        $scope.gridOptions.api.setColumnDefs(columnDefs);
+                        $scope.gridOptions.api.setRowData(data);
+                        $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
+
+                        for (var i in $rootScope.filterList) {
+                            if ($rootScope.filterList[i].filters) {
+                                $rootScope.$watch('filterList["' + i + '"].filters[0].term', function(newVal, oldVal) {
+                                    filterChange(newVal, oldVal);
+                                })
+                            }
+                            if ($rootScope.filterList[i].filter) {
+                                $rootScope.$watch('filterList["' + i + '"].filter.term', function(newVal, oldVal) {
+                                    filterChange(newVal, oldVal);
+                                })
+                            }
+                        }
+
+                        $rootScope.filterList = filterConvert($rootScope.filterList, filterData);
+                        setTimeout(function() {
+                            align();
+                        }, 1000);
                     }, {
                         added: function(data, childSnapshot, id) {
-                            var key = childSnapshot.key;
-                            for (var i in $scope.gridOptions.data) {
-                                if ($scope.gridOptions.data[i]['symbol'] == key) {
-                                    $scope.gridOptions.data[i] = data;
-                                    return;
-                                }
-                            }
-                            $scope.gridOptions.data.push(data);
+                            //todo
                         },
                         changed: function(data, childSnapshot, id) {
-                            var key = childSnapshot.key;
-                            for (var i in $scope.gridOptions.data) {
-                                if ($scope.gridOptions.data[i]['symbol'] == key) {
-                                    $scope.$apply(function() {
-                                        for (var key in data) {
-                                            $scope.gridOptions.data[i][key] = data[key];
-                                        }
-                                    })
-                                    break;
-                                }
-                            }
+                            //todo
                         },
                         removed: function(oldChildSnapshot) {
-                            var key = oldChildSnapshot.key;
-                            for (var i in $scope.gridOptions.data) {
-                                if ($scope.gridOptions.data[i]['symbol'] == key) {
-                                    $scope.gridOptions.data.splice(i, 1);
-                                    break;
-                                }
-                            }
+                            //todo
                         }
                     })
                 })
             })
         });
 
+        //convert bigNum term = term/bigNum
         $rootScope.parseBigNum = function(term) {
             var newTerm = parseFloat(term) / bigNum;
             return newTerm;
         }
-        $scope.symbolClick = function(row, col) {
+
+        //show chart event
+        $(document).on('click', '.chart-icon', function() {
             $('#myModal').modal('show');
-            $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
-            $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
+            $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
+            $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
             $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
-        }
+        });
 
+        //on/off filter
         $rootScope.onOffFilter = function(value) {
-            $scope.filterEnabled = value;
-            setTimeout(function() {
-                // $scope.gridOptions.enableFiltering = value;
-                $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
-            }, 500)
-        }
+            filterOnOff = value;
+            if (value) {
+                filterChange();
+            } else {
+                $scope.gridOptions.api.setFilterModel(null);
+                $scope.gridOptions.api.onFilterChanged();
 
-        $rootScope.search = function(searchTerm) {
-            $scope.gridApi.grid.columns[0].filters[0] = {
-                term: $rootScope.searchTerm
-            };
-        }
-        $rootScope.defaultFilter = function(filter) {
-            if (filter) filter = filter[0];
-            else return;
-            $window.ga('send', 'event', "Filter", filter.filterName);
-            for (var i in $scope.gridOptions.columnDefs) {
-                var fieldName = $scope.gridOptions.columnDefs[i].field;
-                for (var j in filter) {
-                    if (j != 'filterName') {
-                        if (j == fieldName) {
-                            if ($scope.gridOptions.columnDefs[i].filters) {
-                                $scope.gridOptions.columnDefs[i].filters[0].term = filter[j];
-                            }
-                            break;
-                        }
-                    }
-                }
             }
         }
 
-        // var defaultFormat = Ref.children('')
+        //search base on 'symbol'
+        $rootScope.search = function(searchTerm) {
+            var filterApi = $scope.gridOptions.api.getFilterApi('symbol');
+            filterApi.setType(filterApi.CONTAINS);
+            filterApi.setFilter(searchTerm);
+            $scope.gridOptions.api.onFilterChanged();
+        }
 
-        // $scope.industryClick = function(index, row, col) {
-        //     var industry = row.entity.industry;
-        // }
+        //set filter to default filter (Bộ lọc có sẵn)
+        $rootScope.defaultFilter = function(filter) {
+            if (filter) filter = filter[0];
+            else {
+                for (var i in $rootScope.filterList) {
+                    if ($rootScope.filterList[i].filter) {
+                        $rootScope.filterList[i].filter.term = null;
+                    }
+                    if ($rootScope.filterList[i].filters) {
+                        $rootScope.filterList[i].filters[0].term = $rootScope.filterList[i].filters[0].min;
+                    }
+                }
+                $scope.gridOptions.api.onFilterChanged();
+                return;
+            }
+            $window.ga('send', 'event', "Filter", filter.filterName);
+            for (var i in $rootScope.filterList) {
+                if ($rootScope.filterList[i].filter) {
+                    $rootScope.filterList[i].filter.term = null;
+                }
+                if ($rootScope.filterList[i].filters) {
+                    $rootScope.filterList[i].filters[0].term = $rootScope.filterList[i].filters[0].min;
+                }
+            }
+            for (var i in filter) {
+                if ($rootScope.filterList[i].filters) {
+                    $rootScope.filterList[i].filters[0].term = filter[i];
+                }
+            }
+            $scope.gridOptions.api.onFilterChanged();
+        }
+
         function align() {
             $('.ui-grid-header-cell').each(function() {
                 var thisTag = $(this);
                 var span = thisTag.find('span');
                 if (span.text().indexOf('\n') < 0) {
-                    thisTag.addClass('single-line');
-                    // span.parent().css('line-height', '40px');
-                    // thisTag.css('text-align', 'center');
+                    span.parent().css('line-height', '40px');
+                    thisTag.css('text-align', 'center');
                 } else {
-                    // span.last().css('margin-top', '-2px');
+                    span.last().css('margin-top', '-2px');
                 }
             })
         }
         $(document).ready(function() {
             $(document).on('change', '.subTerm', function() {
-                var subTerm = $(this);
-                subTerm.prop('value', subTerm.val());
-                var field = subTerm.prop('id');
-                for (var i in $scope.gridOptions.columnDefs) {
-                    if ($scope.gridOptions.columnDefs[i].field == field) {
-                        $scope.$apply(function() {
-                            $scope.gridOptions.columnDefs[i].filters[0].term = parseFloat(subTerm.val()) * bigNum;
-                            subTerm.prop('value', subTerm.val());
-                        })
-                        break;
-                    }
-                }
-                subTerm.parent().next().children().slider({
-                    slide: function(event, ui) {
-                        subTerm.prop('value', ui.value / bigNum);
-                    }
+                $(this).each(function() {
+                    var subTerm = $(this);
+                    subTerm.prop('value', subTerm.val());
+                    var field = subTerm.data('model');
+                    $scope.$apply(function() {
+                        $rootScope.filterList[field].filters[0].term = parseFloat(subTerm.val()) * bigNum;
+                        subTerm.prop('value', subTerm.val());
+                    });
+                    subTerm.parent().next().children().slider({
+                        slide: function(event, ui) {
+                            subTerm.prop('value', ui.value / bigNum);
+                        }
+                    });
                 });
             });
             $(document).click(function(e) {
                 var container = $("#sidebar-wrapper");
 
-                if (!container.is(e.target) // if the target of the click isn't the container...
-                    && container.has(e.target).length === 0) // ... nor a descendant of the container
-                {
+                if (!container.is(e.target) && container.has(e.target).length === 0) {
                     e.preventDefault();
                     e.stopPropagation();
                     if ($rootScope.link == 'main') return;

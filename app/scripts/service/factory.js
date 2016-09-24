@@ -7,6 +7,7 @@ angular
             var lstObj = [];
             var loadingFlag = true;
             data.$watch(function(watchData) {
+                //firebase data loading
                 if (loadingFlag == false) return;
                 if (data.length == 0) return;
                 var popData = data[data.length - 1];
@@ -30,10 +31,13 @@ angular
             });
             data.$loaded(function() {
                 loadingFlag = false;
-                loaded(data);
-                console.log('loaded');
+                //data loaded callback
+                loaded(lstObj);
+                // console.log('loaded');
+
+                //add new object event
                 Ref.on('child_added', function(childSnapshot, prevChildKey) {
-                    console.log('add');
+                    // console.log('add');
                     var dataConvert = {};
                     if (config.idLabel)
                         dataConvert[config.idLabel] = childSnapshot.key;
@@ -50,8 +54,9 @@ angular
                     event.added(dataConvert, childSnapshot, prevChildKey);
                 });
 
+                //update object event
                 Ref.on('child_changed', function(childSnapshot, prevChildKey) {
-                    console.log('change');
+                    // console.log('change');
                     var dataConvert = {};
                     if (config.idLabel)
                         dataConvert[config.idLabel] = childSnapshot.key;
@@ -68,13 +73,13 @@ angular
                     event.changed(dataConvert, childSnapshot, prevChildKey);
                 });
 
+                //remove object event
                 Ref.on('child_removed', function(oldChildSnapshot) {
-                    console.log('remove');
+                    // console.log('remove');
                     event.removed(oldChildSnapshot);
                 });
             })
         }
-
 
         return {
             drawGrid: drawGrid

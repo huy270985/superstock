@@ -8,42 +8,51 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('MainCtrl', function($rootScope, $scope, $firebaseArray, $firebaseObject, Ref, draw, utils, $window, $sce) {
+    .controller('MainCtrl', function ($rootScope, $scope, auth, $firebaseArray,
+        $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter) {
         $rootScope.link = 'main';
         $window.ga('send', 'event', "Page", "Tổng hợp");
 
-
-        // $('.view-containner').css('width', $(document).width() + 'px');
-        $("#wrapper").addClass("toggled");
-        var heightOut = parseFloat($('.header').css('height')) + parseFloat($('.footer').css('height'));
-        var heightWin = $(window).height();
-        $('#wrapper .view-containner').height(heightWin - heightOut);
+        //Setup ag-grid
         $scope.gridOptions = {
-            // minRowsToShow: Math.floor((heightWin - heightOut - heightHead) / 30),
-            data: []
+            enableSorting: true,
+            enableFilter: true,
+            rowData: [],
+            data: [],
+            enableColResize: true,
+            headerHeight: 50,
+            //filter changed event
+            onAfterFilterChanged: function () { },
+            onCellClicked: function (params) { }
         };
-        console.log($scope.gridOptions);
+        /*
+        * Load title, header and format of field form server
+        */
+        var bigNum = 1000000000;
         var titles = $firebaseObject(Ref.child('summary_titles'));
         var fields = $firebaseObject(Ref.child('summary_headers'));
         var format = $firebaseObject(Ref.child('summary_format'));
-        titles.$loaded(function() {
-            fields.$loaded(function() {
-                format.$loaded(function() {
+        titles.$loaded(function () {
+            fields.$loaded(function () {
+                format.$loaded(function () {
                     var titlesArr = titles.data.split('|');
                     var fieldsArr = fields.data.split('|');
                     var formatArr = format.data.split('|');
-                    console.log(formatArr);
-                    console.log(titlesArr);
-                    console.log(fieldsArr);
-                    var colWidths = [
-                        70, 250, 125, 95, 75, 75, 90, 140, 140, 60, 140
+                    var formatList = {};
+                    
+                    // Define size of field in client
+                    var sizeArr = [
+                        65, 250, 125, 95, 75, 75, 90, 140, 140, 60, 140
                     ]
                     var columnDefs = [];
                     var config = {
                         idLabel: 'Mã',
                         labelList: []
                     }
+
+
                     for (var i in titlesArr) {
+                        formatList[fieldsArr[i]] = formatArr[i];
                         config.labelList.push({
                             fieldName: fieldsArr[i],
                             format: formatArr[i]
@@ -58,19 +67,89 @@ angular.module('superstockApp')
                         } else {
                             cellClass = 'ui-cell-align-left'
                         }
+
+                        //Setup column data
                         var def = {
-                            field: fieldsArr[i],
-                            displayName: titlesArr[i],
-                            cellClass: cellClass,
-                            width: colWidths[i],
-                            headerCellTemplate: "<div role=\"columnheader\" ng-class=\"{ 'sortable': sortable }\" ui-grid-one-bind-aria-labelledby-grid=\"col.uid + '-header-text ' + col.uid + '-sortdir-text'\" aria-sort=\"{{col.sort.direction == asc ? 'ascending' : ( col.sort.direction == desc ? 'descending' : (!col.sort.direction ? 'none' : 'other'))}}\"><div role=\"button\" tabindex=\"0\" class=\"ui-grid-cell-contents ui-grid-header-cell-primary-focus summary-header-" + fieldsArr[i] +"\" col-index=\"renderIndex\" ng-class=\"{'single-line': col.displayName.indexOf('\n') < 0}\" title=\"TOOLTIP\"><span class=\"ui-grid-header-cell-label\" ui-grid-one-bind-id-grid=\"col.uid + '-header-text'\">{{ col.displayName CUSTOM_FILTERS }}</span> <span ui-grid-one-bind-id-grid=\"col.uid + '-sortdir-text'\" ui-grid-visible=\"col.sort.direction\" aria-label=\"{{getSortDirectionAriaLabel()}}\"><i ng-class=\"{ 'ui-grid-icon-up-dir': col.sort.direction == asc, 'ui-grid-icon-down-dir': col.sort.direction == desc, 'ui-grid-icon-blank': !col.sort.direction }\" title=\"{{isSortPriorityVisible() ? i18n.headerCell.priority + ' ' + ( col.sort.priority + 1 )  : null}}\" aria-hidden=\"true\"></i> <sub ui-grid-visible=\"isSortPriorityVisible()\" class=\"ui-grid-sort-priority-number\">{{col.sort.priority + 1}}</sub></span></div><div role=\"button\" tabindex=\"0\" ui-grid-one-bind-id-grid=\"col.uid + '-menu-button'\" class=\"ui-grid-column-menu-button\" ng-if=\"grid.options.enableColumnMenus && !col.isRowHeader  && col.colDef.enableColumnMenu !== false\" ng-click=\"toggleMenu($event)\" ng-class=\"{'ui-grid-column-menu-button-last-col': isLastCol}\" ui-grid-one-bind-aria-label=\"i18n.headerCell.aria.columnMenuButtonLabel\" aria-haspopup=\"true\"><i class=\"ui-grid-icon-angle-down\" aria-hidden=\"true\">&nbsp;</i></div><div ui-grid-filter></div></div>"
-                        }
-                        if (formatType) def.cellFilter = formatType;
+                            field: fieldsArr[i], //field name
+                            width: sizeArr[i], //column width
+                            headerName: titlesArr[i], //column title
+                            cellClass: cellClass, //css class of cell in column
+                            enableTooltip: true,
+                            tooltipField: fieldsArr[i], //show tolltip
+                            cellRenderer: function (params) { //cell render event
+                                if (params.colDef.field == 'symbol2') {
+                                    /*
+                                    * For "symbol2" column
+                                    * - signal1 & signal2 is empty, show empty value
+                                    */ 
+                                    if (params.data.signal1 == '' && params.data.signal2 == '') {
+                                        return '';
+                                    }
+                                } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS') {
+                                    /*
+                                    * For "newPoint" and "EPS" column
+                                    * - Show number with format which has 2 points
+                                    */ 
+                                    if (isNaN(parseFloat(params.value))) {
+                                        return $filter('number')(0, 2);
+                                    } else {
+                                        return $filter('number')(parseFloat(params.value), 2);
+                                    }
+                                }
+                                else {
+                                    if (!params.value) return '';
+                                    if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1)
+                                        return $filter('number')(params.value);
+                                }
+                                return params.value;
+                            },
+                            headerCellTemplate: function (params) {
+                                /*
+                                * Header cell template, this will be render for all header cell of grid
+                                */ 
+                                var column = params.column;
+                                var colId = column.colId;
+                                var greenClass = '';
+                                if (colId == 'signal1' || colId == 'symbol2' || colId == 'signal2')
+                                    greenClass = 'ag-header-cell-green';
+                                return (
+                                    '<div class="ag-header-cell ' + greenClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
+                                    '<table style="width:100%;height:100%">' +
+                                    '<tr>' +
+                                    '<td width="20px" style="vertical-align:top">' +
+                                    '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
+                                    '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
+                                    '<span id="agText" class="ag-header-cell-text"></span>' +
+                                    '</div>' +
+                                    '</td>' +
+                                    '<td width="20px">' +
+                                    '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
+                                    '</td>' +
+                                    '</tr>' +
+                                    '</table>' +
+                                    '</div>'
+                                )
+                            }
+                        };
+
+                        if (formatType) def.cellFilter = formatType; // add cell format (number or string)
                         if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
                         def.cellTemplate = utils.getCellTemplateSummary(fieldsArr[i], formatArr[i]);
-                        if (def.field == 'symbol') {
-                            def.pinnedLeft = true;
+                        if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
+                            def.filter = 'text';
+                            def.pinned = 'left'; //pin column to left
+                            def.cellRenderer = function (params) { // render 'symbol' cell template
+                                var id = params.value;
+                                return '<div><span>' + params.value + '</span>' +
+                                    '<img class="chart-icon" data-symbol="' + id +
+                                    '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' + '</div>';
+                            }
                         }
+
                         if (def.field == 'totalValue') {
                             def.sort = {
                                 direction: 'desc',
@@ -80,84 +159,61 @@ angular.module('superstockApp')
                         if (def.field == 'industry') {
                             def.minWidth = 200;
                         }
+
+                        def.cellClass = function (params) {
+                            // Get cell style
+                            return utils.getCellClassSummary(params, formatList);
+                        }
+
                         columnDefs.push(def);
                     }
-                    // $rootScope.filters = columnDefs;
-                    $scope.gridOptions.columnDefs = columnDefs;
-                    draw.drawGrid(Ref.child('summary_data'), config, function(data) {
-                        $scope.gridOptions.data.push(data);
-                    }, function(data) {
-                        setTimeout(function() {
+
+                    $rootScope.filters = columnDefs;
+
+                    /*
+                    * Get data from server and render to Grid
+                    */
+                    draw.drawGrid(Ref.child('summary_data'), config, function (data) {
+                        //loading data
+                    }, function (data) {
+                        //loaded data
+                        $scope.gridOptions.api.setColumnDefs(columnDefs);
+                        $scope.gridOptions.api.setRowData(data);
+                        $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
+
+                        // $rootScope.filterList = filterConvert($rootScope.filterList, filterData);
+                        setTimeout(function () {
                             align();
                         }, 1000);
                     }, {
-                        added: function(data, childSnapshot, id) {
-                            var key = childSnapshot.key;
-                            for (var i in $scope.gridOptions.data) {
-                                if ($scope.gridOptions.data[i]['symbol'] == key) {
-                                    $scope.gridOptions.data[i] = data;
-                                    return;
-                                }
+                            added: function (data, childSnapshot, id) {
+                                //todo
+                            },
+                            changed: function (data, childSnapshot, id) {
+                                //todo
+                            },
+                            removed: function (oldChildSnapshot) {
+                                //todo
                             }
-                            $scope.gridOptions.data.push(data);
-                        },
-                        changed: function(data, childSnapshot, id) {
-                            var key = childSnapshot.key;
-                            for (var i in $scope.gridOptions.data) {
-                                if ($scope.gridOptions.data[i]['symbol'] == key) {
-                                    $scope.$apply(function() {
-                                        for (var key in data) {
-                                            $scope.gridOptions.data[i][key] = data[key];
-                                        }
-                                    })
-                                    break;
-                                }
-                            }
-                        },
-                        removed: function(oldChildSnapshot) {
-                            var key = oldChildSnapshot.key;
-                            for (var i in $scope.gridOptions.data) {
-                                if ($scope.gridOptions.data[i]['symbol'] == key) {
-                                    $scope.gridOptions.data.splice(i, 1);
-                                    break;
-                                }
-                            }
-                        }
-                    });
-                    $scope.symbolClick = function(row, col) {
+                        })
+
+                    /*
+                    * Graph chart click event
+                    */
+                    $scope.symbolClick = function (row, col) {
                         $('#myModal').modal('show');
                         $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
                         $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
                         $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
                     }
 
-                    $scope.fillCanslim = function(row) {
-                        if ((row.entity.signal1 != '' || row.entity.signal2 != '')) return true;
-                        return false;
-                    }
-
-                    $scope.colorCanslim = function(row, color) {
-                        if ((row.entity.signal1 != '' || row.entity.signal2 != '')) {
-                            if (row.entity.Canslim != '') {
-                                if (color == 'purple') return true;
-                                return false;
-                            } else {
-                                if (color == 'green') return true;
-                                return false;
-                            }
-                        }
-                        return false;
-                    }
-
-                    $scope.showSymbolHasSignal = function(row, symbol) {
-                        if (row.entity.signal1 != '' || row.entity.signal2 != '') {
-                            return symbol;
-                        }
-                        return '';
-                    }
-
+                    /*
+                    * Format header cell text
+                    * - Set text align
+                    * - Set margin
+                    */
                     function align() {
-                        $('.ui-grid-header-cell').each(function() {
+                        $('.ui-grid-header-cell').each(function () {
                             var thisTag = $(this);
                             var span = thisTag.find('span');
                             if (span.text().indexOf('\n') < 0) {
@@ -167,7 +223,8 @@ angular.module('superstockApp')
                                 span.last().css('margin-top', '-2px');
                             }
                         })
-                    }
+                    };
+
                 })
             })
         })

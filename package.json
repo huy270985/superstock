@@ -1,7 +1,10 @@
 {
   "name": "superstock",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "agGridEnterprice": "https://github.com/ceolter/ag-grid-enterprise.git#d450012c072cf13105555dc905cc0dddd1a98e39",
+    "ag-grid": "5.2.0"
+  },
   "repository": {},
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -28,9 +31,12 @@
     "load-grunt-tasks": "^3.1.0",
     "time-grunt": "^1.0.0",
     "chalk": "^0.4.0"
-
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "scripts": {
+    "start": "grunt serve",
+    "postinstall": "bower install"
   }
 }
