@@ -37,7 +37,6 @@ angular
 
                 //add new object event
                 Ref.on('child_added', function(childSnapshot, prevChildKey) {
-                    // console.log('add');
                     var dataConvert = {};
                     if (config.idLabel)
                         dataConvert[config.idLabel] = childSnapshot.key;
@@ -56,7 +55,6 @@ angular
 
                 //update object event
                 Ref.on('child_changed', function(childSnapshot, prevChildKey) {
-                    // console.log('change');
                     var dataConvert = {};
                     if (config.idLabel)
                         dataConvert[config.idLabel] = childSnapshot.key;
@@ -75,7 +73,6 @@ angular
 
                 //remove object event
                 Ref.on('child_removed', function(oldChildSnapshot) {
-                    // console.log('remove');
                     event.removed(oldChildSnapshot);
                 });
             })
