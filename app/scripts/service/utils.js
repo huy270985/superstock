@@ -250,6 +250,21 @@ angular
                         result = data.data.split('|');
                 });
                 return result;
+            },
+            getCompanyInformation: function (id) {
+                /*
+                * Get market summary data
+                * From link: https://superstock.firebaseio.com/profile/{{id}}.json
+                */
+                $.ajaxSetup({
+                    async: false
+                });
+                var result = [];
+                $.getJSON('https://superstock.firebaseio.com/profile/' + id + '.json', {}, function (data) {
+                    if (data && data.data)
+                        result = data.data;
+                });
+                return result;
             }
         }
     });

@@ -115,8 +115,17 @@ body {
     height: 15px;
     vertical-align: top;
     float: right;
+    cursor: pointer;
 }
 
+.information-icon {
+    width: 15px;
+    height: 15px;
+    vertical-align: top;
+    float: right;
+    cursor: pointer;
+    margin-right: 5px;
+}
 
 /* custom */
 
@@ -515,4 +524,14 @@ body {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.bullet-style {
+    padding: 0 30px;
+}
+
+.bullet-style:before {
+    content: '-';
+    position: absolute;
+    left: 3%;
 }

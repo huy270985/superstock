@@ -265,13 +265,16 @@ angular.module('superstockApp')
                                 }
                             }
                             if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
+                                def.width = 80;
                                 def.filter = 'text';
                                 def.pinned = 'left'; //pin column to left
                                 def.cellRenderer = function (params) { // render 'symbol' cell template
                                     var id = params.value;
                                     return '<div><span>' + params.value + '</span>' +
                                         '<img class="chart-icon" data-symbol="' + id +
-                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' + '</div>';
+                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
+                                        '<img class="information-icon" data-symbol="' + id +
+                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
                                 }
                             }
                             //add filter for 'shorttermSignal' (filter selete option)
@@ -335,7 +338,7 @@ angular.module('superstockApp')
                         }, function (data) {
                             //loaded data
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
-                            $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
+                            // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
                             for (var i in $rootScope.filterList) {
                                 if ($rootScope.filterList[i].filters) {
                                     $rootScope.$watch('filterList["' + i + '"].filters[0].term', function (newVal, oldVal) {
@@ -391,12 +394,25 @@ angular.module('superstockApp')
                 return newTerm;
             }
 
-            //show chart event
+            /*
+            * Graph chart click event
+            */
             $(document).on('click', '.chart-icon', function () {
                 $('#myModal').modal('show');
                 $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
                 $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
                 $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+            });
+
+            /*
+            * Company information click event
+            */
+            $(document).on('click', '.information-icon', function () {
+                $('#companyModal').modal('show');
+                var symbolVal = $(this).data('symbol');
+                var industryVal = $(this).data('industry');
+                $scope.companyInfo = symbolVal + ' - ' + industryVal;
+                $scope.companyDatas = utils.getCompanyInformation(symbolVal);
             });
 
             //on/off filter

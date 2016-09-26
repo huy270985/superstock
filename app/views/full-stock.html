@@ -3,6 +3,8 @@
 <div id="result">
 
 </div>
+
+<!--Graph view-->
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -16,6 +18,25 @@
         </div>
     </div>
 </div>
+
+<!--Company view-->
+<div class="modal fade" id="companyModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{companyInfo}}</h4>
+            </div>
+            <div class="modal-body">
+                <div ng-repeat="company in companyDatas">
+                    <h4 ng-bind="company.header"></h4>
+                    <p class="bullet-style" ng-repeat="content in company.content">{{content}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     .ui-grid-filter-container {
         display: none

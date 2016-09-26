@@ -168,7 +168,9 @@ angular.module('superstockApp')
                                     var id = params.value;
                                     return '<div><span>' + params.value + '</span>' +
                                         '<img class="chart-icon" data-symbol="' + id +
-                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' + '</div>';
+                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
+                                        '<img class="information-icon" data-symbol="' + id +
+                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
                                 }
                             }
 
@@ -238,12 +240,23 @@ angular.module('superstockApp')
                         /*
                         * Graph chart click event
                         */
-                        $scope.symbolClick = function (row, col) {
+                        $(document).on('click', '.chart-icon', function () {
                             $('#myModal').modal('show');
-                            $scope.stockInfo = row.entity.symbol + ' - ' + row.entity.industry;
-                            $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + row.entity.symbol;
+                            $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
+                            $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
                             $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
-                        }
+                        });
+
+                        /*
+                        * Company information click event
+                        */
+                        $(document).on('click', '.information-icon', function () {
+                            $('#companyModal').modal('show');
+                            var symbolVal = $(this).data('symbol');
+                            var industryVal = $(this).data('industry');
+                            $scope.companyInfo = symbolVal + ' - ' + industryVal;
+                            $scope.companyDatas = utils.getCompanyInformation(symbolVal);
+                        });
 
                         /*
                         * Format header cell text
