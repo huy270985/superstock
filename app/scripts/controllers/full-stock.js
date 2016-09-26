@@ -326,7 +326,8 @@ angular.module('superstockApp')
                                         //
                                     } else {
                                         $eventTimeout = $timeout(function () {
-                                            $scope.gridOptions.api.setRowData($gridData);
+                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                                                $scope.gridOptions.api.setRowData($gridData);
                                             $gridData = [];
                                             $eventTimeout = undefined;
                                         }, 1000);

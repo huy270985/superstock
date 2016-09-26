@@ -153,10 +153,7 @@ angular.module('superstockApp')
                             }
 
                             if (def.field == 'totalValue') {
-                                def.sort = {
-                                    direction: 'desc',
-                                    priority: 0
-                                }
+                                def.sort = 'desc';
                             }
                             if (def.field == 'industry') {
                                 def.minWidth = 200;
@@ -199,7 +196,8 @@ angular.module('superstockApp')
                                         //
                                     } else {
                                         $eventTimeout = $timeout(function () {
-                                            $scope.gridOptions.api.setRowData($gridData);
+                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                                                $scope.gridOptions.api.setRowData($gridData);
                                             $gridData = [];
                                             $eventTimeout = undefined;
                                         }, 1000);

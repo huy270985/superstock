@@ -471,3 +471,22 @@ body {
     font-size: 13px;
     font-family: Arial;
 }
+
+.ag-fresh .ag-header-cell-menu-button .ag-header-icon,
+.ag-fresh .ag-header-icon.ag-sort-descending-icon,
+.ag-fresh .ag-header-icon.ag-sort-none-icon  {
+    color: #FFFFFF !important;
+    fill:  #FFFFFF !important;
+}
+
+.ag-tab {
+    color: #000000;
+}
+
+.ag-fresh .ag-header-cell-menu-button:hover {
+  border: 1px solid #FFFFFF !important;
+}
+
+.ag-menu-option:nth-child(2) {
+    display: none;
+}
