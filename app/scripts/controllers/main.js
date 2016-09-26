@@ -105,7 +105,12 @@ angular.module('superstockApp')
                                         if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1) {
                                             value = $filter('number')(params.value);
                                             if (formatList[params.colDef.field].indexOf('percent') > -1) {
-                                                value = value + '%';
+                                                if (isNaN(parseFloat(params.value))) {
+                                                    value = '';
+                                                } else {
+                                                    value = $filter('number')(params.value, 2);
+                                                    value = value + '%';
+                                                }
                                             }
                                             return '<div title="' + value + '">' + value + '</div>';
                                         }

@@ -180,9 +180,43 @@ angular.module('superstockApp')
                                 enableTooltip: true,
                                 tooltipField: fieldsArr[i], //show tolltip
                                 cellRenderer: function (params) { //cell render data
-                                    if (!params.value) return '';
-                                    if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1)
-                                        return $filter('number')(params.value);
+                                    if (params.colDef.field == 'symbol2') {
+                                        /*
+                                        * For "symbol2" column
+                                        * - signal1 & signal2 is empty, show empty value
+                                        */
+                                        if (params.data.signal1 == '' && params.data.signal2 == '') {
+                                            return '';
+                                        }
+                                    } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS'
+                                        || params.colDef.field == 'fxEffect' || params.colDef.field == 'cashFlow') {
+                                        /*
+                                        * For "newPoint" and "EPS" column
+                                        * - Show number with format which has 2 points
+                                        */
+                                        var value = '';
+                                        if (isNaN(parseFloat(params.value))) {
+                                            value = $filter('number')(0, 2);
+                                        } else {
+                                            value = $filter('number')(parseFloat(params.value), 2);
+                                        }
+                                        return '<div title="' + value + '">' + value + '</div>';
+                                    }
+                                    else {
+                                        var value = '';
+                                        if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1) {
+                                            value = $filter('number')(params.value);
+                                            if (formatList[params.colDef.field].indexOf('percent') > -1) {
+                                                if (isNaN(parseFloat(params.value))) {
+                                                    value = '';
+                                                } else {
+                                                    value = $filter('number')(params.value, 2);
+                                                    value = value + '%';
+                                                }
+                                            }
+                                            return '<div title="' + value + '">' + value + '</div>';
+                                        }
+                                    }
                                     return params.value;
                                 },
                                 headerCellTemplate: function () {
@@ -280,7 +314,10 @@ angular.module('superstockApp')
                                     headerName: def.headerName,
                                     filter: filter
                                 }
+
+                                def.minWidth = 200;
                             }
+
                             //add css class for cell base on cell date (utils factory)
                             def.cellClass = function (params) {
                                 return utils.getCellClass(params, formatList);

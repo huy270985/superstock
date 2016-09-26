@@ -96,7 +96,7 @@ angular
                     case 'fxEffect':
                     case 'cashFlow':
                         if (value < 0) classList.push("grid-cell-red");
-                        else classList.push("grid-cell-green");
+                        else if (value > 0) classList.push("grid-cell-green");
                         break;
                 }
                 return classList;
