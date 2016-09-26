@@ -399,7 +399,7 @@ body {
 }
 
 .ag-cell-purple-color {
-    color: #A65EEA;
+    color: #90F;
 }
 
 #gridWraper {
@@ -464,4 +464,10 @@ body {
 @decimal-format price {
     grouping-separator: ",";
     decimal-separator: "."
+}
+
+.ag-cell-value {
+    font-weight: 700;
+    font-size: 13px;
+    font-family: Arial;
 }
