@@ -92,16 +92,23 @@ angular.module('superstockApp')
                                         * For "newPoint" and "EPS" column
                                         * - Show number with format which has 2 points
                                         */
+                                        var value = '';
                                         if (isNaN(parseFloat(params.value))) {
-                                            return $filter('number')(0, 2);
+                                            value = $filter('number')(0, 2);
                                         } else {
-                                            return $filter('number')(parseFloat(params.value), 2);
+                                            value = $filter('number')(parseFloat(params.value), 2);
                                         }
+                                        return '<div title="' + value + '">' + value + '</div>';
                                     }
                                     else {
-                                        if (!params.value) return '';
-                                        if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1)
-                                            return $filter('number')(params.value);
+                                        var value = '';
+                                        if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1) {
+                                            value = $filter('number')(params.value);
+                                            if (formatList[params.colDef.field].indexOf('percent') > -1) {
+                                                value = value + '%';
+                                            }
+                                            return '<div title="' + value + '">' + value + '</div>';
+                                        }
                                     }
                                     return params.value;
                                 },
@@ -139,8 +146,6 @@ angular.module('superstockApp')
                             };
 
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
-                            if (formatArr[i].indexOf('percent') > -1) def.cellClass += ' percent';
-                            def.cellTemplate = utils.getCellTemplateSummary(fieldsArr[i], formatArr[i]);
                             if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
                                 def.filter = 'text';
                                 def.pinned = 'left'; //pin column to left
