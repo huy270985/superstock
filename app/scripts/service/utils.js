@@ -219,6 +219,37 @@ angular
                         break;
                 }
                 return classList;
+            },
+            getMarketSummary: function () {
+                /*
+                * Get sell signals data
+                * From link: https://superstock.firebaseio.com/sell_symbols.json
+                */
+                var dataArr = [];
+                $.ajaxSetup({
+                    async: false
+                });
+                var result = '';
+                $.getJSON('https://superstock.firebaseio.com/market_summary.json', {}, function (data) {
+                    if (data && data.data)
+                        result = data.data;
+                });
+                return result;
+            },
+            getSellSignals: function () {
+                /*
+                * Get market summary data
+                * From link: https://superstock.firebaseio.com/market_summary.json
+                */
+                $.ajaxSetup({
+                    async: false
+                });
+                var result = [];
+                $.getJSON('https://superstock.firebaseio.com/sell_symbols.json', {}, function (data) {
+                    if (data && data.data)
+                        result = data.data.split('|');
+                });
+                return result;
             }
         }
     });

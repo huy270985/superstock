@@ -382,6 +382,10 @@ body {
     background: #38761D;
 }
 
+.ag-header-cell.ag-header-cell-red {
+    background: #FF0000;
+}
+
 .ag-header-cell-text {
     white-space: pre;
 }
@@ -400,6 +404,10 @@ body {
 
 .ag-cell-purple-color {
     color: #90F;
+}
+
+.ag-cell-red-bg {
+    background: #F4CCCC;
 }
 
 #gridWraper {
@@ -474,6 +482,7 @@ body {
 
 .ag-fresh .ag-header-cell-menu-button .ag-header-icon,
 .ag-fresh .ag-header-icon.ag-sort-descending-icon,
+.ag-fresh .ag-header-icon.ag-sort-ascending-icon,
 .ag-fresh .ag-header-icon.ag-sort-none-icon  {
     color: #FFFFFF !important;
     fill:  #FFFFFF !important;
@@ -489,4 +498,21 @@ body {
 
 .ag-menu-option:nth-child(2) {
     display: none;
+}
+
+.header-title {
+    max-width: 1280px; 
+    width: 100%; 
+    margin: 0 auto; 
+    padding: 5px 40px; 
+    background: #6AA84F; font-weight: bold;
+}
+
+.header-title > h4 {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

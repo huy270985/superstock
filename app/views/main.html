@@ -1,8 +1,10 @@
-
-<div ng-grid="gridOptions" ag-grid="gridOptions" class="ag-fresh" style="height: 100%; max-width: 1265px; width: 100%; margin: 0 auto;"></div>
-<!--<div id="gridWraper">
-    <div id="main" ui-grid="gridOptions" class="grid" ui-grid-auto-resize ui-grid-pinning style="height: 100%"></div>
-</div>-->
+<div class="header-title" style="border-bottom: solid 1px #000000;">
+    <h4 ng-bind="headerTitle"></h4>
+</div>
+<div class="header-title">
+    <h4 style="font-size: 18px;">Các mã cp đáng chú ý nhất phiên</h4>
+</div>
+<div ng-grid="gridOptions" ag-grid="gridOptions" class="ag-fresh" style="height: calc(100% - 48px - 49px); max-width: 1280px; width: 100%; margin: 0 auto;"></div>
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

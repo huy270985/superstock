@@ -27,6 +27,12 @@ angular.module('superstockApp')
                 onAfterFilterChanged: function () { },
                 onCellClicked: function (params) { }
             };
+
+            /*
+            * Get market summary data
+            */
+            $scope.headerTitle = utils.getMarketSummary();
+
             /*
             * Load title, header and format of field form server
             */
@@ -44,7 +50,7 @@ angular.module('superstockApp')
 
                         // Define size of field in client
                         var sizeArr = [
-                            65, 250, 125, 95, 75, 75, 90, 140, 140, 60, 140
+                            80, 200, 125, 95, 80, 95, 105, 140, 140, 60, 140
                         ]
                         var columnDefs = [];
                         var config = {
@@ -52,7 +58,10 @@ angular.module('superstockApp')
                             labelList: []
                         }
 
-
+                        /**
+                         * Innitial column Def
+                         */
+                        var count = 0;
                         for (var i in titlesArr) {
                             formatList[fieldsArr[i]] = formatArr[i];
                             config.labelList.push({
@@ -73,7 +82,7 @@ angular.module('superstockApp')
                             //Setup column data
                             var def = {
                                 field: fieldsArr[i], //field name
-                                width: sizeArr[i], //column width
+                                width: sizeArr[count], //column width
                                 headerName: titlesArr[i], //column title
                                 cellClass: cellClass, //css class of cell in column
                                 enableTooltip: true,
@@ -149,6 +158,7 @@ angular.module('superstockApp')
                                     )
                                 }
                             };
+                            count++;
 
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
                             if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
@@ -192,7 +202,7 @@ angular.module('superstockApp')
                         }, function (data) {
                             //loaded data
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
-                            $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
+                            // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
                             setTimeout(function () {
                                 align();
                             }, 1000);
