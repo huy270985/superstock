@@ -8,10 +8,10 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('MenuCtrl', function($rootScope, $scope, auth, $location, Ref, $firebaseObject) {
+    .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject) {
         $rootScope.user = null;
         $rootScope.link = '';
-        $scope.filterShow = function(e) {
+        $scope.filterShow = function (e) {
             e.preventDefault();
             e.stopPropagation();
             if ($rootScope.link == 'main') return;
@@ -37,9 +37,10 @@ angular.module('superstockApp')
             $location.path('/');
         }
 
-        $scope.oauthLogin = function(provider) {
+        $scope.oauthLogin = function (provider) {
             auth.$signInWithPopup(provider)
-                .then(function(authData) {
+                .then(function (authData) {
+                    var a = authData;
                     // var user = $firebaseObject(Ref.child('user_settings'));
                     // console.log("logged");
                     // console.log(authData);
@@ -55,12 +56,12 @@ angular.module('superstockApp')
                     // });
                     redirect();
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.log("login error");
                     console.log(error);
                 })
         };
-        $scope.logout = function() {
+        $scope.logout = function () {
             // var obj = {};
             // obj[authDataSave.uid] = false;
             // disconnectRef.set(obj);
@@ -90,7 +91,7 @@ angular.module('superstockApp')
         //         online: true
         //     }
         // });
-        auth.$onAuthStateChanged(function(authData) {
+        auth.$onAuthStateChanged(function (authData) {
             // console.log(authData);
             // authDataSave = authData;
             // if (authData) {
