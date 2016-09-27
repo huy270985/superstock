@@ -1,11 +1,26 @@
+<style type="text/css">
+    .grid-area {
+        max-width: 1280px;
+        height: calc(100% - 48px - 49px);
+        margin: 0 auto;
+    }
+    
+    .grid-area > div {
+        height: 100%;
+        float: left;
+    }
+</style>
+
 <div class="header-title" style="border-bottom: solid 1px #000000;">
     <h4 ng-bind="headerTitle"></h4>
 </div>
 <div class="header-title">
     <h4 style="font-size: 18px;">Các mã cp đáng chú ý nhất phiên</h4>
 </div>
-<div ng-grid="gridOptions" ag-grid="gridOptions" class="ag-fresh" style="height: calc(100% - 48px - 49px); max-width: 1280px; width: 100%; margin: 0 auto;"></div>
-
+<div class="grid-area">
+    <div ng-grid="gridOptions" ag-grid="gridOptions" class="ag-fresh" style="max-width: 1210px; width: calc(100% - 70px);"></div>
+    <div ng-grid="signalGridOptions" ag-grid="signalGridOptions" class="ag-fresh" style="max-width: 70px; width: 70px;"></div>
+</div>
 <!--Graph view-->
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
