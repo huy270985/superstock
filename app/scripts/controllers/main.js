@@ -25,6 +25,7 @@ angular.module('superstockApp')
                 data: [],
                 enableColResize: true,
                 headerHeight: 50,
+                overlayLoadingTemplate: '<span class="ag-overlay-loading-center">Đang xử lý dữ liệu...</span>',
                 //filter changed event
                 onAfterFilterChanged: function () { },
                 onCellClicked: function (params) { }
@@ -215,8 +216,11 @@ angular.module('superstockApp')
                             console.clear();
                         } catch (e) { }
                         var sellSignalDatas = [];
+                        $scope.gridOptions.api.setColumnDefs(columnDefs);
+
                         draw.drawGrid(Ref.child('summary_data'), config, function (data) {
                             //loading data
+                            $scope.gridOptions.api.showLoadingOverlay()
                         }, function (data) {
                             //loaded data
                             // add the handler function
@@ -233,9 +237,6 @@ angular.module('superstockApp')
                                     $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
                                 }
                             });
-
-                            $scope.gridOptions.api.setColumnDefs(columnDefs);
-                            // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
 
                             setTimeout(function () {
                                 align();

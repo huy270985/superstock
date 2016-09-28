@@ -45,6 +45,7 @@ angular.module('superstockApp')
                 data: [],
                 enableColResize: true,
                 headerHeight: 50,
+                overlayLoadingTemplate: '<span class="ag-overlay-loading-center">Đang xử lý dữ liệu...</span>',
                 //filter changed event
                 onAfterFilterChanged: function () {
                     user = Ref.child('users/' + currentAuth.uid);
@@ -342,11 +343,14 @@ angular.module('superstockApp')
                         try {
                             console.clear();
                         } catch (e) { }
+
+                        $scope.gridOptions.api.setColumnDefs(columnDefs);
+
                         draw.drawGrid(Ref.child('superstock'), config, function (data) {
                             //loading data
+                            $scope.gridOptions.api.showLoadingOverlay()
+
                         }, function (data) {
-                            //loaded data
-                            $scope.gridOptions.api.setColumnDefs(columnDefs);
                             // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
                             for (var i in $rootScope.filterList) {
                                 if ($rootScope.filterList[i].filters) {
