@@ -19,6 +19,8 @@ angular.module('superstockApp')
             $scope.gridOptions = {
                 enableSorting: true,
                 enableFilter: true,
+                suppressColumnVirtualisation: true,
+                suppressContextMenu: true,
                 rowData: [],
                 data: [],
                 enableColResize: true,

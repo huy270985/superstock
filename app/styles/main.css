@@ -136,17 +136,21 @@ body {
     width: 15px;
     height: 15px;
     vertical-align: top;
-    float: right;
     cursor: pointer;
+    position: absolute;
+    top: 2px;
+    left: 35px;
 }
 
 .information-icon {
     width: 15px;
     height: 15px;
     vertical-align: top;
-    float: right;
     cursor: pointer;
     margin-right: 5px;
+    position: absolute;
+    top: 3px;
+    left: 55px;
 }
 
 /* custom */
