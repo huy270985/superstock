@@ -572,3 +572,19 @@ body {
     height: 100%;
     float: left;
 }
+
+.ag-body-viewport-wrapper {
+    position: relative;
+}
+
+.ag-body-viewport
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+	-webkit-box-flex: 1;
+}
