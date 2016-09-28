@@ -188,7 +188,7 @@
 
         <div class="container-fluit">
             <div class="view-containner">
-                <div ng-view="" style="height: 100%; width: 100%;"></div>
+                <div ng-view="" ng-if="$root.user" style="height: 100%; width: 100%;"></div>
             </div>
         </div>
 
