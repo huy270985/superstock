@@ -89,9 +89,16 @@ angular.module('superstockApp')
                         }
 
                     } else if (filterItem.filters) {
-                        var filterGreater = $scope.gridOptions.api.getFilterApi(key);
-                        filterGreater.setType(filterGreater.GREATER_THAN);
-                        filterGreater.setFilter(filterItem.filters[0].term);
+                        if (filterItem.filters[0]) {
+                            var filterGreater = $scope.gridOptions.api.getFilterApi(key);
+                            if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
+                                if (filterItem.filters[0].term) {
+                                    var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
+                                    filterGreater.setType(filterType);
+                                    filterGreater.setFilter(filterItem.filters[0].term);
+                                }
+                            }
+                        }
                     }
                 }
                 $scope.gridOptions.api.onFilterChanged();
@@ -251,12 +258,12 @@ angular.module('superstockApp')
                                 var arr = formatArr[i].split(':');
                                 if (arr.length === 4) {
                                     var filters = [{
-                                        condition: 'GREATER_THAN',
+                                        condition: 'greaterThan',
                                         term: (arr[0] == 'bigNum') ? parseFloat(arr[2]) * bigNum : parseFloat(arr[2]),
                                         min: (arr[0] == 'bigNum') ? parseFloat(arr[1]) * bigNum : parseFloat(arr[1]),
                                         bigNum: (arr[0] == 'bigNum') ? true : false
                                     }, {
-                                            condition: 'LESS_THAN',
+                                            condition: 'lessThan',
                                             term: Infinity,
                                             max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
                                         }];

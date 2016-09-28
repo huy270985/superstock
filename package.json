@@ -2,8 +2,8 @@
   "name": "superstock",
   "version": "0.0.0",
   "dependencies": {
-    "agGridEnterprice": "https://github.com/ceolter/ag-grid-enterprise.git#d450012c072cf13105555dc905cc0dddd1a98e39",
-    "ag-grid": "5.2.0"
+    "agGridEnterprice": "https://github.com/ceolter/ag-grid-enterprise.git",
+    "ag-grid": "*"
   },
   "repository": {},
   "devDependencies": {
