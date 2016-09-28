@@ -111,7 +111,7 @@ angular
                     classList.push('percent');
                 switch (field) {
                     case 'symbol':
-                        /*
+                        /**
                         * When this field has value
                         * - Background color will be filled
                         * When signal1 or signal 2 have value
@@ -130,7 +130,7 @@ angular
                         }
                         break;
                     case 'totalValue':
-                        /*
+                        /**
                         * When this field has value and greater than 5.000.000.000
                         * background and forceground(purple) will be filled and 
                         */
@@ -140,7 +140,7 @@ angular
                         }
                         break;
                     case 'EPS':
-                        /*
+                        /**
                         * When this field has value and
                         * >= 3000, background and forceground(purple) will be filled
                         * > 1000, forceground(green) will be filled
@@ -156,7 +156,7 @@ angular
                         }
                         break;
                     case 'newPoint':
-                        /*
+                        /**
                         * When this field has value and
                         * >= 7, background and forceground(purple) will be filled
                         * >= 5, forceground(green) will be filled
@@ -170,10 +170,11 @@ angular
                         } else if (value <= 4) {
                             classList.push('grid-cell-red');
                         }
+                        classList.push('text-center');
                         break;
                     case 'Canslim':
                     case 'pricePeak':
-                        /*
+                        /**
                         * When this field has value
                         * background and forceground(purple) will be filled
                         */
@@ -183,9 +184,10 @@ angular
                         } else {
 
                         }
+                        classList.push('text-center');
                         break;
                     case 'symbol2':
-                        /*
+                        /**
                         * When this field has value
                         * - Background color will be filled
                         * When signal1 or signal 2 have value
@@ -203,10 +205,11 @@ angular
                             }
                         }
                         classList.push('ag-cell-green-bg');
+                        classList.push('text-center');
                         break;
                     case 'signal1':
                     case 'signal2':
-                        /*
+                        /**
                         * When this field has value
                         * background and forceground(purple) will be filled
                         * and otherwise background is green
@@ -216,7 +219,15 @@ angular
                             classList.push('ag-cell-purple-color');
                         }
                         classList.push('ag-cell-green-bg');
+                        classList.push('text-center');
                         break;
+                    case 'sellSignal':
+                        /**
+                         * Fill red background for cell which is sell signal
+                         */
+                        classList.push('ag-cell-red-bg');
+                        classList.push('text-center');
+                        break
                 }
                 return classList;
             },

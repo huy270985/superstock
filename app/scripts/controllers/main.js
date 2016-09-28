@@ -28,14 +28,6 @@ angular.module('superstockApp')
                 onCellClicked: function (params) { }
             };
 
-            $scope.signalGridOptions = {
-                rowData: [],
-                data: [],
-                headerHeight: 50,
-                onAfterFilterChanged: function () { },
-                onCellClicked: function (params) { }
-            };
-
             /*
             * Get market summary data
             */
@@ -56,9 +48,13 @@ angular.module('superstockApp')
                         var formatArr = format.data.split('|');
                         var formatList = {};
 
+                        //For Sell signal
+                        titlesArr.push('Báo bán')
+                        fieldsArr.push('sellSignal');
+                        formatArr.push('text');
                         // Define size of field in client
                         var sizeArr = [
-                            80, 150, 125, 95, 75, 95, 105, 135, 140, 60, 140
+                            80, 150, 125, 95, 75, 95, 105, 135, 140, 60, 140, 70
                         ]
                         var columnDefs = [];
                         var config = {
@@ -140,26 +136,33 @@ angular.module('superstockApp')
                                     */
                                     var column = params.column;
                                     var colId = column.colId;
-                                    var greenClass = '';
+                                    var colorClass = '';
                                     if (colId == 'signal1' || colId == 'symbol2' || colId == 'signal2')
-                                        greenClass = 'ag-header-cell-green';
-                                    return (
-                                        '<div class="ag-header-cell ' + greenClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
-                                        '<table style="width:100%;height:100%">' +
-                                        '<tr>' +
-                                        '<td width="20px" style="vertical-align:top">' +
+                                        colorClass = 'ag-header-cell-green';
+                                    var agMenu = '<td width="20px" style="vertical-align:top">' +
                                         '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
                                         '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
                                         '</span>' +
-                                        '</td>' +
+                                        '</td>';
+                                    var agSort = '<td width="20px">' +
+                                        '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
+                                        '</td>';
+                                    if (colId == 'sellSignal') {
+                                        agSort = '';
+                                        agMenu = '';
+                                        colorClass = 'ag-header-cell-red';
+                                    }
+                                    return (
+                                        '<div class="ag-header-cell ' + colorClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
+                                        '<table style="width:100%;height:100%">' +
+                                        '<tr>' +
+                                        agMenu +
                                         '<td>' +
                                         '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
                                         '<span id="agText" class="ag-header-cell-text"></span>' +
                                         '</div>' +
                                         '</td>' +
-                                        '<td width="20px">' +
-                                        '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
-                                        '</td>' +
+                                        agSort +
                                         '</tr>' +
                                         '</table>' +
                                         '</div>'
@@ -180,6 +183,8 @@ angular.module('superstockApp')
                                         '<img class="information-icon" data-symbol="' + id +
                                         '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
                                 }
+                            } else if (fieldsArr[i] == 'sellSignal') {
+                                def.suppressSorting = true;
                             }
 
                             if (def.field == 'totalValue') {
@@ -207,13 +212,29 @@ angular.module('superstockApp')
                         try {
                             console.clear();
                         } catch (e) { }
-
+                        var sellSignalDatas = [];
                         draw.drawGrid(Ref.child('summary_data'), config, function (data) {
                             //loading data
                         }, function (data) {
                             //loaded data
+                            // add the handler function
+                            $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
+                                var updatedNodes = [];
+                                if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                                    $scope.gridOptions.api.forEachNode(function (node) {
+                                        var value = '';
+                                        if (sellSignalDatas[node.childIndex])
+                                            value = sellSignalDatas[node.childIndex];
+                                        node.data.sellSignal = value;
+                                        updatedNodes.push(node);
+                                    });
+                                    $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                }
+                            });
+
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
                             // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
+
                             setTimeout(function () {
                                 align();
                             }, 1000);
@@ -227,12 +248,22 @@ angular.module('superstockApp')
                                         //
                                     } else {
                                         $eventTimeout = $timeout(function () {
-                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
                                                 $scope.gridOptions.api.setRowData($gridData);
-                                            /**
-                                             * Sell signal column
-                                             */
-                                            generateSellSignal($gridData.length);
+                                                /**
+                                                 * Fill data for sell signal column
+                                                 */
+                                                sellSignalDatas = utils.getSellSignals();
+                                                var updatedNodes = [];
+                                                $scope.gridOptions.api.forEachNode(function (node) {
+                                                    var value = '';
+                                                    if (sellSignalDatas[node.childIndex])
+                                                        value = sellSignalDatas[node.childIndex];
+                                                    node.data.sellSignal = value;
+                                                    updatedNodes.push(node);
+                                                });
+                                                $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                            }
                                             $gridData = [];
                                             $eventTimeout = undefined;
                                         }, 1000);
@@ -288,70 +319,6 @@ angular.module('superstockApp')
                             })
                         };
 
-                        /**
-                         * Sell signal column 
-                         */
-                        function generateSellSignal(dataLength) {
-                            var signalGridOptions = {
-                                idLabel: 'Báo bán',
-                                labelList: []
-                            }
-
-                            var data = utils.getSellSignals();
-                            var gridData = [];
-                            for (var i in data) {
-                                var field = {
-                                    sellSignal: data[i]
-                                };
-                                gridData.push(field);
-                            }
-
-                            if (dataLength > gridData.length) {
-                                var length = gridData.length;
-                                for (var i = 0; i < (dataLength - length); i++) {
-                                    var field = {
-                                        sellSignal: ''
-                                    };
-                                    gridData.push(field);
-                                }
-                            }
-
-                            var signalColumns = [{
-                                field: 'sellSignal', //field name
-                                width: 65, //column width
-                                headerName: 'Báo bán', //column title
-                                cellClass: ['ag-cell-red-bg'], //css class of cell in column
-                                enableTooltip: true,
-                                cellRenderer: function (params) { //cell render event
-                                    return '<div title="' + params.value + '">' + params.value + '</div>';
-                                },
-                                headerCellTemplate: function (params) {
-                                    /*
-                                    * Header cell template, this will be render for all header cell of grid
-                                    */
-                                    return (
-                                        '<div class="ag-header-cell ag-header-cell-red ag-header-cell-sortable ag-header-cell-sorted-none">' +
-                                        '<table style="width:100%;height:100%">' +
-                                        '<tr>' +
-                                        '<td width="20px" style="vertical-align:top">' +
-                                        '</td>' +
-                                        '<td>' +
-                                        '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
-                                        '<span id="agText" class="ag-header-cell-text"></span>' +
-                                        '</div>' +
-                                        '</td>' +
-                                        '<td width="20px">' +
-                                        '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
-                                        '</td>' +
-                                        '</tr>' +
-                                        '</table>' +
-                                        '</div>'
-                                    )
-                                }
-                            }]
-                            $scope.signalGridOptions.api.setColumnDefs(signalColumns);
-                            $scope.signalGridOptions.api.setRowData(gridData);
-                        }
                     })
                 })
             })

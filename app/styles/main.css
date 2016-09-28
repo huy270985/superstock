@@ -532,7 +532,7 @@ body {
 }
 
 .header-title {
-    max-width: 1280px; 
+    max-width: 1290px; 
     width: 100%; 
     margin: 0 auto; 
     padding: 5px 40px; 
@@ -556,4 +556,15 @@ body {
     content: '-';
     position: absolute;
     left: 3%;
+}
+
+.grid-area {
+    max-width: 1290px;
+    height: calc(100% - 48px - 49px);
+    margin: 0 auto;
+}
+
+.grid-area > div {
+    height: 100%;
+    float: left;
 }
