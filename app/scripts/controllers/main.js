@@ -307,7 +307,8 @@ angular.module('superstockApp')
                             }
 
                             if (dataLength > gridData.length) {
-                                for (var i = 0; i < (dataLength - gridData.length); i++) {
+                                var length = gridData.length;
+                                for (var i = 0; i < (dataLength - length); i++) {
                                     var field = {
                                         sellSignal: ''
                                     };
@@ -317,13 +318,12 @@ angular.module('superstockApp')
 
                             var signalColumns = [{
                                 field: 'sellSignal', //field name
-                                width: 70, //column width
+                                width: 65, //column width
                                 headerName: 'Báo bán', //column title
                                 cellClass: ['ag-cell-red-bg'], //css class of cell in column
                                 enableTooltip: true,
-                                tooltipField: fieldsArr[i], //show tolltip
                                 cellRenderer: function (params) { //cell render event
-                                    return params.value;
+                                    return '<div title="' + params.value + '">' + params.value + '</div>';
                                 },
                                 headerCellTemplate: function (params) {
                                     /*
