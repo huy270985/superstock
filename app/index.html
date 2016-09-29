@@ -136,16 +136,16 @@
 
                     <div class="collapse navbar-collapse" id="js-navbar-collapse">
                         <ul class="nav navbar-nav navbar-left">
-                            <li ng-if="$root.user" ng-class="{active:($root.link == 'main')}">
+                            <li ng-class="{active:($root.link == 'main')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
                                 <a href="#/"><i class="glyphicon glyphicon-th-large"></i> <span class="menu-item-text">Tổng hợp</span> </a>
                             </li>
-                            <li ng-class="{active:($root.link == 'full')}" ng-if="$root.user">
+                            <li ng-class="{active:($root.link == 'full')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
                                 <a href="#/full"><i class="glyphicon glyphicon-list-alt"></i> <span class="menu-item-text">Đầy đủ</span> </a>
                             </li>
-                            <li ng-show="$root.link == 'full'" ng-click="filterShow($event)" id="filter" ng-if="$root.user">
+                            <li ng-show="$root.link == 'full'" ng-click="filterShow($event)" id="filter" ng-if="$root.user && $root.user.account && $root.user.account.active">
                                 <a href=""><i class="glyphicon glyphicon-filter"></i> <span class="menu-item-text">Bộ lọc</span></a>
                             </li>
-                            <li ng-show="$root.link == 'full'" id="search" ng-if="$root.user">
+                            <li ng-show="$root.link == 'full'" id="search" ng-if="$root.user && $root.user.account && $root.user.account.active">
                                 <div class="row" style="margin-left:15px">
                                     <form class="navbar-form navbar-left" role="search">
                                         <div class="form-group col-xs-10" style="padding:0px">
@@ -159,12 +159,14 @@
                                     </form>
                                 </div>
                             </li>
-                            <li class="" ng-if="$root.user && $root.user.expiredTime">
-                                <a>Thời hạn sử dụng: {{$root.user.expiredTime}}</a>
-                            </li>
                             <li>
-                                <a href="images/icon-information.png" download>
-                                    <span class="glyphicon glyphicon-download-alt"></span> Download HDSD</a>
+                                <a href="" class="super-stock-guide" ng-click="openGuideModal($event)">
+                                    <i class="glyphicon glyphicon-download-alt"></i>
+                                    <span class="menu-item-text">HDSD Super Stock</span>
+                                </a>
+                            </li>
+                            <li class="" ng-if="$root.user && $root.user.account && $root.user.account.active && $root.user.account.expired_date">
+                                <a>Thời hạn sử dụng: {{$root.user.account.expired_date}}</a>
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
@@ -188,7 +190,7 @@
 
         <div class="container-fluit">
             <div class="view-containner">
-                <div ng-view="" ng-if="$root.user" style="height: 100%; width: 100%;"></div>
+                <div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%;"></div>
             </div>
         </div>
 
@@ -196,6 +198,37 @@
             <p>Copyright @superstock</p>
         </div>
 
+    </div>
+
+    <!--Super stock guide-->
+    <div id="superStockGuideModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 id="modal-label">SuperStock</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe src="https://drive.google.com/embeddedfolderview?id=0BwF7UJNTKaLwRk4wLWtuMEtfOHc#grid" width="100%" height="600"
+                        frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Super expired message-->
+    <div id="expiredMessageModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 id="modal-label">SuperStock</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Tài khoản đã bị khóa hoặc hết hạn sử dụng. Vui lòng thanh toán để tiếp tục sử dụng.</h4>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
