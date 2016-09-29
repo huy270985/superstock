@@ -105,7 +105,7 @@ angular.module('superstockApp')
                 $scope.gridOptions.api.onFilterChanged();
             }
 
-            /*
+            /**
              * convert columnDefs to filters and opposite
              */
             function filterConvert(rowDefs, filters) {
@@ -448,7 +448,16 @@ angular.module('superstockApp')
                 $scope.gridOptions.api.onFilterChanged();
             }
 
-            //set filter to default filter (Bộ lọc có sẵn)
+            /**
+             * Export data sheet
+             */
+            $rootScope.exportDatasheet = function ($event) {
+                $event.preventDefault();
+            };
+
+            /**
+             * Set filter to default filter
+             */
             $rootScope.defaultFilter = function (filter) {
                 if (filter) filter = filter[0];
                 else {
@@ -480,6 +489,9 @@ angular.module('superstockApp')
                 $scope.gridOptions.api.onFilterChanged();
             }
 
+            /**
+             * Format UI
+             */
             function align() {
                 $('.ui-grid-header-cell').each(function () {
                     var thisTag = $(this);
@@ -492,6 +504,7 @@ angular.module('superstockApp')
                     }
                 })
             }
+
             $(document).ready(function () {
                 $(document).on('change', '.subTerm', function () {
                     $(this).each(function () {
@@ -509,6 +522,7 @@ angular.module('superstockApp')
                         });
                     });
                 });
+
                 $(document).click(function (e) {
                     var container = $("#sidebar-wrapper");
 

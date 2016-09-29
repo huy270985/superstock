@@ -42,7 +42,6 @@ body {
     padding-right: 15px;
 }
 
-
 /* Custom page header */
 
 .header {
@@ -68,11 +67,22 @@ body {
     color: #777;
     border-top: 1px solid #e5e5e5;
     margin: 0;
+    position: relative;
 }
 
 .footer p {
     padding: 5px;
     margin: 0;
+}
+
+ .footer .controls {
+     position: absolute;
+     left: 10px;
+     top: 5px;
+ }
+
+.footer .controls a {
+        padding: 0 10px;
 }
 
 .container-narrow > hr {

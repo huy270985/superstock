@@ -11,32 +11,30 @@ angular.module('superstockApp')
     .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject) {
         $rootScope.user = null;
         $rootScope.link = '';
+        var disconnectRef = null;
+        var authDataSave = null;
+
+        /**
+         * Show filter controls
+         */
         $scope.filterShow = function (e) {
             e.preventDefault();
             e.stopPropagation();
             if ($rootScope.link == 'main') return;
             $("#wrapper").toggleClass("toggled");
         }
-        var disconnectRef = null;
-        var authDataSave = null;
 
-        // $('#filter').click(function(e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     $("#wrapper").toggleClass("toggled");
-        //     console.log('silder');
-        // });
-
-        // var timeUse = $firebaseObject(Ref.child('title'));
-        // timeUse.$loaded(function(data) {
-        //     console.log(data);
-        //     $scope.timeUse = data.$value;
-        // })
-
+        /**
+         * Redirect to home page
+         */
         function redirect() {
             $location.path('/');
         }
 
+        /**
+         * Login with provider
+         * Ex: facebook,...
+         */
         $scope.oauthLogin = function (provider) {
             auth.$signInWithPopup(provider)
                 .then(function (authData) {
@@ -48,6 +46,10 @@ angular.module('superstockApp')
                     console.log(error);
                 })
         };
+
+        /**
+         * Logout ad redirect to hompage
+         */
         $scope.logout = function () {
             // var obj = {};
             // obj[authDataSave.uid] = false;
@@ -56,15 +58,17 @@ angular.module('superstockApp')
             $location.path('/');
         };
 
+        /**
+         * Open popup to download superstock guide
+         */
         $scope.openGuideModal = function ($event) {
             $event.preventDefault();
             $('#superStockGuideModal').modal('show');
         }
 
-        auth.$onAuthStateChanged(function (authData) {
-
-        });
-
+        /**
+         * Create or update user profile when login
+         */
         function createUserProfile(user) {
             return new Promise(function (resolve, reject) {
                 var $account = $firebaseObject(Ref.child('users/' + user.uid));
