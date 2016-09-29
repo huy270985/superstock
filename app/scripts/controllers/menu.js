@@ -75,8 +75,10 @@ angular.module('superstockApp')
          */
         $rootScope.activeDeactiveAccount = function (userID, $event) {
             $event.preventDefault();
+            var $userRef;
             var promise = new Promise(function (resolve, reject) {
                 var $user = $firebaseObject(Ref.child('users/' + userID));
+                $userRef = $user;
                 $user.$loaded(function (user) {
                     if (user && user.account) {
                         resolve(user);
@@ -94,27 +96,42 @@ angular.module('superstockApp')
                     };
                     if (user.account.active) {
                         data.active = false;
+
+                    }
+                    if (data.active) {
+                        var date = new Date();
+                        date.setDate(date.getUTCDate() + 1);
+                        data.expired_date = date.getFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+                    } else {
+                        data.expired_date = '';
                     }
                     $user.child('account').set(data, function (err) {
                         if (err) {
                             reject();
                         } else {
-                            resolve();
                             $rootScope.user.account.active = data.active;
+                            if (data.expired_date)
+                                $rootScope.user.account.expired_date = new Date(data.expired_date);
+                            resolve();
                         }
                     });
                 });
             }).then(function () {
                 $($event.target).parent().addClass('hidden');
+                if ($userRef)
+                    $userRef.$destroy();
             }).catch(function (e) {
                 $($event.target).parent().addClass('hidden');
+                if ($userRef)
+                    $userRef.$destroy();
             });
         };
 
         /**
          * Create or update user profile when login
          */
-        function createUserProfile(user) {
+        function createUserProfile(userData) {
+            var user = userData.toJSON();
             return new Promise(function (resolve, reject) {
                 var $user = $firebaseObject(Ref.child('users/' + user.uid));
                 $rootScope.$userRef = $user;
