@@ -199,6 +199,10 @@
                     <i class="glyphicon glyphicon-dashboard"></i>
                     <span>Thời hạn sử dụng: {{$root.user.account.expired_date | date : 'dd/MM/yyyy'}}</span>
                 </a>
+                <a href="" class="hidden" ng-click="activeDeactiveAccount($root.user.uid, $event)" ng-if="$root.user">
+                    <i class="glyphicon glyphicon-dashboard"></i>
+                    <span>{{$root.user.account.active ? 'Deactive' : 'Active'}}</span>
+                </a>
             </div>
             <p>Copyright @superstock</p>
         </div>

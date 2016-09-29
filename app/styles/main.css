@@ -376,6 +376,7 @@ body {
 
 .profile-photo {
     width: 34px;
+    max-height: 38px;
     margin-top: 8px;
     border: 1px solid #ccc;
     padding: 1px;

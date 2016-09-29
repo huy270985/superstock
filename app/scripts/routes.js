@@ -130,8 +130,9 @@ angular.module('superstockApp')
             auth.$onAuthStateChanged(function (authData) {
                 $rootScope.user = authData;
                 if ($rootScope.user) {
-                    var $account = $firebaseObject(Ref.child('users/' + $rootScope.user.uid + '/account'));
-                    $account.$loaded(function (account) {
+                    var accountRef = Ref.child('users/' + $rootScope.user.uid + '/account');
+                    $rootScope.$account = $firebaseObject(accountRef);
+                    $rootScope.$account.$loaded(function (account) {
                         var showMessage = false;
                         if (account) {
                             $rootScope.user.account = account;
@@ -147,7 +148,8 @@ angular.module('superstockApp')
                         }
                     });
                 } else {
-
+                    if ($rootScope.$account)
+                        $rootScope.$account.$destroy();
                 }
             });
 

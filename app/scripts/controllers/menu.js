@@ -36,7 +36,8 @@ angular.module('superstockApp')
          * Ex: facebook,...
          */
         $scope.oauthLogin = function (provider) {
-            auth.$signInWithPopup(provider)
+            var providerData = getProviderData(provider);
+            auth.$signInWithPopup(providerData)
                 .then(function (authData) {
                     return createUserProfile(authData.user);
                 }).then(function (userProfile) {
@@ -55,6 +56,8 @@ angular.module('superstockApp')
             // obj[authDataSave.uid] = false;
             // disconnectRef.set(obj);
             auth.$signOut();
+            if ($rootScope.$userRef)
+                $rootScope.$userRef.$destroy();
             $location.path('/');
         };
 
@@ -64,15 +67,58 @@ angular.module('superstockApp')
         $rootScope.openGuideModal = function ($event) {
             $event.preventDefault();
             $('#superStockGuideModal').modal('show');
-        }
+        };
+
+        /**
+         * This function only use for development
+         * active and deavtive account
+         */
+        $rootScope.activeDeactiveAccount = function (userID, $event) {
+            $event.preventDefault();
+            var promise = new Promise(function (resolve, reject) {
+                var $user = $firebaseObject(Ref.child('users/' + userID));
+                $user.$loaded(function (user) {
+                    if (user && user.account) {
+                        resolve(user);
+                    } else {
+                        reject();
+                    }
+                });
+            })
+
+            promise.then(function (user) {
+                return new Promise(function (resolve, reject) {
+                    var $user = Ref.child('users/' + userID);
+                    var data = {
+                        active: true
+                    };
+                    if (user.account.active) {
+                        data.active = false;
+                    }
+                    $user.child('account').set(data, function (err) {
+                        if (err) {
+                            reject();
+                        } else {
+                            resolve();
+                            $rootScope.user.account.active = data.active;
+                        }
+                    });
+                });
+            }).then(function () {
+                $($event.target).parent().addClass('hidden');
+            }).catch(function (e) {
+                $($event.target).parent().addClass('hidden');
+            });
+        };
 
         /**
          * Create or update user profile when login
          */
         function createUserProfile(user) {
             return new Promise(function (resolve, reject) {
-                var $account = $firebaseObject(Ref.child('users/' + user.uid));
-                $account.$loaded(function (userProfile) {
+                var $user = $firebaseObject(Ref.child('users/' + user.uid));
+                $rootScope.$userRef = $user;
+                $user.$loaded(function (userProfile) {
                     if (userProfile) {
                         user.account = userProfile.account;
                         resolve(user);
@@ -93,6 +139,9 @@ angular.module('superstockApp')
                             active: false
                         }
                     };
+                    if (user.providerData && user.providerData[0]) {
+                        userProfile.profile.email = user.providerData[0].email;
+                    }
                     if (user) {
                         if (user.account) {
                             $user = Ref.child('users/' + user.uid);
@@ -111,5 +160,18 @@ angular.module('superstockApp')
                     });
                 })
             });
+        }
+
+        /**
+         * Get provider data for login
+         * Ex: facebook,...
+         */
+        function getProviderData(provider) {
+            var providerData = provider;
+            if (provider == 'facebook') {
+                providerData = new firebase.auth['Facebook' + "AuthProvider"]();
+                providerData.Lc.push('email');
+            }
+            return providerData;
         }
     })
