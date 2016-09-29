@@ -61,7 +61,7 @@ angular.module('superstockApp')
         /**
          * Open popup to download superstock guide
          */
-        $scope.openGuideModal = function ($event) {
+        $rootScope.openGuideModal = function ($event) {
             $event.preventDefault();
             $('#superStockGuideModal').modal('show');
         }
