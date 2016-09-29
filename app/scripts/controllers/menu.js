@@ -153,7 +153,7 @@ angular.module('superstockApp')
                             email: user.email
                         },
                         account: {
-                            active: false
+                            active: true //For new user trial
                         }
                     };
                     if (user.providerData && user.providerData[0]) {
