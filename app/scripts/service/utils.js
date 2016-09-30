@@ -255,23 +255,36 @@ angular
                         var workSheet = workBook.Sheets[workBook.SheetNames[0]];
                         var row = 4;
                         for (var i in data) {
+                            var forSymbol2 = 0;
                             for (var j in data[i]) {
-                                if (config[j]) {
-                                    var cell = config[j].cell;
+                                var key = j;
+                                if (j == 'symbol2') {
+                                    key = key + forSymbol2;
+                                    forSymbol2++;
+                                }
+                                if (config[key]) {
+                                    var cell = config[key].cell;
                                     if (cell) {
                                         var cellAddress = cell + (row + parseInt(i));
                                         var cellData = workSheet[cellAddress];
                                         if (!cellData)
                                             cellData = {};
                                         cellData.v = data[i][j];
-                                        if (config[j].format.indexOf('number') > -1 || config[j].format.indexOf('bigNum') > -1) {
+                                        if (config[key].format.indexOf('number') > -1 || config[key].format.indexOf('bigNum') > -1) {
                                             cellData.t = 'n';
-                                            cellData.z = '#,###.00';
+                                            cellData.z = '#,###';
                                         }
-                                        if (config[j].format.indexOf('percent') > -1) {
+                                        if (config[key].format.indexOf('percent') > -1) {
                                             cellData.v = cellData.v + '%';
                                         }
                                         workSheet[cellAddress] = cellData;
+                                        if (j == 'symbol2') {
+                                            if (config[j + forSymbol2]) {
+                                                var cellAddress = config[j + forSymbol2].cell + (row + parseInt(i));
+                                                var cellData = workSheet[cellAddress];
+                                                cellData.v = data[i][j];
+                                            }
+                                        }
                                     }
                                 }
                             }

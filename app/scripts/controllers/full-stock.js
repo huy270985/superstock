@@ -453,10 +453,9 @@ angular.module('superstockApp')
              */
             $rootScope.exportDatasheet = function ($event) {
                 $event.preventDefault();
-                // Show loading
-                /*              
+                // Show loading      
                 $('#exportProccessing').modal('show');
-                */
+
                 $timeout(function () {
                     var data = {};
                     $scope.gridOptions.api.forEachNode(function (node) {
@@ -469,25 +468,30 @@ angular.module('superstockApp')
                     var formatArr = format.data.split('|');
                     var config = {};
                     var characters = ['A', 'D', 'E', 'F',
-                        'G', 'H', 'I', 'K', 'L', 'M',
-                        'N', 'O', 'P', 'Q', 'R', 'S',
-                        'T', 'U', 'V', 'W', 'X', 'Y',
-                        'Z',
-                        'AA', 'AB', 'AC', 'AD', 'AF', 'AG',
-                        'AH', 'AI', 'AJ', 'AK', 'AL', 'AM',
-                        'AN', 'AO', 'AP', 'AQ', 'AR', 'AS',
-                        'AT', 'AU', 'AV', 'AW', 'AX', 'AY',
-                        'AX'
+                        'G', 'H', 'I', 'J', 'K', 'L',
+                        'M', 'N', 'O', 'P', 'Q', 'R',
+                        'S', 'T', 'U', 'V', 'W', 'X',
+                        'Y', 'Z',
+                        'AA', 'AB', 'AC', 'AD', 'AE', 'AF',
+                        'AG', 'AH', 'AI', 'AJ', 'AK', 'AL',
+                        'AM', 'AN', 'AO', 'AP', 'AQ', 'AR',
+                        'AS', 'AT', 'AU', 'AV', 'AW', 'AX',
+                        'AY', 'AZ'
                     ];
-
+                    var forSymbol2 = 0;
                     for (var i in fieldsArr) {
                         var field = {
                             cell: characters[i],
                             format: formatArr[i]
                         }
-                        config[fieldsArr[i]] = field;
+                        if (fieldsArr[i] == 'symbol2') {
+                            config[fieldsArr[i] + forSymbol2] = field;
+                            forSymbol2++;
+                        } else {
+                            config[fieldsArr[i]] = field;
+                        }
                     }
-                    /*
+
                     // Call write funtction
                     utils.writeData2Worksheet(data, config).then(function (workBook) {
                         // Disabled loadding
@@ -495,7 +499,7 @@ angular.module('superstockApp')
                             $('#exportProccessing').modal('hide');
                         });
                     });
-                    */
+
                 }, 500);
 
             };
