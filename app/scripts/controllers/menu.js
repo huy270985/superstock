@@ -35,7 +35,7 @@ angular.module('superstockApp')
         $scope.userSignup = {};
         $scope.checkEmail;
         $scope.checkPassword;
-        $scope.checkSignIn;
+        $scope.checkSignIn = true;
         $scope.checkConfirmPassword;
         $scope.checkFullName;
         $scope.disabledButton;
@@ -66,8 +66,10 @@ angular.module('superstockApp')
                  * Sigin with email and password
                  */
                 //Check validate
-                if (!checkValidate())
+                if (!checkValidate()) {
+                    $scope.checkSignIn = true;
                     return;
+                }
 
                 //Signin
                 $scope.disabledButton = true;
@@ -205,6 +207,7 @@ angular.module('superstockApp')
             $scope.checkConfirmPassword = true;
             $scope.checkFullName = true;
             $scope.loading = false;
+            $scope.userSignin = {};
             $('#signInModal').modal('show');
         };
 
@@ -218,6 +221,7 @@ angular.module('superstockApp')
             $scope.checkConfirmPassword = true;
             $scope.checkFullName = true;
             $scope.loading = false;
+            $scope.userSignup = {};
             $('#signUpModal').modal('show');
         };
 
@@ -347,6 +351,10 @@ angular.module('superstockApp')
         $(document).on('hidden.bs.modal', '.modal', function () {
             var $this = $(this);
             $this.find('input').val('');
+            $scope.$apply(function () {
+                $scope.userSignin = {};
+                $scope.userSignup = {};
+            })
         });
 
     })
