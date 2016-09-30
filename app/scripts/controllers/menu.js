@@ -31,22 +31,90 @@ angular.module('superstockApp')
             $location.path('/');
         }
 
+        $scope.userSignin = {};
+        $scope.userSignup = {};
+        $scope.checkEmail;
+        $scope.checkPassword;
+        $scope.checkSignIn;
+        $scope.checkConfirmPassword;
+        $scope.checkFullName;
+        $scope.disabledButton;
+        $scope.loading = false;
+
         /**
          * Login with provider
          * Ex: facebook,...
          */
         $scope.oauthLogin = function (provider) {
             var providerData = getProviderData(provider);
-            auth.$signInWithPopup(providerData)
-                .then(function (authData) {
-                    return createUserProfile(authData.user);
-                }).then(function (userProfile) {
-                    redirect();
-                }).catch(function (error) {
-                    console.log("login error");
-                    console.log(error);
-                })
+            if (provider == 'facebook') {
+                /**
+                 * Signin with facebook
+                 */
+                auth.$signInWithPopup(providerData)
+                    .then(function (authData) {
+                        return createUserProfile(authData.user);
+                    }).then(function (userProfile) {
+                        $('#signInModal').modal('hide');
+                        redirect();
+                    }).catch(function (error) {
+                        console.log("login error");
+                        console.log(error);
+                    });
+            } else {
+                /**
+                 * Sigin with email and password
+                 */
+                //Check validate
+                if (!checkValidate())
+                    return;
+
+                //Signin
+                $scope.disabledButton = true;
+                $scope.loading = true;
+                $scope.checkSignIn = true;
+                auth.$signInWithEmailAndPassword($scope.userSignin.email, $scope.userSignin.password)
+                    .then(function (data) {
+                        $('#signInModal').modal('hide');
+                        $scope.disabledButton = false;
+                        $scope.loading = false;
+                        redirect();
+                    }).catch(function (err) {
+                        $scope.disabledButton = false;
+                        $scope.loading = false;
+                        if (err.code) {
+                            $scope.checkSignIn = false;
+                        }
+                    });
+            }
         };
+
+        $scope.oauthSignUp = function () {
+            // Check validate
+            if (!checkValidate('signup'))
+                return;
+
+            // Signup
+            $scope.disabledButton = true;
+            $scope.loading = true;
+            auth.$createUserWithEmailAndPassword($scope.userSignup.email, $scope.userSignup.password)
+                .then(function (data) {
+                    var a = data;
+                    return createUserProfile(data, 'password');
+                })
+                .then(function (data) {
+                    $('#signUpModal').modal('hide');
+                    $scope.disabledButton = false;
+                    $scope.loading = false;
+                    redirect();
+                }).catch(function (err) {
+                    $scope.disabledButton = false;
+                    $scope.loading = false;
+                    if (err.code) {
+                        $scope.checkSignIn = false;
+                    }
+                });
+        }
 
         /**
          * Logout ad redirect to hompage
@@ -128,9 +196,36 @@ angular.module('superstockApp')
         };
 
         /**
+         * Open signin form
+         */
+        $scope.signInForm = function () {
+            $scope.checkEmail = true;
+            $scope.checkPassword = true;
+            $scope.checkSignIn = true;
+            $scope.checkConfirmPassword = true;
+            $scope.checkFullName = true;
+            $scope.loading = false;
+            $('#signInModal').modal('show');
+        };
+
+        /**
+         * Open signup form
+         */
+        $scope.signUpForm = function () {
+            $scope.checkEmail = true;
+            $scope.checkPassword = true;
+            $scope.checkSignIn = true;
+            $scope.checkConfirmPassword = true;
+            $scope.checkFullName = true;
+            $scope.loading = false;
+            $('#signUpModal').modal('show');
+        };
+
+
+        /**
          * Create or update user profile when login
          */
-        function createUserProfile(userData) {
+        function createUserProfile(userData, type) {
             var user = userData.toJSON();
             return new Promise(function (resolve, reject) {
                 var $user = $firebaseObject(Ref.child('users/' + user.uid));
@@ -156,6 +251,8 @@ angular.module('superstockApp')
                             active: true //For new user trial
                         }
                     };
+                    if (type == 'password')
+                        userProfile.profile.fullName = $scope.userSignup.fullName;
                     if (user.providerData && user.providerData[0]) {
                         userProfile.profile.email = user.providerData[0].email;
                     }
@@ -187,8 +284,69 @@ angular.module('superstockApp')
             var providerData = provider;
             if (provider == 'facebook') {
                 providerData = new firebase.auth['Facebook' + "AuthProvider"]();
-                providerData.Lc.push('email');
+                for (var i in providerData) {
+                    if (providerData[i] instanceof Array) {
+                        providerData[i].push('email');
+                    }
+                }
             }
             return providerData;
         }
+
+        function checkValidate(type) {
+            var form = $scope.form;
+            var user = $scope.userSignin;
+            if (type == 'signup') {
+                form = $scope.form_signup;
+                user = $scope.userSignup;
+            }
+
+            var result = true;
+
+            //Check email
+            if ((user && !user.email) || !form.email.$valid) {
+                $scope.checkEmail = false;
+                result = false;
+            }
+            else {
+                $scope.checkEmail = true;
+            }
+
+            //Check password
+            if (user && !user.password) {
+                $scope.checkPassword = false;
+                result = false;
+            }
+            else {
+                $scope.checkPassword = true;
+            }
+
+            //Check confirm password (if any in form)
+            if (form.confirm_password) {
+                if (user.password != user.confirmPassword || !user.confirmPassword) {
+                    $scope.checkConfirmPassword = false;
+                    result = false;
+                } else {
+                    $scope.checkConfirmPassword = true;
+                }
+            }
+
+            if (form.full_name) {
+                //Check full name (if any in form)
+                if (user && !user.fullName) {
+                    $scope.checkFullName = false;
+                    result = false;
+                }
+                else {
+                    $scope.checkFullName = true;
+                }
+            }
+            return result;
+        }
+
+        $(document).on('hidden.bs.modal', '.modal', function () {
+            var $this = $(this);
+            $this.find('input').val('');
+        });
+
     })

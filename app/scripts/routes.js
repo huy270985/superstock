@@ -128,14 +128,17 @@ angular.module('superstockApp')
 
             // watch for login status changes and redirect if appropriate
             auth.$onAuthStateChanged(function (authData) {
-                $rootScope.user = authData;
+                $rootScope.user = authData ? authData.toJSON() : undefined;
                 if ($rootScope.user) {
-                    var accountRef = Ref.child('users/' + $rootScope.user.uid + '/account');
-                    $rootScope.$account = $firebaseObject(accountRef);
-                    $rootScope.$account.$loaded(function (account) {
+                    var userRef = Ref.child('users/' + $rootScope.user.uid);
+                    $rootScope.$userRef = $firebaseObject(userRef);
+                    $rootScope.$userRef.$loaded(function (user) {
                         var showMessage = false;
-                        if (account) {
-                            $rootScope.user.account = account;
+                        if (user.account) {
+                            $rootScope.user.account = user.account;
+                            if (authData && !authData.displayName && user && user.profile) {
+                                $rootScope.user.displayName = user.profile.fullName;
+                            }
                             if ($rootScope.user.account.expired_date)
                                 $rootScope.user.account.expired_date = new Date($rootScope.user.account.expired_date);
                             $rootScope.user.account.active = true; // Always pass for development
@@ -150,8 +153,8 @@ angular.module('superstockApp')
                         }
                     });
                 } else {
-                    if ($rootScope.$account)
-                        $rootScope.$account.$destroy();
+                    if ($rootScope.$userRef)
+                        $rootScope.$userRef.$destroy();
                 }
             });
 
