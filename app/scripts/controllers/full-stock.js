@@ -453,15 +453,51 @@ angular.module('superstockApp')
              */
             $rootScope.exportDatasheet = function ($event) {
                 $event.preventDefault();
-                var data = {};
-                $scope.gridOptions.api.forEachNode(function (node) {
-                    var value = node.data;
-                    data[node.childIndex] = value;
-                });
+                // Show loading
+                /*              
+                $('#exportProccessing').modal('show');
+                */
+                $timeout(function () {
+                    var data = {};
+                    $scope.gridOptions.api.forEachNode(function (node) {
+                        var value = node.data;
+                        data[node.childIndex] = value;
+                    });
 
-                utils.writeData2Worksheet(data).then(function (worBook) {
-                    utils.generateWorksheetFile(worBook);
-                });
+                    // Config to map data of field with template cell
+                    var fieldsArr = fields.data.split('|');
+                    var formatArr = format.data.split('|');
+                    var config = {};
+                    var characters = ['A', 'D', 'E', 'F',
+                        'G', 'H', 'I', 'K', 'L', 'M',
+                        'N', 'O', 'P', 'Q', 'R', 'S',
+                        'T', 'U', 'V', 'W', 'X', 'Y',
+                        'Z',
+                        'AA', 'AB', 'AC', 'AD', 'AF', 'AG',
+                        'AH', 'AI', 'AJ', 'AK', 'AL', 'AM',
+                        'AN', 'AO', 'AP', 'AQ', 'AR', 'AS',
+                        'AT', 'AU', 'AV', 'AW', 'AX', 'AY',
+                        'AX'
+                    ];
+
+                    for (var i in fieldsArr) {
+                        var field = {
+                            cell: characters[i],
+                            format: formatArr[i]
+                        }
+                        config[fieldsArr[i]] = field;
+                    }
+                    /*
+                    // Call write funtction
+                    utils.writeData2Worksheet(data, config).then(function (workBook) {
+                        // Disabled loadding
+                        utils.generateWorksheetFile(workBook, function () {
+                            $('#exportProccessing').modal('hide');
+                        });
+                    });
+                    */
+                }, 500);
+
             };
 
             /**

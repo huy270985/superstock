@@ -253,8 +253,28 @@ angular
                 }).then(function (workBook) {
                     return new Promise(function (resolve, reject) {
                         var workSheet = workBook.Sheets[workBook.SheetNames[0]];
+                        var row = 4;
                         for (var i in data) {
-
+                            for (var j in data[i]) {
+                                if (config[j]) {
+                                    var cell = config[j].cell;
+                                    if (cell) {
+                                        var cellAddress = cell + (row + parseInt(i));
+                                        var cellData = workSheet[cellAddress];
+                                        if (!cellData)
+                                            cellData = {};
+                                        cellData.v = data[i][j];
+                                        if (config[j].format.indexOf('number') > -1 || config[j].format.indexOf('bigNum') > -1) {
+                                            cellData.t = 'n';
+                                            cellData.z = '#,###.00';
+                                        }
+                                        if (config[j].format.indexOf('percent') > -1) {
+                                            cellData.v = cellData.v + '%';
+                                        }
+                                        workSheet[cellAddress] = cellData;
+                                    }
+                                }
+                            }
                         }
                         resolve(workBook);
                     });
@@ -263,7 +283,7 @@ angular
                 })
 
             },
-            generateWorksheetFile: function (workBook) {
+            generateWorksheetFile: function (workBook, callback) {
                 /**
                  * Generate EXCEL file
                  */
@@ -283,8 +303,10 @@ angular
 
                 // The saveAs call downloads a file on the local machine
                 var date = new Date();
-                var fileName = 'SuperStock' + date.getFullYear() + '' + (date.getUTCMonth() + 1) + '' + date.getUTCDate() + '.xlxs';
+                var fileName = 'SuperStock' + date.getFullYear() + '' + (date.getUTCMonth() + 1) + '' + date.getUTCDate() + '.xlsx';
                 saveAs(new Blob([s2ab(wbout)], { type: "" }), fileName);
+                if (callback)
+                    callback();
             }
         }
     });
