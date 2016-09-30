@@ -4,63 +4,6 @@ angular
     .module('superstockApp')
     .factory('utils', function () {
         return {
-            getCellTemplate: function (fieldName, format) {
-                switch (fieldName) {
-                    case 'priceChange':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 0, \'"grid-cell-green"\': COL_FIELD >= 0}">{{COL_FIELD | number}}</div>';
-                    case 'EPS':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 1000, \'"grid-cell-green"\': COL_FIELD > 1000}">{{COL_FIELD | number}}</div>';
-                    case 'revenueChange':
-                    case 'EPSChange':
-                    case 'profitChange':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 0, \'"grid-cell-green"\': COL_FIELD > 0}">{{COL_FIELD | number}}</div>';
-                    case 'point':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 5, \'"grid-cell-green"\': COL_FIELD >= 5, \'grid-cell-purple\': COL_FIELD >= 7}">{{COL_FIELD | number}}</div>';
-                    case 'roe':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 10, \'"grid-cell-green"\': COL_FIELD > 10 }">{{COL_FIELD | number}}</div>';
-                    case 'fxEffect':
-                    case 'cashFlow':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 0, \'"grid-cell-green"\': COL_FIELD > 0 }">{{COL_FIELD | number}}</div>';
-                    default:
-                        if (format)
-                            return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD | number}}</div>';
-                        return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD}}</div>';
-                }
-            },
-            getCellTemplateSummary: function (fieldName, format) {
-                switch (fieldName) {
-                    case 'symbol':
-                        return '<div class="chart-pointer" title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true,\
-                        \'grid-cell-purple\': grid.appScope.colorCanslim(row,\'purple\'), \
-                        \'"grid-cell-green"\': grid.appScope.colorCanslim(row,\'green\'), \
-                        \'grid-cell-fill\': grid.appScope.fillCanslim(row)}">{{COL_FIELD}}\
-                        <img class=\'chart-icon\' src=\'./images/icon-graph.png\' ng-click="grid.appScope.symbolClick(row,col)"/></div>';
-                    case 'totalValue':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true,\
-                         \'grid-cell-purple\': COL_FIELD >= 5e9, \'grid-cell-fill\': COL_FIELD >= 5e9}">{{COL_FIELD | number}}</div>';
-                    case 'EPS':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'"grid-cell-red"\': COL_FIELD < 1000, \'"grid-cell-green"\': COL_FIELD > 1000, \'grid-cell-fill grid-cell-purple\': COL_FIELD >= 3000}">{{COL_FIELD | number}}</div>';
-                    case 'Canslim':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-purple\': COL_FIELD, \'grid-cell-fill\': COL_FIELD }">{{COL_FIELD}}</div>';
-                    case 'pricePeak':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \
-                        \'grid-cell-purple\': COL_FIELD && \'cao nhất 30 phiên\' == COL_FIELD.trim().toLowerCase(), \
-                        \'grid-cell-fill\': COL_FIELD && \'cao nhất 30 phiên\' == COL_FIELD.trim().toLowerCase()}">{{COL_FIELD}}</div>';
-                    case 'signal1':
-                    case 'signal2':
-                        return '<div title="{{COL_FIELD}}" ng-class="{\'ui-grid-cell-contents\': true, \'grid-cell-purple\': COL_FIELD, \'grid-cell-fill\': COL_FIELD}">{{COL_FIELD}}</div>';
-                    case 'chart':
-                    case 'symbol2':
-                        return '<div class="chart-pointer" title="{{COL_FIELD}}" ng-click="grid.appScope.symbolClick(row,col)" ng-class="{\'ui-grid-cell-contents\': true,\
-                        \'grid-cell-purple\': grid.appScope.colorCanslim(row,\'purple\'), \
-                        \'"grid-cell-green"\': grid.appScope.colorCanslim(row,\'green\'), \
-                        \'grid-cell-fill\': grid.appScope.fillCanslim(row)}">{{COL_FIELD}}</div>';
-                    default:
-                        if (format == 'number' || format == 'bigNum')
-                            return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD | number}}</div>';
-                        return '<div title="{{COL_FIELD}}" class="ui-grid-cell-contents">{{COL_FIELD}}</div>';
-                }
-            },
             getCellClass: function (params, format) {
                 var field = params.colDef.field;
                 var value = params.value;
@@ -101,7 +44,10 @@ angular
                 }
                 return classList;
             },
-            getCellClassSummary: function (params, format) { // Define cell color for grid
+            getCellClassSummary: function (params, format) {
+                /**
+                 * Define cell style for grid by column
+                 */
                 var field = params.colDef.field;
                 var value = params.value;
                 var classList = ['ag-cell-orange-bg'];
@@ -276,6 +222,69 @@ angular
                         result = data.data;
                 });
                 return result;
+            },
+            writeData2Worksheet: function (data, config) {
+                /**
+                 * Write data to worksheet
+                 */
+                return new Promise(function (resolve, reject) {
+                    //Get template from server /* set up XMLHttpRequest */
+                    var url = "/data/template.xlsx";
+                    var oReq = new XMLHttpRequest();
+                    oReq.open("GET", url, true);
+                    oReq.responseType = "arraybuffer";
+
+                    oReq.onload = function (e) {
+                        var arraybuffer = oReq.response;
+
+                        /* convert data to binary string */
+                        var data = new Uint8Array(arraybuffer);
+                        var arr = new Array();
+                        for (var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+                        var bstr = arr.join("");
+
+                        /* Call XLSX */
+                        var workBook = XLSX.read(bstr, { type: "binary", cellStyles: true });
+
+                        resolve(workBook);
+                    }
+
+                    oReq.send();
+                }).then(function (workBook) {
+                    return new Promise(function (resolve, reject) {
+                        var workSheet = workBook.Sheets[workBook.SheetNames[0]];
+                        for (var i in data) {
+
+                        }
+                        resolve(workBook);
+                    });
+                }).catch(function (ex) {
+                    return ex;
+                })
+
+            },
+            generateWorksheetFile: function (workBook) {
+                /**
+                 * Generate EXCEL file
+                 */
+                // Config generate file 
+                var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary', cellStyles: true };
+
+                // Write data to file
+                var wbout = XLSX.write(workBook, wopts);
+
+
+                function s2ab(s) {
+                    var buf = new ArrayBuffer(s.length);
+                    var view = new Uint8Array(buf);
+                    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                    return buf;
+                }
+
+                // The saveAs call downloads a file on the local machine
+                var date = new Date();
+                var fileName = 'SuperStock' + date.getFullYear() + '' + (date.getUTCMonth() + 1) + '' + date.getUTCDate() + '.xlxs';
+                saveAs(new Blob([s2ab(wbout)], { type: "" }), fileName);
             }
         }
     });

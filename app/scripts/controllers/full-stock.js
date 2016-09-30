@@ -453,6 +453,15 @@ angular.module('superstockApp')
              */
             $rootScope.exportDatasheet = function ($event) {
                 $event.preventDefault();
+                var data = {};
+                $scope.gridOptions.api.forEachNode(function (node) {
+                    var value = node.data;
+                    data[node.childIndex] = value;
+                });
+
+                utils.writeData2Worksheet(data).then(function (worBook) {
+                    utils.generateWorksheetFile(worBook);
+                });
             };
 
             /**

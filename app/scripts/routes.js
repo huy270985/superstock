@@ -131,8 +131,8 @@ angular.module('superstockApp')
                 $rootScope.user = authData ? authData.toJSON() : undefined;
                 if ($rootScope.user) {
                     var userRef = Ref.child('users/' + $rootScope.user.uid);
-                    $rootScope.$userRef = $firebaseObject(userRef);
-                    $rootScope.$userRef.$loaded(function (user) {
+                    $rootScope.$userRefChange = $firebaseObject(userRef);
+                    $rootScope.$userRefChange.$loaded(function (user) {
                         var showMessage = false;
                         if (user.account) {
                             $rootScope.user.account = user.account;
@@ -153,8 +153,8 @@ angular.module('superstockApp')
                         }
                     });
                 } else {
-                    if ($rootScope.$userRef)
-                        $rootScope.$userRef.$destroy();
+                    if ($rootScope.$userRefChange)
+                        $rootScope.$userRefChange.$destroy();
                 }
             });
 
