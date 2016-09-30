@@ -138,13 +138,13 @@ angular.module('superstockApp')
                             $rootScope.user.account = account;
                             if ($rootScope.user.account.expired_date)
                                 $rootScope.user.account.expired_date = new Date($rootScope.user.account.expired_date);
-                            showMessage = !account.active;
+                            $rootScope.user.account.active = true; // Always pass for development
                         } else {
                             $rootScope.user.account = {
                                 active: true // For new user trial
                             };
-                            showMessage = false;
                         }
+                        showMessage = !$rootScope.user.account.active;
                         if (showMessage) {
                             $('#expiredMessageModal').modal('show');
                         }
