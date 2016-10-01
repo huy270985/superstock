@@ -172,7 +172,8 @@
                             </li>
                             <!--style="width: 49px; min-height: 1px;"-->
                             <li class="dropdown user-area" ng-if="$root.user">
-                                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="cursor: pointer;">
+                                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="cursor: pointer; {{ $root.user.photoURL ? 'padding-top: 5px;
+    padding-bottom: 5px;' : ''}}">
                                     <img ng-if="$root.user.photoURL" class="profile-photo" ng-src="{{$root.user.photoURL}}" />
                                     <span>{{$root.user.displayName}}</span>
                                     <span class="caret"></span>
