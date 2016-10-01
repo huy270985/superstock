@@ -551,7 +551,7 @@ angular.module('superstockApp')
             //search base on 'symbol'
             $rootScope.search = function (searchTerm) {
                 var filterApi = $scope.gridOptions.api.getFilterApi('symbol');
-                filterApi.setType(filterApi.CONTAINS);
+                filterApi.setType(filterApi.CONTAINS || 'contains');
                 filterApi.setFilter(searchTerm);
                 $scope.gridOptions.api.onFilterChanged();
             }
