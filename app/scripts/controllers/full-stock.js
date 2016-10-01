@@ -254,6 +254,22 @@ angular.module('superstockApp')
                                     )
                                 }
                             }
+
+                            // Set sort by user setting
+                            if ($rootScope.userSetting && $rootScope.userSetting.sort && $rootScope.userSetting.sort.full) {
+                                if (def.field == $rootScope.userSetting.sort.full.colId) {
+                                    def.sort = $rootScope.userSetting.sort.full.sort;
+                                }
+                            }
+
+                            // Pinned column by user setting
+                            if ($rootScope.userSetting && $rootScope.userSetting.pinColumns && $rootScope.userSetting.pinColumns.full) {
+                                var check = $rootScope.userSetting.pinColumns.full.indexOf(def.field)
+                                if (check > -1) {
+                                    def.pinned = 'left';
+                                }
+                            }
+
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
                             if (filter) def.filter = filter; //add filter
                             if (formatArr[i] != '') { //add filter from A to B
@@ -345,59 +361,150 @@ angular.module('superstockApp')
                             console.clear();
                         } catch (e) { }
 
-                        $scope.gridOptions.api.setColumnDefs(columnDefs);
+                        if ($scope.gridOptions.api) {
+                            $scope.gridOptions.api.setColumnDefs(columnDefs);
 
-                        draw.drawGrid(Ref.child('superstock'), config, function (data) {
-                            //loading data
-                            $scope.gridOptions.api.showLoadingOverlay()
+                            draw.drawGrid(Ref.child('superstock'), config, function (data) {
+                                //loading data
+                                $scope.gridOptions.api.showLoadingOverlay();
+                            }, function (data) {
+                                //Add event after sort changed
+                                $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
 
-                        }, function (data) {
-                            // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
-                            for (var i in $rootScope.filterList) {
-                                if ($rootScope.filterList[i].filters) {
-                                    $rootScope.$watch('filterList["' + i + '"].filters[0].term', function (newVal, oldVal) {
-                                        filterChange(newVal, oldVal);
-                                    })
-                                }
-                                if ($rootScope.filterList[i].filter) {
-                                    $rootScope.$watch('filterList["' + i + '"].filter.term', function (newVal, oldVal) {
-                                        filterChange(newVal, oldVal);
-                                    })
-                                }
-                            }
+                                    var setting = $rootScope.userSetting;
+                                    if (!setting) {
+                                        setting = {
+                                            sort: {
+                                                full: {
 
-                            $rootScope.filterList = filterConvert($rootScope.filterList, filterData);
-                            setTimeout(function () {
-                                align();
-                            }, 1000);
-                        }, {
-                                added: function (data, childSnapshot, id) {
-                                    /*
-                                    * Update data in grid when server update data
-                                    */
-                                    $gridData.push(data);
-                                    if ($eventTimeout) {
-                                        //
-                                    } else {
-                                        $eventTimeout = $timeout(function () {
-                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null)
-                                                $scope.gridOptions.api.setRowData($gridData);
-                                            $gridData = [];
-                                            $eventTimeout = undefined;
-                                        }, 1000);
+                                                }
+                                            },
+                                            pinColumns: {
+
+                                            }
+                                        };
                                     }
-                                },
-                                changed: function (data, childSnapshot, id) {
-                                    /*
-                                    * Data Changed Event
-                                    */
-                                },
-                                removed: function (oldChildSnapshot) {
-                                    /*
-                                    * Data Removed Event
-                                    */
+                                    if (!setting.sort) {
+                                        setting.sort = {
+                                            full: {
+
+                                            }
+                                        }
+                                    }
+
+                                    if (!setting.sort.full)
+                                        setting.sort.full = {};
+                                    var sortModel = $scope.gridOptions.api.getSortModel();
+                                    if (sortModel && sortModel[0])
+                                        setting.sort.full = sortModel[0];
+
+                                    var $user = Ref.child('users/' + currentAuth.uid);
+                                    $user.child('userSetting').set(setting, function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log('Saved user setting');
+                                        }
+                                    })
+
+                                });
+
+                                //Add event after column pinned
+                                $scope.gridOptions.api.addEventListener('columnPinned', function (params) {
+
+                                    var setting = $rootScope.userSetting;
+                                    if (!setting) {
+                                        setting = {
+                                            sort: {
+                                                full: {
+
+                                                }
+                                            },
+                                            pinColumns: {
+                                                full: {
+
+                                                }
+                                            }
+                                        };
+                                    }
+                                    if (!setting.pinColumns) {
+                                        setting.pinColumns = {
+                                            full: {
+
+                                            }
+                                        }
+                                    }
+                                    if (!setting.pinColumns.full)
+                                        setting.pinColumns.full = [];
+
+                                    var pinnedColumns = $scope.gridOptions.columnApi.getDisplayedLeftColumns();
+                                    setting.pinColumns.full = [];
+                                    if (pinnedColumns) {
+                                        for (var i in pinnedColumns) {
+                                            var colId = pinnedColumns[i].colId;
+                                            setting.pinColumns.full.push(colId);
+                                        }
+                                    }
+
+                                    var $user = Ref.child('users/' + currentAuth.uid);
+                                    $user.child('userSetting').set(setting, function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log('Saved user setting');
+                                        }
+                                    });
+
+                                });
+
+                                // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
+                                for (var i in $rootScope.filterList) {
+                                    if ($rootScope.filterList[i].filters) {
+                                        $rootScope.$watch('filterList["' + i + '"].filters[0].term', function (newVal, oldVal) {
+                                            filterChange(newVal, oldVal);
+                                        })
+                                    }
+                                    if ($rootScope.filterList[i].filter) {
+                                        $rootScope.$watch('filterList["' + i + '"].filter.term', function (newVal, oldVal) {
+                                            filterChange(newVal, oldVal);
+                                        })
+                                    }
                                 }
-                            })
+
+                                $rootScope.filterList = filterConvert($rootScope.filterList, filterData);
+                                setTimeout(function () {
+                                    align();
+                                }, 1000);
+                            }, {
+                                    added: function (data, childSnapshot, id) {
+                                        /*
+                                        * Update data in grid when server update data
+                                        */
+                                        $gridData.push(data);
+                                        if ($eventTimeout) {
+                                            //
+                                        } else {
+                                            $eventTimeout = $timeout(function () {
+                                                if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                                                    $scope.gridOptions.api.setRowData($gridData);
+                                                $gridData = [];
+                                                $eventTimeout = undefined;
+                                            }, 1000);
+                                        }
+                                    },
+                                    changed: function (data, childSnapshot, id) {
+                                        /*
+                                        * Data Changed Event
+                                        */
+                                    },
+                                    removed: function (oldChildSnapshot) {
+                                        /*
+                                        * Data Removed Event
+                                        */
+                                    }
+                                })
+                        }
+
                     })
                 })
             });
@@ -510,7 +617,7 @@ angular.module('superstockApp')
                         cell: characters[1],
                         format: ''
                     };
-
+            
                     config['chartCustom'] = {
                         cell: characters[2],
                         format: ''

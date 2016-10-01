@@ -45,7 +45,7 @@ angular.module('superstockApp')
          * Login with provider
          * Ex: facebook,...
          */
-        $scope.oauthLogin = function (provider) {
+        $rootScope.oauthLogin = function (provider) {
             var providerData = getProviderData(provider);
             if (provider == 'facebook') {
                 /**
@@ -326,7 +326,7 @@ angular.module('superstockApp')
             }
 
             //Check confirm password (if any in form)
-            if (form.confirm_password) {
+            if (form && form.confirm_password) {
                 if (user.password != user.confirmPassword || !user.confirmPassword) {
                     $scope.checkConfirmPassword = false;
                     result = false;
@@ -335,7 +335,7 @@ angular.module('superstockApp')
                 }
             }
 
-            if (form.full_name) {
+            if (form && form.full_name) {
                 //Check full name (if any in form)
                 if (user && !user.fullName) {
                     $scope.checkFullName = false;
@@ -352,6 +352,11 @@ angular.module('superstockApp')
             var $this = $(this);
             $this.find('input').val('');
             $scope.$apply(function () {
+                $scope.checkEmail = true;
+                $scope.checkPassword = true;
+                $scope.checkSignIn = true;
+                $scope.checkConfirmPassword = true;
+                $scope.checkFullName = true;
                 $scope.userSignin = {};
                 $scope.userSignup = {};
             })

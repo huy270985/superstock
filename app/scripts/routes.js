@@ -134,6 +134,7 @@ angular.module('superstockApp')
                     $rootScope.$userRefChange = $firebaseObject(userRef);
                     $rootScope.$userRefChange.$loaded(function (user) {
                         var showMessage = false;
+                        $rootScope.userSetting = user.userSetting;
                         if (user.account) {
                             $rootScope.user.account = user.account;
                             if (authData && user && user.profile) {

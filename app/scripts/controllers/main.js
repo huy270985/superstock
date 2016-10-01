@@ -216,73 +216,75 @@ angular.module('superstockApp')
                             console.clear();
                         } catch (e) { }
                         var sellSignalDatas = [];
-                        $scope.gridOptions.api.setColumnDefs(columnDefs);
+                        if ($scope.gridOptions.api) {
+                            $scope.gridOptions.api.setColumnDefs(columnDefs);
 
-                        draw.drawGrid(Ref.child('summary_data'), config, function (data) {
-                            //loading data
-                            $scope.gridOptions.api.showLoadingOverlay()
-                        }, function (data) {
-                            //loaded data
-                            // add the handler function
-                            $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
-                                var updatedNodes = [];
-                                if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
-                                    $scope.gridOptions.api.forEachNode(function (node) {
-                                        var value = '';
-                                        if (sellSignalDatas[node.childIndex])
-                                            value = sellSignalDatas[node.childIndex];
-                                        node.data.sellSignal = value;
-                                        updatedNodes.push(node);
-                                    });
-                                    $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
-                                }
-                            });
-
-                            setTimeout(function () {
-                                align();
-                            }, 1000);
-                        }, {
-                                added: function (data, childSnapshot, id) {
-                                    /*
-                                    * Update data in grid when server update data
-                                    */
-                                    $gridData.push(data);
-                                    if ($eventTimeout) {
-                                        //
-                                    } else {
-                                        $eventTimeout = $timeout(function () {
-                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
-                                                $scope.gridOptions.api.setRowData($gridData);
-                                                /**
-                                                 * Fill data for sell signal column
-                                                 */
-                                                sellSignalDatas = utils.getSellSignals();
-                                                var updatedNodes = [];
-                                                $scope.gridOptions.api.forEachNode(function (node) {
-                                                    var value = '';
-                                                    if (sellSignalDatas[node.childIndex])
-                                                        value = sellSignalDatas[node.childIndex];
-                                                    node.data.sellSignal = value;
-                                                    updatedNodes.push(node);
-                                                });
-                                                $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
-                                            }
-                                            $gridData = [];
-                                            $eventTimeout = undefined;
-                                        }, 1000);
+                            draw.drawGrid(Ref.child('summary_data'), config, function (data) {
+                                //loading data
+                                $scope.gridOptions.api.showLoadingOverlay()
+                            }, function (data) {
+                                //loaded data
+                                // add the handler function
+                                $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
+                                    var updatedNodes = [];
+                                    if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                                        $scope.gridOptions.api.forEachNode(function (node) {
+                                            var value = '';
+                                            if (sellSignalDatas[node.childIndex])
+                                                value = sellSignalDatas[node.childIndex];
+                                            node.data.sellSignal = value;
+                                            updatedNodes.push(node);
+                                        });
+                                        $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
                                     }
-                                },
-                                changed: function (data, childSnapshot, id) {
-                                    /*
-                                    * Data Changed Event
-                                    */
-                                },
-                                removed: function (oldChildSnapshot) {
-                                    /*
-                                    * Data Removed Event
-                                    */
-                                }
-                            })
+                                });
+
+                                setTimeout(function () {
+                                    align();
+                                }, 1000);
+                            }, {
+                                    added: function (data, childSnapshot, id) {
+                                        /*
+                                        * Update data in grid when server update data
+                                        */
+                                        $gridData.push(data);
+                                        if ($eventTimeout) {
+                                            //
+                                        } else {
+                                            $eventTimeout = $timeout(function () {
+                                                if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                                                    $scope.gridOptions.api.setRowData($gridData);
+                                                    /**
+                                                     * Fill data for sell signal column
+                                                     */
+                                                    sellSignalDatas = utils.getSellSignals();
+                                                    var updatedNodes = [];
+                                                    $scope.gridOptions.api.forEachNode(function (node) {
+                                                        var value = '';
+                                                        if (sellSignalDatas[node.childIndex])
+                                                            value = sellSignalDatas[node.childIndex];
+                                                        node.data.sellSignal = value;
+                                                        updatedNodes.push(node);
+                                                    });
+                                                    $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                                }
+                                                $gridData = [];
+                                                $eventTimeout = undefined;
+                                            }, 1000);
+                                        }
+                                    },
+                                    changed: function (data, childSnapshot, id) {
+                                        /*
+                                        * Data Changed Event
+                                        */
+                                    },
+                                    removed: function (oldChildSnapshot) {
+                                        /*
+                                        * Data Removed Event
+                                        */
+                                    }
+                                })
+                        }
                         /*
                         * Graph chart click event
                         */

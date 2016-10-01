@@ -273,13 +273,20 @@ angular
                                         if (config[key].format.indexOf('number') > -1 || config[key].format.indexOf('bigNum') > -1) {
                                             cellData.t = 'n';
                                             cellData.z = '#,###';
+                                            if (!cellData.v || cellData.v == null || cellData.v == '')
+                                                cellData.v = 0;
+                                            if (cellData.v == 0)
+                                                delete cellData.z;
                                         }
                                         if (config[key].format.indexOf('percent') > -1) {
+                                            cellData.t = 's';
                                             var value = parseFloat(cellData.v);
                                             if (!isNaN(value)) {
                                                 value = value.toFixed(2);
+                                                cellData.v = value + '%';
+                                            } else {
+                                                cellData.v = '';
                                             }
-                                            cellData.v = value + '%';
                                         }
                                         if (config[key].format == '')
                                             cellData.t = 's';
