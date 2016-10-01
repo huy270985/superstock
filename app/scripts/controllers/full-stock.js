@@ -270,6 +270,14 @@ angular.module('superstockApp')
                                 }
                             }
 
+                            // Visible column by user setting
+                            if ($rootScope.userSetting && $rootScope.userSetting.hiddenColumns && $rootScope.userSetting.hiddenColumns.full) {
+                                var check = $rootScope.userSetting.hiddenColumns.full.indexOf(def.field)
+                                if (check > -1) {
+                                    def.hide = true;
+                                }
+                            }
+                            
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
                             if (filter) def.filter = filter; //add filter
                             if (formatArr[i] != '') { //add filter from A to B
@@ -429,9 +437,7 @@ angular.module('superstockApp')
                                     }
                                     if (!setting.pinColumns) {
                                         setting.pinColumns = {
-                                            full: {
-
-                                            }
+                                            full: []
                                         }
                                     }
                                     if (!setting.pinColumns.full)
@@ -460,6 +466,55 @@ angular.module('superstockApp')
                                 //Add event after column pinned
                                 $scope.gridOptions.api.addEventListener('afterFilterChanged', function (params) {
                                     $scope.rowAfterFilter = $scope.gridOptions.api.rowModel.rowsToDisplay;
+                                });
+
+                                //Add event after column pinned
+                                $scope.gridOptions.api.addEventListener('columnVisible', function (params) {
+
+                                    var setting = $rootScope.userSetting;
+                                    if (!setting) {
+                                        setting = {
+                                            sort: {
+                                                full: {
+
+                                                }
+                                            },
+                                            pinColumns: {
+                                                full: []
+                                            },
+                                            hiddenColumns: {
+                                                full: []
+                                            }
+                                        };
+                                    }
+                                    if (!setting.hiddenColumns) {
+                                        setting.hiddenColumns = {
+                                            full: []
+                                        }
+                                    }
+                                    if (!setting.hiddenColumns.full)
+                                        setting.hiddenColumns.full = [];
+
+                                    var columns = $scope.gridOptions.columnApi.getAllColumns();
+                                    var hiddenColumns = columns.filter(function (value) {
+                                        return value.visible == false;
+                                    })
+                                    var data = [];
+                                    if (hiddenColumns) {
+                                        for (var i in hiddenColumns) {
+                                            data.push(hiddenColumns[i].colId);
+                                        }
+                                    }
+
+                                    setting.hiddenColumns.full = data;
+                                    var $user = Ref.child('users/' + currentAuth.uid);
+                                    $user.child('userSetting').set(setting, function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log('Saved user setting');
+                                        }
+                                    });
                                 });
 
                                 // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
