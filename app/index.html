@@ -457,6 +457,46 @@
         </div>
     </div>
 
+    <!--Change Profile Form-->
+    <div id="changeProfileModal" class="modal fade" data-backdrop="static" ng-controller="MenuCtrl">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 id="modal-label">Cập nhật thông tin</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="form_change_profile" role="form" autocomplete="off" novalidate ng-submit="changeProfile()">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>Họ tên</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" name="full_name" class="form-control input-sm" ng-model="userProfile.fullName" placeholder="Họ tên" required/>
+                                    <span ng-show="(form_change_profile.$submitted && !checkFullName)" style="color: red;">Vui lòng nhập họ tên.</span>
+                                    <span ng-show="(form_change_pasword.$submitted && !checkChangeProfile)" style="color: red;">Không thể cập nhật thông tin tài khoản, vui lòng thử lại.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                </div>
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary btn-sm" style="min-width: 90px;" ng-disabled="disabledButton">Cập nhật</button>
+                                    <button type="button" class="btn btn-sm" data-dismiss="modal" style="min-width: 90px;">Đóng</button>
+                                    <img ng-if="loading" class="pull-right" style="margin-top: 8px;" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--Export data sheet loading Form-->
     <div id="exportProccessing" class="modal fade" data-backdrop="static">
         <div class="modal-dialog">

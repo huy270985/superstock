@@ -229,7 +229,7 @@ angular.module('superstockApp')
         };
 
         /**
-         * Open signup form
+         * Open change password form
          */
         $scope.changePasswordForm = function () {
             $scope.checkEmail = true;
@@ -240,6 +240,13 @@ angular.module('superstockApp')
             $scope.loading = false;
             $scope.userSignup = {};
             $('#changePasswordModal').modal('show');
+        };
+
+        /**
+         * 
+         */
+        $scope.changeProfileForm = function () {
+            $('#changeProfileModal').modal('show');
         };
 
         /**
@@ -265,6 +272,40 @@ angular.module('superstockApp')
                     }
                 });
         }
+
+        /**
+         * Change profile function
+         */
+
+        $scope.changeProfile = function () {
+            if (!checkValidate('changeProfile')) {
+                $scope.checkChangeProfile = true;
+                return;
+            }
+
+            if ($rootScope.user) {
+                var userProfile = $rootScope.user.profile;
+                userProfile.fullName = $scope.userProfile.fullName;
+
+                $scope.loading = true;
+                $scope.disabledButton = true;
+                var $user = Ref.child('users/' + $rootScope.user.uid);
+                $user.child('profile').set(userProfile, function (err) {
+                    $scope.$apply(function () {
+                        if (err) {
+
+                        } else {
+                            $rootScope.user.displayName = $scope.userProfile.fullName;
+                        }
+                        $('#changeProfileModal').modal('hide');
+                        $scope.disabledButton = false;
+                        $scope.loading = false;
+                    });
+
+                });
+            }
+        }
+
         /**
          * Create or update user profile when login
          */
@@ -346,12 +387,15 @@ angular.module('superstockApp')
             } else if (type == 'changePassword') {
                 form = $scope.form_change_pasword;
                 user = $scope.userProfile;
+            } else if (type == 'changeProfile') {
+                form = $scope.form_change_profile;
+                user = $scope.userProfile;
             }
 
             var result = true;
 
             //Check email
-            if (type != 'changePassword' && ((user && !user.email) || !form.email.$valid)) {
+            if (type != 'changePassword' && type != 'changeProfile' && ((user && !user.email) || !form.email.$valid)) {
                 $scope.checkEmail = false;
                 result = false;
             }
@@ -360,7 +404,7 @@ angular.module('superstockApp')
             }
 
             // Check password
-            if (user && !user.password) {
+            if (form.password && user && !user.password) {
                 $scope.checkPassword = false;
                 result = false;
             }
@@ -426,6 +470,13 @@ angular.module('superstockApp')
                 $scope.userSignin = {};
                 $scope.userSignup = {};
                 $scope.userProfile = {};
+            })
+        });
+
+        $(document).on('shown.bs.modal', '#changeProfileModal', function () {
+            $scope.$apply(function () {
+                if ($rootScope.user)
+                    $scope.userProfile.fullName = $rootScope.user.displayName;
             })
         });
 

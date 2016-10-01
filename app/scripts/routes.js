@@ -135,6 +135,7 @@ angular.module('superstockApp')
                     $rootScope.$userRefChange.$loaded(function (user) {
                         var showMessage = false;
                         $rootScope.userSetting = user.userSetting;
+                        $rootScope.user.profile = user.profile;
                         if (user.account) {
                             $rootScope.user.account = user.account;
                             if (authData && user && user.profile) {
