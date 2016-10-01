@@ -275,8 +275,14 @@ angular
                                             cellData.z = '#,###';
                                         }
                                         if (config[key].format.indexOf('percent') > -1) {
-                                            cellData.v = cellData.v + '%';
+                                            var value = parseFloat(cellData.v);
+                                            if (!isNaN(value)) {
+                                                value = value.toFixed(2);
+                                            }
+                                            cellData.v = value + '%';
                                         }
+                                        if (config[key].format == '')
+                                            cellData.t = 's';
                                         workSheet[cellAddress] = cellData;
                                         if (j == 'symbol2') {
                                             if (config[j + forSymbol2]) {

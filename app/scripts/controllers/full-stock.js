@@ -25,6 +25,7 @@ angular.module('superstockApp')
             //check user login
             if (currentAuth) {
                 var filter = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/filter'));
+                $rootScope.filterRef = filter;
                 filter.$loaded(function (data) {
                     filterData = {};
                     for (var i in data) {
@@ -461,13 +462,17 @@ angular.module('superstockApp')
                     $scope.gridOptions.api.forEachNode(function (node) {
                         var value = node.data;
                         data[node.childIndex] = value;
+                        if (data[node.childIndex]) {
+                            data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
+                            data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
+                        }
                     });
 
                     // Config to map data of field with template cell
                     var fieldsArr = fields.data.split('|');
                     var formatArr = format.data.split('|');
                     var config = {};
-                    var characters = ['A', 'D', 'E', 'F',
+                    var characters = ['A', 'B', 'C', 'D', 'E', 'F',
                         'G', 'H', 'I', 'J', 'K', 'L',
                         'M', 'N', 'O', 'P', 'Q', 'R',
                         'S', 'T', 'U', 'V', 'W', 'X',
@@ -479,9 +484,14 @@ angular.module('superstockApp')
                         'AY', 'AZ'
                     ];
                     var forSymbol2 = 0;
+                    var count = 3;
                     for (var i in fieldsArr) {
+                        var key = i;
+                        if (fieldsArr[i] != 'symbol') {
+                            key = count.toString();
+                        }
                         var field = {
-                            cell: characters[i],
+                            cell: characters[key],
                             format: formatArr[i]
                         }
                         if (fieldsArr[i] == 'symbol2') {
@@ -490,7 +500,22 @@ angular.module('superstockApp')
                         } else {
                             config[fieldsArr[i]] = field;
                         }
+                        if (fieldsArr[i] != 'symbol') {
+                            count++;
+                        }
                     }
+
+                    /**
+                    config['basicCustom'] = {
+                        cell: characters[1],
+                        format: ''
+                    };
+
+                    config['chartCustom'] = {
+                        cell: characters[2],
+                        format: ''
+                    };
+                     */
 
                     // Call write funtction
                     utils.writeData2Worksheet(data, config).then(function (workBook) {
