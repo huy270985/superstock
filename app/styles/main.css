@@ -588,8 +588,7 @@ body {
     position: relative;
 }
 
-.ag-body-viewport
-{
+.ag-body-viewport {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -598,4 +597,15 @@ body {
 	overflow-y: scroll;
 	
 	-webkit-box-flex: 1;
+}
+
+.user-area {
+    cursor: pointer;
+    background: #D7EEFE !important;
+    color: #2E70B7 !important;
+}
+
+.user-area.open > a {
+    background: #D7EEFE !important;
+    color: #2E70B7 !important;
 }

@@ -33,11 +33,14 @@ angular.module('superstockApp')
 
         $scope.userSignin = {};
         $scope.userSignup = {};
+        $scope.userProfile = {};
         $scope.checkEmail;
         $scope.checkPassword;
         $scope.checkSignIn = true;
         $scope.checkConfirmPassword;
         $scope.checkFullName;
+        $scope.checkNewPassword;
+        $scope.checkConfirmNewPassword;
         $scope.disabledButton;
         $scope.loading = false;
 
@@ -45,7 +48,7 @@ angular.module('superstockApp')
          * Login with provider
          * Ex: facebook,...
          */
-        $rootScope.oauthLogin = function (provider) {
+        $scope.oauthLogin = function (provider) {
             var providerData = getProviderData(provider);
             if (provider == 'facebook') {
                 /**
@@ -225,7 +228,43 @@ angular.module('superstockApp')
             $('#signUpModal').modal('show');
         };
 
+        /**
+         * Open signup form
+         */
+        $scope.changePasswordForm = function () {
+            $scope.checkEmail = true;
+            $scope.checkPassword = true;
+            $scope.checkSignIn = true;
+            $scope.checkConfirmPassword = true;
+            $scope.checkFullName = true;
+            $scope.loading = false;
+            $scope.userSignup = {};
+            $('#changePasswordModal').modal('show');
+        };
 
+        /**
+         * Change password function
+         */
+        $scope.changePassword = function () {
+            if (!checkValidate('changePassword')) {
+                $scope.checkChangePassword = true;
+                return;
+            }
+            //Change password
+            $scope.loading = true;
+            auth.$updatePassword($scope.userProfile.newPassword)
+                .then(function (data) {
+                    $('#changePasswordModal').modal('hide');
+                    $scope.disabledButton = false;
+                    $scope.loading = false;
+                }).catch(function (err) {
+                    $scope.disabledButton = false;
+                    $scope.loading = false;
+                    if (err.code) {
+                        $scope.checkChangePassword = false;
+                    }
+                });
+        }
         /**
          * Create or update user profile when login
          */
@@ -273,6 +312,7 @@ angular.module('superstockApp')
                         if (err) {
                             reject();
                         } else {
+                            $rootScope.fullName = $scope.userSignup.fullName;
                             resolve(userProfile)
                         }
                     });
@@ -303,12 +343,15 @@ angular.module('superstockApp')
             if (type == 'signup') {
                 form = $scope.form_signup;
                 user = $scope.userSignup;
+            } else if (type == 'changePassword') {
+                form = $scope.form_change_pasword;
+                user = $scope.userProfile;
             }
 
             var result = true;
 
             //Check email
-            if ((user && !user.email) || !form.email.$valid) {
+            if (type != 'changePassword' && ((user && !user.email) || !form.email.$valid)) {
                 $scope.checkEmail = false;
                 result = false;
             }
@@ -316,7 +359,7 @@ angular.module('superstockApp')
                 $scope.checkEmail = true;
             }
 
-            //Check password
+            // Check password
             if (user && !user.password) {
                 $scope.checkPassword = false;
                 result = false;
@@ -325,7 +368,7 @@ angular.module('superstockApp')
                 $scope.checkPassword = true;
             }
 
-            //Check confirm password (if any in form)
+            // Check confirm password (if any in form)
             if (form && form.confirm_password) {
                 if (user.password != user.confirmPassword || !user.confirmPassword) {
                     $scope.checkConfirmPassword = false;
@@ -335,6 +378,7 @@ angular.module('superstockApp')
                 }
             }
 
+            // Check full name (if any in form)
             if (form && form.full_name) {
                 //Check full name (if any in form)
                 if (user && !user.fullName) {
@@ -343,6 +387,26 @@ angular.module('superstockApp')
                 }
                 else {
                     $scope.checkFullName = true;
+                }
+            }
+
+            // Check new password
+            if (form && form.new_password) {
+                if (!user.newPassword) {
+                    $scope.checkNewPassword = false;
+                    result = false;
+                } else {
+                    $scope.checkNewPassword = true;
+                }
+            }
+
+            // Check confirm new password
+            if (form && form.confirm_new_password) {
+                if (user.newPassword != user.confirmNewPassword || !user.confirmNewPassword) {
+                    $scope.checkConfirmNewPassword = false;
+                    result = false;
+                } else {
+                    $scope.checkConfirmNewPassword = true;
                 }
             }
             return result;
@@ -357,8 +421,11 @@ angular.module('superstockApp')
                 $scope.checkSignIn = true;
                 $scope.checkConfirmPassword = true;
                 $scope.checkFullName = true;
+                $scope.checkNewPassword = true;
+                $scope.checkConfirmNewPassword = true;
                 $scope.userSignin = {};
                 $scope.userSignup = {};
+                $scope.userProfile = {};
             })
         });
 
