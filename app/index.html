@@ -164,8 +164,15 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="" class="super-stock-guide" ng-click="openGuideModal($event)">
+                                    <i class="glyphicon glyphicon-question-sign"></i>
+                                    <span class="menu-item-text">Hướng dẫn</span>
+                                </a>
+                            </li>
+                            <!--style="width: 49px; min-height: 1px;"-->
                             <li class="">
-                                <img ng-if="$root.user" class="profile-photo" ng-src="{{$root.user.photoURL}}" />
+                                <img ng-if="$root.user && $root.user.photoURL" class="profile-photo" ng-src="{{$root.user.photoURL}}" />
                             </li>
                             <li class="">
                                 <a href="" ng-if="$root.user">{{$root.user.displayName}}</a>
@@ -193,11 +200,6 @@
 
         <div class="footer">
             <div class="controls">
-                <a href="" class="super-stock-guide" ng-click="openGuideModal($event)">
-                    <i class="glyphicon glyphicon-question-sign"></i>
-                    <span class="menu-item-text">Hướng dẫn</span>
-                </a>
-
                 <a ng-if="$root.user && $root.user.account && $root.user.account.active && $root.user.account.expired_date">
                     <i class="glyphicon glyphicon-dashboard"></i>
                     <span>Thời hạn sử dụng: {{$root.user.account.expired_date | date : 'dd/MM/yyyy'}}</span>
