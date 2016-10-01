@@ -457,6 +457,11 @@ angular.module('superstockApp')
 
                                 });
 
+                                //Add event after column pinned
+                                $scope.gridOptions.api.addEventListener('afterFilterChanged', function (params) {
+                                    $scope.rowAfterFilter = $scope.gridOptions.api.rowModel.rowsToDisplay;
+                                });
+
                                 // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
                                 for (var i in $rootScope.filterList) {
                                     if ($rootScope.filterList[i].filters) {
@@ -559,6 +564,7 @@ angular.module('superstockApp')
             /**
              * Export data sheet
              */
+            $scope.rowAfterFilter = [];
             $rootScope.exportDatasheet = function ($event) {
                 $event.preventDefault();
                 // Show loading      
@@ -566,15 +572,26 @@ angular.module('superstockApp')
 
                 $timeout(function () {
                     var data = {};
-                    $scope.gridOptions.api.forEachNode(function (node) {
-                        var value = node.data;
-                        data[node.childIndex] = value;
-                        if (data[node.childIndex]) {
-                            data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
-                            data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
+                    if ($scope.rowAfterFilter && $scope.rowAfterFilter.length > 0) {
+                        for (var i in $scope.rowAfterFilter) {
+                            var node = $scope.rowAfterFilter[i];
+                            var value = node.data;
+                            data[node.childIndex] = value;
+                            if (data[node.childIndex]) {
+                                data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
+                                data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
+                            }
                         }
-                    });
-
+                    } else {
+                        $scope.gridOptions.api.forEachNode(function (node) {
+                            var value = node.data;
+                            data[node.childIndex] = value;
+                            if (data[node.childIndex]) {
+                                data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
+                                data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
+                            }
+                        });
+                    }
                     // Config to map data of field with template cell
                     var fieldsArr = fields.data.split('|');
                     var formatArr = format.data.split('|');
