@@ -229,7 +229,7 @@ angular
                  */
                 return new Promise(function (resolve, reject) {
                     //Get template from server /* set up XMLHttpRequest */
-                    var url = "/data/template.xlsx";
+                    var url = "data/template.xlsx";
                     var oReq = new XMLHttpRequest();
                     oReq.open("GET", url, true);
                     oReq.responseType = "arraybuffer";
