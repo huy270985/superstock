@@ -8,7 +8,7 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject) {
+    .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject, $timeout) {
         $rootScope.user = null;
         $rootScope.link = '';
         var disconnectRef = null;
@@ -22,6 +22,14 @@ angular.module('superstockApp')
             e.stopPropagation();
             if ($rootScope.link == 'main') return;
             $("#wrapper").toggleClass("toggled");
+            if ($("#wrapper").hasClass('toggled')) {
+                $rootScope.filterOn = false;
+                $("#filter-control").removeClass('ng-hide');
+            } else {
+                $rootScope.filterOn = true;
+                $rootScope.setDataForDefaultFilter();
+                $("#filter-control").addClass('ng-hide');
+            }
         }
 
         /**

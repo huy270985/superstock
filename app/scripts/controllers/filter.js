@@ -8,7 +8,7 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('FilterCtrl', function($rootScope, $scope, Ref, $firebaseArray, $compile) {
+    .controller('FilterCtrl', function ($rootScope, $scope, Ref, $firebaseArray, $compile) {
         $scope.defaultFilter = [{
             "EPS": 1000,
             "maVol30": 30e3,
@@ -17,28 +17,70 @@ angular.module('superstockApp')
             "roe": 7,
             "filterName": "Cơ bản tốt"
         }];
+        $scope.individualFilter = false;
+        $scope.publicFilter = true;
 
-        $rootScope.$watch('searchTerm', function() {
+        /**
+         * Filter by search (by CP)
+         */
+        $rootScope.$watch('searchTerm', function () {
             if ($rootScope.search)
                 $rootScope.search($rootScope.searchTerm)
         })
 
-        $scope.$watch('filter', function() {
+        $scope.filterChange = function () {
             if ($scope.filter && $scope.filter.length == 0) {
                 $scope.filter = null;
-                return;
             }
-            if ($rootScope.defaultFilter) {
-                try {
-                    $rootScope.defaultFilter($scope.filter);
-                } catch (e) {}
+            $rootScope.filterData = $scope.filter;
+            if ($rootScope.filterModes)
+                $rootScope.filterModes();
+        }
+
+        /**
+         * Filter mode Public or Individual
+         */
+        $scope.$watch('filterModes', function () {
+            if ($rootScope.filterModes) {
+                if ($scope.filterModes) {
+                    // For individual filter
+                    $scope.publicFilter = false;
+                    $scope.individualFilter = true;
+                    $rootScope.filterModes(true);
+                } else {
+                    // For public filter
+                    $scope.publicFilter = true;
+                    $scope.individualFilter = false;
+                    $rootScope.filterModes(false);
+                }
             }
         });
 
-        $scope.$watch('filterEnabled', function() {
-            if ($rootScope.onOffFilter) {
-                $rootScope.onOffFilter($scope.filterEnabled);
-            }
-        })
+        /**
+         * Reset filter mode
+         */
+        $rootScope.resetFilterModes = function () {
+            $scope.filterModes = false;
+            $scope.publicFilter = true;
+            $scope.individualFilter = false;
+        }
 
+        /**
+         * Hide filter controls when click outsite
+         */
+        $scope.filterHide = function () {
+            if ($rootScope.link == 'main') return;
+            $("#filter-control").removeClass('ng-hide');
+            $rootScope.filterOn = false;
+            $rootScope.resetFilterModes();
+            $rootScope.resetFilter();
+            $("#wrapper").toggleClass("toggled");
+        }
+
+        /**
+         * Set data for default filter
+         */
+        $rootScope.setDataForDefaultFilter = function () {
+            $scope.filter = $scope.defaultFilter;
+        }
     });

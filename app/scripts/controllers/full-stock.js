@@ -19,7 +19,7 @@ angular.module('superstockApp')
             var userAuthData = null;
             var filterData = null;
             var filterChangeFlag = 0;
-            var filterOnOff = false;
+            var filterMode = false;
             $rootScope.filterList = {};
 
             //check user login
@@ -65,46 +65,144 @@ angular.module('superstockApp')
             };
 
             /**
-             * filter change event into angular $watch ($rootScope.filterList[i]...)
+             * Filter change
              */
-            function filterChange(newVal, oldVal) {
-                filterChangeFlag++;
-                if (!filterOnOff) return;
-                if (filterChangeFlag <= Object.keys($rootScope.filterList).length) return;
-                for (var key in $rootScope.filterList) {
-                    var filterItem = $rootScope.filterList[key];
-                    var filterApi = $scope.gridOptions.api.getFilterApi(key);
-                    if (filterItem.filter) {
-                        var term = filterItem.filter.term;
-                        if (term && term.length > 0) {
-                            var model = [];
-                            for (var i in term) {
-                                model.push(term[i].value);
-                            }
-                            if (model.length > 0) {
-                                filterApi.setModel(model);
+            var notLoading = false;
+            function filterChange(loading, filters) {
+                if (loading != undefined)
+                    notLoading = loading;
+                if ($rootScope.filterOn) {
+                    if (filterMode) {
+                        filterIndividualChange();
+                    } else {
+                        if ($rootScope.filterData && $rootScope.filterData != null)
+                            filterPublicChange($rootScope.filterData);
+                        else
+                            $rootScope.resetFilter();
+                    }
+                }
+            }
 
+            /**
+             * Filter change for public mode
+             */
+            function filterPublicChange(filter) {
+                if (filter)
+                    filter = filter[0];
+
+                $window.ga('send', 'event', "Filter", filter.filterName);
+
+                if (!$rootScope.filterList || $rootScope.filterList == null || $rootScope.filterList.length == 0)
+                    return;
+
+                if (!notLoading) {
+                    $scope.gridOptions.api.showLoadingOverlay();
+                    notLoading = true;
+                }
+                $timeout(function () {
+                    var data = {};
+                    for (var i in $rootScope.filterList) {
+                        if (i == 'EPS')
+                            data['EPS'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
+                        else if (i == 'maVol30')
+                            data['maVol30'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
+                        else if (i == 'point')
+                            data['point'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
+                        else if (i == 'profitChange')
+                            data['profitChange'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
+                        else // roe
+                            data['roe'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
+                    }
+                    var filterData = data;
+                    var filterModel = {};
+                    for (var i in filterData) {
+                        var filters = filterData[i].filters;
+                        if (filters && filters[0]) {
+                            if (i == 'EPS') {
+                                filterModel[i] = {
+                                    type: filters[0].condition,
+                                    filter: filter.EPS
+                                };
+                            }
+                            else if (i == 'maVol30') {
+                                filterModel[i] = {
+                                    type: filters[0].condition,
+                                    filter: filter.maVol30
+                                };
+                            }
+                            else if (i == 'point') {
+                                filterModel[i] = {
+                                    type: filters[0].condition,
+                                    filter: filter.point
+                                };
+                            }
+                            else if (i == 'profitChange') {
+                                filterModel[i] = {
+                                    type: filters[0].condition,
+                                    filter: filter.profitChange
+                                };
+                            }
+                            else { // roe
+                                filterModel[i] = {
+                                    type: filters[0].condition,
+                                    filter: filter.roe
+                                };
+                            }
+                        }
+                    }
+                    $scope.gridOptions.api.setFilterModel(filterModel);
+                    $scope.gridOptions.api.onFilterChanged();
+                }, 500);
+            }
+
+            /**
+             * Filter change for individual
+             * Filter change event into angular $watch ($rootScope.filterList[i]...)
+             */
+            function filterIndividualChange(newVal, oldVal) {
+                filterChangeFlag++;
+                if (!$rootScope.filterOn || !filterMode) return;
+                if (filterChangeFlag <= Object.keys($rootScope.filterList).length) return;
+                if (!notLoading) {
+                    $scope.gridOptions.api.showLoadingOverlay();
+                    notLoading = true;
+                }
+                $timeout(function () {
+                    for (var key in $rootScope.filterList) {
+                        var filterItem = $rootScope.filterList[key];
+                        var filterApi = $scope.gridOptions.api.getFilterApi(key);
+                        if (filterItem.filter) {
+                            var term = filterItem.filter.term;
+                            if (term && term.length > 0) {
+                                var model = [];
+                                for (var i in term) {
+                                    model.push(term[i].value);
+                                }
+                                if (model.length > 0) {
+                                    filterApi.setModel(model);
+
+                                } else {
+                                    filterApi.selectEverything();
+                                }
                             } else {
                                 filterApi.selectEverything();
                             }
-                        } else {
-                            filterApi.selectEverything();
-                        }
 
-                    } else if (filterItem.filters) {
-                        if (filterItem.filters[0]) {
-                            var filterGreater = $scope.gridOptions.api.getFilterApi(key);
-                            if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
-                                if (filterItem.filters[0].term) {
-                                    var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
-                                    filterGreater.setType(filterType);
-                                    filterGreater.setFilter(filterItem.filters[0].term);
+                        } else if (filterItem.filters) {
+                            if (filterItem.filters[0]) {
+                                var filterGreater = $scope.gridOptions.api.getFilterApi(key);
+                                if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
+                                    if (filterItem.filters[0].term) {
+                                        var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
+                                        filterGreater.setType(filterType);
+                                        filterGreater.setFilter(filterItem.filters[0].term);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                $scope.gridOptions.api.onFilterChanged();
+                    $scope.gridOptions.api.onFilterChanged();
+                }, 500)
             }
 
             /**
@@ -367,7 +465,7 @@ angular.module('superstockApp')
                         var $eventTimeout;
                         var $gridData = [];
                         try {
-                            console.clear();
+                            // console.clear();
                         } catch (e) { }
 
                         if ($scope.gridOptions.api) {
@@ -464,8 +562,14 @@ angular.module('superstockApp')
 
                                 });
 
-                                //Add event after column pinned
+                                //Add event before filter changed
+                                $scope.gridOptions.api.addEventListener('beforeFilterChanged', function (params) {
+
+                                });
+
+                                //Add event after filter changed
                                 $scope.gridOptions.api.addEventListener('afterFilterChanged', function (params) {
+                                    $scope.gridOptions.api.hideOverlay();
                                     $scope.rowAfterFilter = $scope.gridOptions.api.rowModel.rowsToDisplay;
                                 });
 
@@ -522,12 +626,12 @@ angular.module('superstockApp')
                                 for (var i in $rootScope.filterList) {
                                     if ($rootScope.filterList[i].filters) {
                                         $rootScope.$watch('filterList["' + i + '"].filters[0].term', function (newVal, oldVal) {
-                                            filterChange(newVal, oldVal);
+                                            filterIndividualChange(newVal, oldVal);
                                         })
                                     }
                                     if ($rootScope.filterList[i].filter) {
                                         $rootScope.$watch('filterList["' + i + '"].filter.term', function (newVal, oldVal) {
-                                            filterChange(newVal, oldVal);
+                                            filterIndividualChange(newVal, oldVal);
                                         })
                                     }
                                 }
@@ -551,6 +655,7 @@ angular.module('superstockApp')
                                             $eventTimeout = $timeout(function () {
                                                 if ($scope.gridOptions.api && $scope.gridOptions.api != null)
                                                     $scope.gridOptions.api.setRowData($gridData);
+                                                filterChange(false);
                                                 $gridData = [];
                                                 $eventTimeout = undefined;
                                             }, 1000);
@@ -600,16 +705,25 @@ angular.module('superstockApp')
                 $scope.companyDatas = utils.getCompanyInformation(symbolVal);
             });
 
-            //on/off filter
-            $rootScope.onOffFilter = function (value) {
-                filterOnOff = value;
-                if (value) {
-                    filterChange();
-                } else {
+            /**
+             * Filter mode: public or individual
+             * false: public, true: individual
+             */
+            $rootScope.filterModes = function (mode) {
+                filterMode = mode;
+                filterChange(undefined);
+            }
+
+            /**
+             * Reset filter when disanled filter control
+             */
+
+            $rootScope.resetFilter = function () {
+                $scope.gridOptions.api.showLoadingOverlay();
+                $timeout(function () {
                     $scope.gridOptions.api.setFilterModel(null);
                     $scope.gridOptions.api.onFilterChanged();
-
-                }
+                }, 600)
             }
 
             //search base on 'symbol'
@@ -713,40 +827,6 @@ angular.module('superstockApp')
             };
 
             /**
-             * Set filter to default filter
-             */
-            $rootScope.defaultFilter = function (filter) {
-                if (filter) filter = filter[0];
-                else {
-                    for (var i in $rootScope.filterList) {
-                        if ($rootScope.filterList[i].filter) {
-                            $rootScope.filterList[i].filter.term = null;
-                        }
-                        if ($rootScope.filterList[i].filters) {
-                            $rootScope.filterList[i].filters[0].term = $rootScope.filterList[i].filters[0].min;
-                        }
-                    }
-                    $scope.gridOptions.api.onFilterChanged();
-                    return;
-                }
-                $window.ga('send', 'event', "Filter", filter.filterName);
-                for (var i in $rootScope.filterList) {
-                    if ($rootScope.filterList[i].filter) {
-                        $rootScope.filterList[i].filter.term = null;
-                    }
-                    if ($rootScope.filterList[i].filters) {
-                        $rootScope.filterList[i].filters[0].term = $rootScope.filterList[i].filters[0].min;
-                    }
-                }
-                for (var i in filter) {
-                    if ($rootScope.filterList[i].filters) {
-                        $rootScope.filterList[i].filters[0].term = filter[i];
-                    }
-                }
-                $scope.gridOptions.api.onFilterChanged();
-            }
-
-            /**
              * Format UI
              */
             function align() {
@@ -780,17 +860,6 @@ angular.module('superstockApp')
                     });
                 });
 
-                $(document).click(function (e) {
-                    var container = $("#sidebar-wrapper");
-
-                    if (!container.is(e.target) && container.has(e.target).length === 0) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if ($rootScope.link == 'main') return;
-                        if ($("#wrapper").prop('class').indexOf('toggled') > -1) return;
-                        $("#wrapper").toggleClass("toggled");
-                    }
-                });
             });
         }])
     .directive('ngEnter', function () {
