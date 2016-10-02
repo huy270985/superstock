@@ -26,6 +26,7 @@ angular.module('superstockApp')
                 enableColResize: true,
                 headerHeight: 50,
                 overlayLoadingTemplate: '<span class="ag-overlay-loading-center">Đang xử lý dữ liệu...</span>',
+                sortingOrder: ['desc', 'asc'],
                 //filter changed event
                 onAfterFilterChanged: function () { },
                 onCellClicked: function (params) { }
