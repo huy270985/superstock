@@ -465,7 +465,7 @@ angular.module('superstockApp')
                         var $eventTimeout;
                         var $gridData = [];
                         try {
-                            // console.clear();
+                            console.clear();
                         } catch (e) { }
 
                         if ($scope.gridOptions.api) {

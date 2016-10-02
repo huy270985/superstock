@@ -69,13 +69,19 @@ angular.module('superstockApp')
          * Hide filter controls when click outsite
          */
         $scope.filterHide = function () {
-            if ($rootScope.link == 'main') return;
-            $("#filter-control").removeClass('ng-hide');
-            $rootScope.filterOn = false;
-            $rootScope.resetFilterModes();
-            $rootScope.resetFilter();
-            $("#wrapper").toggleClass("toggled");
+
         }
+        $(document).on('click', '#container-fluit-area, #footer-area, #header-area', function () {
+            if (!$("#sidebar-wrapper").parent().hasClass("toggled")) {
+                $("#filter-control").removeClass('ng-hide');
+                $("#wrapper").toggleClass("toggled");
+                $scope.$apply(function () {
+                    $rootScope.filterOn = false;
+                    $rootScope.resetFilterModes();
+                    $rootScope.resetFilter();
+                })
+            }
+        });
 
         /**
          * Set data for default filter

@@ -64,9 +64,11 @@
                                 <span>Bộ lọc có sẵn</span>
                                 <switch id="filterModes" name="filterModes" ng-init="filterModes = false" ng-model="filterModes" class="green" style="margin-left: 10px;"></switch>
                                 <span style="text-indent: 10px;">Bộ lọc cá nhân</span>
+                                <!--
                                 <button ng-click="filterHide()" class="btn btn-default btn-sm" style="position: absolute;right: -40px;padding: 0 10px;line-height: initial;border-radius: 50%;">
                                     <span style="font-size: 25px;">×</span>
                                 </button>
+                                -->
                             </form>
                         </div>
                     </div>
@@ -124,7 +126,7 @@
             </ul>
         </div>
         <!-- Add your site or application content here -->
-        <div class="header" ng-controller="MenuCtrl">
+        <div id="header-area" class="header" ng-controller="MenuCtrl">
             <div class="navbar navbar-default" role="navigation">
                 <div class="container-fluit">
 
@@ -207,13 +209,13 @@
             </div>
         </div>
 
-        <div class="container-fluit">
+        <div id="container-fluit-area" class="container-fluit">
             <div class="view-containner">
                 <div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%;"></div>
             </div>
         </div>
 
-        <div class="footer">
+        <div id="footer-area" class="footer">
             <div class="controls">
                 <a ng-if="$root.user && $root.user.account && $root.user.account.active && $root.user.account.expired_date">
                     <i class="glyphicon glyphicon-dashboard"></i>
