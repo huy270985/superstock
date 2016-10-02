@@ -47,6 +47,7 @@ angular.module('superstockApp')
                 enableColResize: true,
                 headerHeight: 50,
                 overlayLoadingTemplate: '<span class="ag-overlay-loading-center">Đang xử lý dữ liệu...</span>',
+                sortingOrder: ['desc', 'asc'],
                 //filter changed event
                 onAfterFilterChanged: function () {
                     user = Ref.child('users/' + currentAuth.uid);
@@ -277,7 +278,7 @@ angular.module('superstockApp')
                                     def.hide = true;
                                 }
                             }
-                            
+
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
                             if (filter) def.filter = filter; //add filter
                             if (formatArr[i] != '') { //add filter from A to B
@@ -540,6 +541,9 @@ angular.module('superstockApp')
                                         /*
                                         * Update data in grid when server update data
                                         */
+                                        if (isNaN(data.disruptQtty)) {
+                                            data.disruptQtty = 0;
+                                        }
                                         $gridData.push(data);
                                         if ($eventTimeout) {
                                             //
