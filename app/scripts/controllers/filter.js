@@ -81,6 +81,6 @@ angular.module('superstockApp')
          * Set data for default filter
          */
         $rootScope.setDataForDefaultFilter = function () {
-            $scope.filter = $scope.defaultFilter;
+            // $scope.filter = $scope.defaultFilter;
         }
     });
