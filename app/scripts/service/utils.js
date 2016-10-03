@@ -188,8 +188,9 @@ angular
                 });
                 var result = '';
                 $.getJSON('https://superstock.firebaseio.com/market_summary.json', {}, function (data) {
-                    if (data && data.data)
-                        result = data.data;
+                    if (data && data.data) {
+                        result = data.data.replace('\n', '<br/>');
+                    }
                 });
                 return result;
             },

@@ -141,10 +141,12 @@ angular.module('superstockApp')
                             $rootScope.user.account = user.account;
                             if (authData && user && user.profile) {
                                 $rootScope.user.displayName = user.profile.fullName ? user.profile.fullName : $rootScope.user.displayName;
+                                $rootScope.user.phoneNumber = user.profile.phoneNumber;
                             }
                             if ($rootScope.fullName) {
                                 $rootScope.user.displayName = $rootScope.fullName;
                             }
+
                             if ($rootScope.user.account.expired_date)
                                 $rootScope.user.account.expired_date = new Date($rootScope.user.account.expired_date);
                             $rootScope.user.account.active = true; // Always pass for development

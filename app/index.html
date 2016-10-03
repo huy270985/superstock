@@ -385,6 +385,17 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">
+                                    <label>Số điện thoại</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" name="phone_number" class="form-control input-sm" ng-model="userSignup.phoneNumber" placeholder="Số điện thoại" required/>
+                                    <span ng-show="(form_signup.$submitted && !checkPhoneNumber)" style="color: red;">Vui lòng nhập số điện thoại.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
                                 </div>
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary btn-sm" style="min-width: 90px;" ng-disabled="disabledButton">Đăng ký</button>
@@ -483,7 +494,18 @@
                                 <div class="col-sm-10">
                                     <input type="text" name="full_name" class="form-control input-sm" ng-model="userProfile.fullName" placeholder="Họ tên" required/>
                                     <span ng-show="(form_change_profile.$submitted && !checkFullName)" style="color: red;">Vui lòng nhập họ tên.</span>
-                                    <span ng-show="(form_change_pasword.$submitted && !checkChangeProfile)" style="color: red;">Không thể cập nhật thông tin tài khoản, vui lòng thử lại.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>Số điện thoại</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" name="phone_number" class="form-control input-sm" ng-model="userProfile.phoneNumber" placeholder="Số điện thoại" required/>
+                                    <span ng-show="(form_change_profile.$submitted && !checkPhoneNumber)" style="color: red;">Vui lòng nhập số điện thoại.</span>
+                                    <span ng-show="(form_change_profile.$submitted && !checkChangeProfile)" style="color: red;">Không thể cập nhật thông tin tài khoản, vui lòng thử lại.</span>
                                 </div>
                             </div>
                         </div>

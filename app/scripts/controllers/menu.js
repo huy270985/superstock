@@ -231,6 +231,7 @@ angular.module('superstockApp')
             $scope.checkSignIn = true;
             $scope.checkConfirmPassword = true;
             $scope.checkFullName = true;
+            $scope.checkPhoneNumber = true;
             $scope.loading = false;
             $scope.userSignup = {};
             $('#signUpModal').modal('show');
@@ -245,6 +246,7 @@ angular.module('superstockApp')
             $scope.checkSignIn = true;
             $scope.checkConfirmPassword = true;
             $scope.checkFullName = true;
+            $scope.checkPhoneNumber = true;
             $scope.loading = false;
             $scope.userSignup = {};
             $('#changePasswordModal').modal('show');
@@ -294,6 +296,7 @@ angular.module('superstockApp')
             if ($rootScope.user) {
                 var userProfile = $rootScope.user.profile;
                 userProfile.fullName = $scope.userProfile.fullName;
+                userProfile.phoneNumber = $scope.userProfile.phoneNumber;
 
                 $scope.loading = true;
                 $scope.disabledButton = true;
@@ -304,6 +307,7 @@ angular.module('superstockApp')
 
                         } else {
                             $rootScope.user.displayName = $scope.userProfile.fullName;
+                            $rootScope.user.phoneNumber = $scope.userProfile.phoneNumber;
                         }
                         $('#changeProfileModal').modal('hide');
                         $scope.disabledButton = false;
@@ -343,8 +347,10 @@ angular.module('superstockApp')
                             active: true //For new user trial
                         }
                     };
-                    if (type == 'password')
+                    if (type == 'password') {
                         userProfile.profile.fullName = $scope.userSignup.fullName;
+                        userProfile.profile.phoneNumber = $scope.userSignup.phoneNumber;
+                    }
                     if (user.providerData && user.providerData[0]) {
                         userProfile.profile.email = user.providerData[0].email;
                     }
@@ -461,6 +467,17 @@ angular.module('superstockApp')
                     $scope.checkConfirmNewPassword = true;
                 }
             }
+
+            // Check phone number
+            if (form && form.phone_number) {
+                if (!user.phoneNumber) {
+                    $scope.checkPhoneNumber = false;
+                    result = false;
+                } else {
+                    $scope.checkPhoneNumber = true;
+                }
+            }
+
             return result;
         }
 
@@ -483,8 +500,10 @@ angular.module('superstockApp')
 
         $(document).on('shown.bs.modal', '#changeProfileModal', function () {
             $scope.$apply(function () {
-                if ($rootScope.user)
+                if ($rootScope.user){
                     $scope.userProfile.fullName = $rootScope.user.displayName;
+                    $scope.userProfile.phoneNumber = $rootScope.user.phoneNumber;
+                }
             })
         });
 
