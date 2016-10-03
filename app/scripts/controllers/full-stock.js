@@ -169,44 +169,44 @@ angular.module('superstockApp')
                         $scope.gridOptions.api.showLoadingOverlay();
                     notLoading = true;
                 }
-                // $timeout(function () {
-                if (!$scope.gridOptions.api || $scope.gridOptions.api == null)
-                    return;
-                for (var key in $rootScope.filterList) {
-                    var filterItem = $rootScope.filterList[key];
-                    var filterApi = $scope.gridOptions.api.getFilterApi(key);
-                    if (filterItem.filter) {
-                        var term = filterItem.filter.term;
-                        if (term && term.length > 0) {
-                            var model = [];
-                            for (var i in term) {
-                                model.push(term[i].value);
-                            }
-                            if (model.length > 0) {
-                                filterApi.setModel(model);
+                $timeout(function () {
+                    if (!$scope.gridOptions.api || $scope.gridOptions.api == null)
+                        return;
+                    for (var key in $rootScope.filterList) {
+                        var filterItem = $rootScope.filterList[key];
+                        var filterApi = $scope.gridOptions.api.getFilterApi(key);
+                        if (filterItem.filter) {
+                            var term = filterItem.filter.term;
+                            if (term && term.length > 0) {
+                                var model = [];
+                                for (var i in term) {
+                                    model.push(term[i].value);
+                                }
+                                if (model.length > 0) {
+                                    filterApi.setModel(model);
 
+                                } else {
+                                    filterApi.selectEverything();
+                                }
                             } else {
                                 filterApi.selectEverything();
                             }
-                        } else {
-                            filterApi.selectEverything();
-                        }
 
-                    } else if (filterItem.filters) {
-                        if (filterItem.filters[0]) {
-                            var filterGreater = $scope.gridOptions.api.getFilterApi(key);
-                            if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
-                                if (filterItem.filters[0].term) {
-                                    var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
-                                    filterGreater.setType(filterType);
-                                    filterGreater.setFilter(filterItem.filters[0].term);
+                        } else if (filterItem.filters) {
+                            if (filterItem.filters[0]) {
+                                var filterGreater = $scope.gridOptions.api.getFilterApi(key);
+                                if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
+                                    if (filterItem.filters[0].term) {
+                                        var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
+                                        filterGreater.setType(filterType);
+                                        filterGreater.setFilter(filterItem.filters[0].term);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                $scope.gridOptions.api.onFilterChanged();
-                // }, 0)
+                    $scope.gridOptions.api.onFilterChanged();
+                }, 600)
                 $rootScope.saveFilterSetting();
             }
 
