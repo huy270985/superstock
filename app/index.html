@@ -78,7 +78,8 @@
                     <div class="row" style="margin-left:0px">
                         <!--<div class="col-md-3"></div>-->
                         <div class="col-sm-10 col-xs-10 col-md-10 default-filter" style="padding-left:0px">
-                            <multiselect ng-model="filter" ng-change="filterChange()" options="defaultFilter" class="signle-select" selection-limit="1" id-prop="filterName" display-prop="filterName"></multiselect>
+                            <multiselect ng-model="filter" ng-change="filterChange()" options="defaultFilter" class="signle-select" selection-limit="1"
+                                id-prop="filterName" display-prop="filterName"></multiselect>
                         </div>
                         <div class="col-sm-1 col-xs-1 col-md-1" style="padding-left:10px">
                             <button type="button" ng-click="filter = null" class="close form-control clear-filter" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -109,10 +110,10 @@
                     <div>{{item.headerName}}</div>
                     <div class="row" style="margin-left:0px">
                         <div class="col-md-3 col-sm-3 col-xs-3">
-                            <input type="number" ng-disabled="!filterModes" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum"
-                                max="{{item.filters[1].max}}" ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
-                            <input type="number" ng-disabled="!filterModes" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}"
-                                class="form-control subTerm" data-model="{{key}}" style="padding: 6px 6px" ng-show="item.filters[0].bigNum">
+                            <input type="number" ng-disabled="!filterModes" min="{{item.filters[0].min}}" ng-show="!item.filters[0].bigNum" max="{{item.filters[1].max}}"
+                                ng-model="item.filters[0].term" class="form-control" style="padding: 6px 6px">
+                            <input type="number" ng-disabled="!filterModes" id="{{item.field}}" value="{{parseBigNum(item.filters[0].term)}}" class="form-control subTerm"
+                                data-model="{{key}}" style="padding: 6px 6px" ng-show="item.filters[0].bigNum">
                         </div>
                         <div class="col-md-9 col-sm-9 col-xs-9" style="padding-top:12px">
                             <div ui-slider ng-disabled="!filterModes" min="{{item.filters[0].min}}" id="slide-{{item.field}}" max="{{item.filters[1].max}}"
