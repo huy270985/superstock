@@ -96,7 +96,8 @@ angular.module('superstockApp')
                     return;
 
                 if (!notLoading) {
-                    $scope.gridOptions.api.showLoadingOverlay();
+                    if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                        $scope.gridOptions.api.showLoadingOverlay();
                     notLoading = true;
                 }
                 $timeout(function () {
@@ -164,7 +165,8 @@ angular.module('superstockApp')
                 if (!filterMode) return;
                 if (filterChangeFlag <= Object.keys($rootScope.filterList).length) return;
                 if (!notLoading) {
-                    $scope.gridOptions.api.showLoadingOverlay();
+                    if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                        $scope.gridOptions.api.showLoadingOverlay();
                     notLoading = true;
                 }
                 $timeout(function () {
@@ -226,7 +228,8 @@ angular.module('superstockApp')
              */
 
             $rootScope.resetFilter = function () {
-                $scope.gridOptions.api.showLoadingOverlay();
+                if ($scope.gridOptions.api && $scope.gridOptions.api != null)
+                    $scope.gridOptions.api.showLoadingOverlay();
                 $timeout(function () {
                     $scope.gridOptions.api.setFilterModel(null);
                     $scope.gridOptions.api.onFilterChanged();
