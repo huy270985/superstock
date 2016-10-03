@@ -23,7 +23,7 @@ angular.module('superstockApp')
             if ($rootScope.link == 'main') return;
             $("#wrapper").toggleClass("toggled");
             if ($("#wrapper").hasClass('toggled')) {
-                $rootScope.filterOn = false;
+                $rootScope.filterOn = true;
                 $("#filter-control").removeClass('ng-hide');
             } else {
                 $rootScope.filterOn = true;

@@ -76,9 +76,9 @@ angular.module('superstockApp')
                 $("#filter-control").removeClass('ng-hide');
                 $("#wrapper").toggleClass("toggled");
                 $scope.$apply(function () {
-                    $rootScope.filterOn = false;
-                    $rootScope.resetFilterModes();
-                    $rootScope.resetFilter();
+                    // $rootScope.filterOn = false;
+                    // $rootScope.resetFilterModes();
+                    // $rootScope.resetFilter();
                 })
             }
         });
