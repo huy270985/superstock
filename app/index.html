@@ -355,7 +355,7 @@
                                 <div class="col-sm-10">
                                     <input type="password" name="password" class="form-control input-sm" ng-model="userSignup.password" placeholder="Mật khẩu"
                                         required/>
-                                    <span ng-show="(form_signup.$submitted && !checkPassword)" style="color: red;">Vui lòng nhập mật khẩu.</span>
+                                    <span ng-show="(form_signup.$submitted && !checkPassword)" style="color: red;">Vui lòng nhập mật khẩu(Mật khẩu ít nhất 8 ký tự).</span>
                                 </div>
                             </div>
                         </div>
@@ -388,7 +388,8 @@
                                     <label>Số điện thoại</label>
                                 </div>
                                 <div class="col-sm-10">
-                                    <input type="text" name="phone_number" class="form-control input-sm" ng-model="userSignup.phoneNumber" placeholder="Số điện thoại" required/>
+                                    <input type="text" name="phone_number" class="form-control input-sm" ng-model="userSignup.phoneNumber" placeholder="Số điện thoại"
+                                        required/>
                                     <span ng-show="(form_signup.$submitted && !checkPhoneNumber)" style="color: red;">Vui lòng nhập số điện thoại.</span>
                                 </div>
                             </div>
@@ -441,7 +442,7 @@
                                 <div class="col-sm-10">
                                     <input type="password" name="new_password" class="form-control input-sm" ng-model="userProfile.newPassword" placeholder="Nhập mật khẩu mới"
                                         required/>
-                                    <span ng-show="(form_change_pasword.$submitted && !checkNewPassword)" style="color: red;">Nhập mật khẩu mới.</span>
+                                    <span ng-show="(form_change_pasword.$submitted && !checkNewPassword)" style="color: red;">Nhập mật khẩu mới(Vui lòng nhập mật khẩu(Mật khẩu mới ít nhất 8 ký tự).).</span>
                                 </div>
                             </div>
                         </div>
@@ -503,7 +504,8 @@
                                     <label>Số điện thoại</label>
                                 </div>
                                 <div class="col-sm-10">
-                                    <input type="text" name="phone_number" class="form-control input-sm" ng-model="userProfile.phoneNumber" placeholder="Số điện thoại" required/>
+                                    <input type="text" name="phone_number" class="form-control input-sm" ng-model="userProfile.phoneNumber" placeholder="Số điện thoại"
+                                        required/>
                                     <span ng-show="(form_change_profile.$submitted && !checkPhoneNumber)" style="color: red;">Vui lòng nhập số điện thoại.</span>
                                     <span ng-show="(form_change_profile.$submitted && !checkChangeProfile)" style="color: red;">Không thể cập nhật thông tin tài khoản, vui lòng thử lại.</span>
                                 </div>

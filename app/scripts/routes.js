@@ -129,6 +129,10 @@ angular.module('superstockApp')
             // watch for login status changes and redirect if appropriate
             auth.$onAuthStateChanged(function (authData) {
                 $rootScope.user = authData ? authData.toJSON() : undefined;
+                if ($rootScope.userTmp) {
+                    $rootScope.user.displayName = $rootScope.userTmp.displayName;
+                    $rootScope.user.phoneNumber = $rootScope.userTmp.phoneNumber;
+                }
                 if ($rootScope.user) {
                     var userRef = Ref.child('users/' + $rootScope.user.uid);
                     $rootScope.$userRefChange = $firebaseObject(userRef);

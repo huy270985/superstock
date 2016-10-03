@@ -112,7 +112,11 @@ angular.module('superstockApp')
             $scope.loading = true;
             auth.$createUserWithEmailAndPassword($scope.userSignup.email, $scope.userSignup.password)
                 .then(function (data) {
-                    var a = data;
+                    $rootScope.userTmp = {
+                        email: $scope.userSignup.email,
+                        displayName: $scope.userSignup.fullName,
+                        phoneNumber: $scope.userSignup.phoneNumber,
+                    }
                     return createUserProfile(data, 'password');
                 })
                 .then(function (data) {
@@ -418,7 +422,7 @@ angular.module('superstockApp')
             }
 
             // Check password
-            if (form.password && user && !user.password) {
+            if (form.password && user && (!user.password || user.password.length < 7)) {
                 $scope.checkPassword = false;
                 result = false;
             }
@@ -450,7 +454,7 @@ angular.module('superstockApp')
 
             // Check new password
             if (form && form.new_password) {
-                if (!user.newPassword) {
+                if (!user.newPassword || user.newPassword.length < 7) {
                     $scope.checkNewPassword = false;
                     result = false;
                 } else {
@@ -500,7 +504,7 @@ angular.module('superstockApp')
 
         $(document).on('shown.bs.modal', '#changeProfileModal', function () {
             $scope.$apply(function () {
-                if ($rootScope.user){
+                if ($rootScope.user) {
                     $scope.userProfile.fullName = $rootScope.user.displayName;
                     $scope.userProfile.phoneNumber = $rootScope.user.phoneNumber;
                 }
