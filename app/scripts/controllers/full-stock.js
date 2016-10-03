@@ -169,42 +169,44 @@ angular.module('superstockApp')
                         $scope.gridOptions.api.showLoadingOverlay();
                     notLoading = true;
                 }
-                $timeout(function () {
-                    for (var key in $rootScope.filterList) {
-                        var filterItem = $rootScope.filterList[key];
-                        var filterApi = $scope.gridOptions.api.getFilterApi(key);
-                        if (filterItem.filter) {
-                            var term = filterItem.filter.term;
-                            if (term && term.length > 0) {
-                                var model = [];
-                                for (var i in term) {
-                                    model.push(term[i].value);
-                                }
-                                if (model.length > 0) {
-                                    filterApi.setModel(model);
+                // $timeout(function () {
+                if (!$scope.gridOptions.api || $scope.gridOptions.api == null)
+                    return;
+                for (var key in $rootScope.filterList) {
+                    var filterItem = $rootScope.filterList[key];
+                    var filterApi = $scope.gridOptions.api.getFilterApi(key);
+                    if (filterItem.filter) {
+                        var term = filterItem.filter.term;
+                        if (term && term.length > 0) {
+                            var model = [];
+                            for (var i in term) {
+                                model.push(term[i].value);
+                            }
+                            if (model.length > 0) {
+                                filterApi.setModel(model);
 
-                                } else {
-                                    filterApi.selectEverything();
-                                }
                             } else {
                                 filterApi.selectEverything();
                             }
+                        } else {
+                            filterApi.selectEverything();
+                        }
 
-                        } else if (filterItem.filters) {
-                            if (filterItem.filters[0]) {
-                                var filterGreater = $scope.gridOptions.api.getFilterApi(key);
-                                if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
-                                    if (filterItem.filters[0].term) {
-                                        var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
-                                        filterGreater.setType(filterType);
-                                        filterGreater.setFilter(filterItem.filters[0].term);
-                                    }
+                    } else if (filterItem.filters) {
+                        if (filterItem.filters[0]) {
+                            var filterGreater = $scope.gridOptions.api.getFilterApi(key);
+                            if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
+                                if (filterItem.filters[0].term) {
+                                    var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
+                                    filterGreater.setType(filterType);
+                                    filterGreater.setFilter(filterItem.filters[0].term);
                                 }
                             }
                         }
                     }
-                    $scope.gridOptions.api.onFilterChanged();
-                }, 500)
+                }
+                $scope.gridOptions.api.onFilterChanged();
+                // }, 0)
                 $rootScope.saveFilterSetting();
             }
 
@@ -337,14 +339,13 @@ angular.module('superstockApp')
             };
 
             //Begin get data for ag-grid
-            $rootScope.setFilterSetting();
             var bigNum = 1000000000;
             var titles = $firebaseObject(Ref.child('superstock_titles'));
             var fields = $firebaseObject(Ref.child('superstock_fields'));
             var format = $firebaseObject(Ref.child('superstock_format'));
             fields.$loaded(function () { //load superstock_fields
                 titles.$loaded(function () { //load superstock_titles
-                    format.$loaded(function () { //load superstock_format
+                    format.$loaded(function () { //load 
                         var titlesArr = titles.data.split('|');
                         var fieldsArr = fields.data.split('|');
                         var formatArr = format.data.split('|');
@@ -562,6 +563,13 @@ angular.module('superstockApp')
                             columnDefs.push(def);
                         }
                         $rootScope.filters = columnDefs;
+
+                        $rootScope.setFilterSetting();
+                        if ($rootScope.userFilter) {
+                            if ($rootScope.userFilter.individualFilter)
+                                $rootScope.filterList = filterConvert($rootScope.filterList, $rootScope.userFilter.individualFilter);
+                            filterMode = $rootScope.userFilter.filterMode;
+                        }
                         var $eventTimeout;
                         var $gridData = [];
                         try {
@@ -570,11 +578,11 @@ angular.module('superstockApp')
 
                         if ($scope.gridOptions.api) {
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
-
+                            $scope.gridOptions.api.showLoadingOverlay();
                             draw.drawGrid(Ref.child('superstock'), config, function (data) {
                                 //loading data
-                                $scope.gridOptions.api.showLoadingOverlay();
                             }, function (data) {
+                                $scope.gridOptions.api.hideOverlay();
                                 //Add event after sort changed
                                 $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
 
@@ -725,19 +733,16 @@ angular.module('superstockApp')
                                 // $scope.gridOptions.columnApi.autoSizeColumns(fieldsArr);
                                 for (var i in $rootScope.filterList) {
                                     if ($rootScope.filterList[i].filters) {
-                                        $rootScope.$watch('filterList["' + i + '"].filters[0].term', function (newVal, oldVal) {
+                                        $scope.$watch('filterList["' + i + '"].filters[0].term', function (newVal, oldVal) {
                                             filterIndividualChange(newVal, oldVal);
                                         })
                                     }
                                     if ($rootScope.filterList[i].filter) {
-                                        $rootScope.$watch('filterList["' + i + '"].filter.term', function (newVal, oldVal) {
+                                        $scope.$watch('filterList["' + i + '"].filter.term', function (newVal, oldVal) {
                                             filterIndividualChange(newVal, oldVal);
                                         })
                                     }
                                 }
-
-                                if ($rootScope.userFilter && $rootScope.userFilter.individualFilter)
-                                    $rootScope.filterList = filterConvert($rootScope.filterList, $rootScope.userFilter.individualFilter);
                                 setTimeout(function () {
                                     align();
                                 }, 1000);

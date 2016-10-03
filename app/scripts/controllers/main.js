@@ -16,7 +16,7 @@ angular.module('superstockApp')
             $window.ga('send', 'event', "Page", "Tổng hợp");
 
             //Setup ag-grid
-            $scope.gridOptions = {
+            $scope.gridMainOptions = {
                 enableSorting: true,
                 enableFilter: true,
                 suppressColumnVirtualisation: true,
@@ -217,26 +217,26 @@ angular.module('superstockApp')
                             console.clear();
                         } catch (e) { }
                         var sellSignalDatas = [];
-                        if ($scope.gridOptions.api) {
-                            $scope.gridOptions.api.setColumnDefs(columnDefs);
+                        if ($scope.gridMainOptions.api) {
+                            $scope.gridMainOptions.api.setColumnDefs(columnDefs);
 
                             draw.drawGrid(Ref.child('summary_data'), config, function (data) {
                                 //loading data
-                                $scope.gridOptions.api.showLoadingOverlay()
+                                $scope.gridMainOptions.api.showLoadingOverlay()
                             }, function (data) {
                                 //loaded data
                                 // add the handler function
-                                $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
+                                $scope.gridMainOptions.api.addEventListener('afterSortChanged', function (params) {
                                     var updatedNodes = [];
-                                    if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
-                                        $scope.gridOptions.api.forEachNode(function (node) {
+                                    if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
+                                        $scope.gridMainOptions.api.forEachNode(function (node) {
                                             var value = '';
                                             if (sellSignalDatas[node.childIndex])
                                                 value = sellSignalDatas[node.childIndex];
                                             node.data.sellSignal = value;
                                             updatedNodes.push(node);
                                         });
-                                        $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                        $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
                                     }
                                 });
 
@@ -253,21 +253,21 @@ angular.module('superstockApp')
                                             //
                                         } else {
                                             $eventTimeout = $timeout(function () {
-                                                if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
-                                                    $scope.gridOptions.api.setRowData($gridData);
+                                                if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
+                                                    $scope.gridMainOptions.api.setRowData($gridData);
                                                     /**
                                                      * Fill data for sell signal column
                                                      */
                                                     sellSignalDatas = utils.getSellSignals();
                                                     var updatedNodes = [];
-                                                    $scope.gridOptions.api.forEachNode(function (node) {
+                                                    $scope.gridMainOptions.api.forEachNode(function (node) {
                                                         var value = '';
                                                         if (sellSignalDatas[node.childIndex])
                                                             value = sellSignalDatas[node.childIndex];
                                                         node.data.sellSignal = value;
                                                         updatedNodes.push(node);
                                                     });
-                                                    $scope.gridOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                                    $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
                                                 }
                                                 $gridData = [];
                                                 $eventTimeout = undefined;
