@@ -607,3 +607,18 @@ body {
     background: #D7EEFE !important;
     color: #2E70B7 !important;
 }
+
+.unauthentication-area {
+    height: 100%;
+    width: 100%;
+    color: rgba(46, 112, 159, 1);
+    font-size: 40px;
+    padding: 10px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+}
