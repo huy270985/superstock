@@ -107,6 +107,8 @@ angular.module('superstockApp')
                             };
                         }
                     }
+                    if (!$scope.gridOptions.api)
+                        return;
                     $scope.gridOptions.api.setFilterModel(filterModel);
                     $scope.gridOptions.api.onFilterChanged();
                 }, 500);
@@ -189,6 +191,8 @@ angular.module('superstockApp')
                 if ($scope.gridOptions.api && $scope.gridOptions.api != null)
                     $scope.gridOptions.api.showLoadingOverlay();
                 $timeout(function () {
+                    if (!$scope.gridOptions.api)
+                        return;
                     $scope.gridOptions.api.setFilterModel(null);
                     $scope.gridOptions.api.onFilterChanged();
                 }, 600)
@@ -224,6 +228,8 @@ angular.module('superstockApp')
                             }
                         }
                     } else {
+                        if (!$scope.gridOptions.api)
+                            return;
                         $scope.gridOptions.api.forEachNode(function (node) {
                             var value = node.data;
                             data[node.childIndex] = value;
@@ -540,6 +546,8 @@ angular.module('superstockApp')
                             draw.drawGrid(Ref.child('superstock'), config, function (data) {
                                 //loading data
                             }, function (data) {
+                                if (!$scope.gridOptions.api)
+                                    return;
                                 $scope.gridOptions.api.hideOverlay();
                                 //Add event after sort changed
                                 $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {

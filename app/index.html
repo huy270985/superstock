@@ -199,10 +199,10 @@
                                 </ul>
                             </li>
                             <li class="">
-                                <a href="" ng-if="!$root.user" ng-click="signInForm()">Đăng nhập</a>
+                                <a href="" ng-if="$root.showUI && !$root.user" ng-click="signInForm()">Đăng nhập</a>
                             </li>
                             <li class="">
-                                <a href="" ng-if="!$root.user" ng-click="signUpForm()">Đăng ký</a>
+                                <a href="" ng-if="$root.showUI && !$root.user" ng-click="signUpForm()">Đăng ký</a>
                             </li>
                         </ul>
                     </div>
@@ -213,7 +213,7 @@
         <div id="container-fluit-area" class="container-fluit">
             <div class="view-containner">
                 <div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%;"></div>
-                <div ng-if="!$root.user" class="unauthentication-area">Mời bạn đăng ký tài khoản ở góc phải màn hình,<br>sau đó đăng nhập để có thể sử dụng được bảng giá</div>
+                <div ng-if="$root.showUI && !$root.user" class="unauthentication-area" ng-cloak>Mời bạn đăng ký tài khoản ở góc phải màn hình,<br>sau đó đăng nhập để có thể sử dụng được bảng giá</div>
             </div>
         </div>
 

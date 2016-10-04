@@ -170,6 +170,7 @@ angular.module('superstockApp')
                     if ($rootScope.filterRef)
                         $rootScope.filterRef.$destroy();
                 }
+                $rootScope.showUI = true;
             });
 
             // some of our routes may reject resolve promises with the special {authRequired: true} error
