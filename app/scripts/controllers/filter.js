@@ -10,15 +10,42 @@
 angular.module('superstockApp')
     .controller('FilterCtrl', ['$rootScope', '$scope', 'Ref', '$firebaseArray', '$compile',
         function ($rootScope, $scope, Ref, $firebaseArray, $compile) {
-            $scope.defaultFilter = [{
-                "id": 1,
-                "EPS": 1000,
-                "maVol30": 30e3,
-                "point": 7,
-                "profitChange": 20,
-                "roe": 7,
-                "filterName": "Cơ bản tốt"
-            }];
+            $scope.defaultFilter = [
+                {
+                    "id": 1,
+                    "EPS": { term: 1000, condition: 'greaterThan' },
+                    "maVol30": { term: 30e3, condition: 'greaterThan' },
+                    "point": { term: 7, condition: 'greaterThan' },
+                    "profitChange": { term: 20, condition: 'greaterThan' },
+                    "roe": { term: 7, condition: 'greaterThan' },
+                    "filterName": "Cơ bản tốt"
+                }, {
+                    "id": 2,
+                    "canslim": { term: 'Canslim', condition: 'contains' },
+                    "maVol30": { term: 30e3, condition: 'greaterThanOrEqual' },
+                    "filterName": "Canslim"
+                }, {
+                    "id": 3,
+                    "totalValue": { term: 5e9, condition: 'greaterThanOrEqual' },
+                    "priceChange": { term: 1, condition: 'greaterThanOrEqual' },
+                    "EPS": { term: 3e3, condition: 'greaterThanOrEqual' },
+                    "point": { term: 7, condition: 'greaterThanOrEqual' },
+                    "filterName": "Siêu cổ phiếu"
+                }, {
+                    "id": 4,
+                    "capital": { term: 10e3, condition: 'greaterThanOrEqual' },
+                    "filterName": "Vốn hóa lớn"
+                }, {
+                    "id": 5,
+                    "sideway": { term: "sideway", condition: 'contains' },
+                    "maVol30": { term: 30e3, condition: 'greaterThanOrEqual' },
+                    "filterName": "Các mã sideway"
+                }, {
+                    "id": 6,
+                    "totalValue": { term: 3e9, condition: 'greaterThanOrEqual' },
+                    "pricePeak": { term: "Cao nhất 30 phiên", condition: 'contains' },
+                    "filterName": "Vượt đỉnh"
+                }];
             $scope.individualFilter = false;
             $scope.publicFilter = true;
             $scope.filterModes;

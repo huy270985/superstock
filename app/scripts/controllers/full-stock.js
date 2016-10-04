@@ -92,63 +92,19 @@ angular.module('superstockApp')
 
                 $window.ga('send', 'event', "Filter", filter.filterName);
 
-                if (!$rootScope.filterList || $rootScope.filterList == null || $rootScope.filterList.length == 0)
-                    return;
-
                 if (!notLoading) {
                     if ($scope.gridOptions.api && $scope.gridOptions.api != null)
                         $scope.gridOptions.api.showLoadingOverlay();
                     notLoading = true;
                 }
                 $timeout(function () {
-                    var data = {};
-                    for (var i in $rootScope.filterList) {
-                        if (i == 'EPS')
-                            data['EPS'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
-                        else if (i == 'maVol30')
-                            data['maVol30'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
-                        else if (i == 'point')
-                            data['point'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
-                        else if (i == 'profitChange')
-                            data['profitChange'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
-                        else // roe
-                            data['roe'] = JSON.parse(JSON.stringify($rootScope.filterList[i]))
-                    }
-                    var filterData = data;
                     var filterModel = {};
-                    for (var i in filterData) {
-                        var filters = filterData[i].filters;
-                        if (filters && filters[0]) {
-                            if (i == 'EPS') {
-                                filterModel[i] = {
-                                    type: filters[0].condition,
-                                    filter: filter.EPS
-                                };
-                            }
-                            else if (i == 'maVol30') {
-                                filterModel[i] = {
-                                    type: filters[0].condition,
-                                    filter: filter.maVol30
-                                };
-                            }
-                            else if (i == 'point') {
-                                filterModel[i] = {
-                                    type: filters[0].condition,
-                                    filter: filter.point
-                                };
-                            }
-                            else if (i == 'profitChange') {
-                                filterModel[i] = {
-                                    type: filters[0].condition,
-                                    filter: filter.profitChange
-                                };
-                            }
-                            else { // roe
-                                filterModel[i] = {
-                                    type: filters[0].condition,
-                                    filter: filter.roe
-                                };
-                            }
+                    for (var i in filter) {
+                        if (filter[i].condition && filter[i].term) {
+                            filterModel[i] = {
+                                type: filter[i].condition,
+                                filter: filter[i].term
+                            };
                         }
                     }
                     $scope.gridOptions.api.setFilterModel(filterModel);
@@ -355,12 +311,12 @@ angular.module('superstockApp')
                         // console.log(fieldsArr);
                         //set up column size
                         var sizeArr = [
-                            65, 250, 130, 100, 110, 120, 120, 130,
+                            65, 250, 130, 100, 120, 140, 140, 130,
                             80, 150, 160, 150, 90, 140, 100, 120,
-                            140, 120, 120, 120, 100, 90, 90, 140,
+                            140, 120, 120, 120, 100, 120, 90, 140,
                             140, 140, 170, 80, 140, 110, 140, 100,
                             120, 120, 140, 120, 120, 120, 120, 100,
-                            100, 140, 80, 140
+                            140, 140, 80, 140
                         ];
                         var columnDefs = [];
                         var config = {
@@ -375,7 +331,7 @@ angular.module('superstockApp')
                             });
                             var formatType = null;
                             var cellClass = null;
-                            var filter = null;
+                            var filter = 'text';
                             if (formatArr[i].indexOf('bigNum') > -1 || formatArr[i].indexOf('number') > -1) {
                                 formatType = 'number';
                                 filter = 'number';
@@ -412,8 +368,10 @@ angular.module('superstockApp')
                                             value = $filter('number')(parseFloat(params.value), 2);
                                         }
                                         return '<div title="' + value + '">' + value + '</div>';
-                                    }
-                                    else {
+                                    } else if (params.colDef.field == 'buyDate') {
+                                        // if (params.value && params.value != null && params.value != '')
+                                        //     return $filter('date')(params.value, 'dd/MM/yyyy');
+                                    } else {
                                         var value = '';
                                         if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1) {
                                             value = $filter('number')(params.value);
