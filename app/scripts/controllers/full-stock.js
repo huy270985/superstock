@@ -122,7 +122,7 @@ angular.module('superstockApp')
              */
             function filterIndividualChange(newVal, oldVal) {
                 filterChangeFlag++;
-                if (!filterMode) return;
+                // if (!filterMode) return;
                 if (filterChangeFlag <= Object.keys($rootScope.filterList).length) return;
                 if (!notLoading) {
                     if ($scope.gridOptions.api && $scope.gridOptions.api != null)
@@ -143,13 +143,15 @@ angular.module('superstockApp')
                                     model.push(term[i].value);
                                 }
                                 if (model.length > 0) {
-                                    filterApi.setModel(model);
-
+                                    if (filterApi.selectEverything)
+                                        filterApi.setModel(model);
                                 } else {
-                                    filterApi.selectEverything();
+                                    if (filterApi.selectEverything)
+                                        filterApi.selectEverything();
                                 }
                             } else {
-                                filterApi.selectEverything();
+                                if (filterApi.selectEverything)
+                                    filterApi.selectEverything();
                             }
 
                         } else if (filterItem.filters) {

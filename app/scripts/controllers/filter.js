@@ -67,7 +67,7 @@ angular.module('superstockApp')
                 }
                 $rootScope.filterData = $scope.filter;
                 if ($rootScope.filterModes)
-                    $rootScope.filterModes();
+                    $rootScope.filterModes($scope.filterModes);
 
                 $rootScope.saveFilterSetting();
             }
@@ -118,8 +118,11 @@ angular.module('superstockApp')
                     $("#filter-control").removeClass('ng-hide');
                     $("#wrapper").toggleClass("toggled");
 
-                    $("#js-navbar-collapse").find("ul > li").removeClass("active");
-                    $("#filter-control").addClass("active");
+                    if (!$rootScope.filterOn) {
+                        $("#js-navbar-collapse").find("ul > li").removeClass("active");
+                        $("#full-stock").addClass("active");
+                    }
+                    $(".item-to-hide").removeClass('hidden');
 
                     $scope.$apply(function () {
                         // $rootScope.filterOn = false;
