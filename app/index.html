@@ -146,7 +146,7 @@
                             <li ng-class="{active:($root.link == 'main')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
                                 <a href="#/"><i class="glyphicon glyphicon-th-large"></i> <span class="menu-item-text">Tổng hợp</span> </a>
                             </li>
-                            <li ng-class="{active:($root.link == 'full')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
+                            <li id="full-stock" ng-class="{active:($root.link == 'full')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
                                 <a href="#/full"><i class="glyphicon glyphicon-list-alt"></i> <span class="menu-item-text">Đầy đủ</span> </a>
                             </li>
                             <li ng-show="$root.link == 'full'" ng-click="$root.exportDatasheet($event)" ng-if="$root.user && $root.user.account && $root.user.account.active">
@@ -212,21 +212,13 @@
 
         <div id="container-fluit-area" class="container-fluit">
             <div class="view-containner">
-                <div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%;"></div>
+                <div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%; overflow: auto;"></div>
                 <div ng-if="$root.showUI && !$root.user" class="unauthentication-area" ng-cloak>Mời bạn đăng ký tài khoản ở góc phải màn hình,<br>sau đó đăng nhập để có thể sử dụng được bảng giá</div>
             </div>
         </div>
 
         <div id="footer-area" class="footer">
             <div class="controls">
-                <a ng-if="$root.user && $root.user.account && $root.user.account.active && $root.user.account.expired_date">
-                    <i class="glyphicon glyphicon-dashboard"></i>
-                    <span>Thời hạn sử dụng: {{$root.user.account.expired_date | date : 'dd/MM/yyyy'}}</span>
-                </a>
-                <a href="" class="hidden" ng-click="activeDeactiveAccount($root.user.uid, $event)" ng-if="$root.user">
-                    <i class="glyphicon glyphicon-dashboard"></i>
-                    <span>{{$root.user.account.active ? 'Deactive' : 'Active'}}</span>
-                </a>
             </div>
             <p>Copyright @superstock</p>
         </div>
@@ -489,6 +481,17 @@
                 </div>
                 <div class="modal-body">
                     <form name="form_change_profile" role="form" autocomplete="off" novalidate ng-submit="changeProfile()">
+                        <div class="form-group" ng-if="$root.user && $root.user.account">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>Thời hạn sử dụng</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control input-sm" disabled="disabled" value=" {{$root.user.account.expiredDate | date : 'dd/MM/yyyy'}}"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">

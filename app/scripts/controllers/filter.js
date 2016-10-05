@@ -73,6 +73,14 @@ angular.module('superstockApp')
             }
 
             /**
+             * Public function $scope.filterChange for menu.js
+             */
+            $rootScope.filterChangeGlobal = function () {
+                $scope.filterChange();
+            }
+
+
+            /**
              * Filter mode Public or Individual
              */
             $scope.$watch('filterModes', function () {
@@ -105,16 +113,34 @@ angular.module('superstockApp')
             /**
              * Hide filter controls when click outsite
              */
-            $(document).on('click', '#container-fluit-area, #footer-area, #header-area', function () {
+            $(document).on('click', '#container-fluit-area, #footer-area, #header-area', function (event) {
                 if (!$("#sidebar-wrapper").parent().hasClass("toggled")) {
                     $("#filter-control").removeClass('ng-hide');
                     $("#wrapper").toggleClass("toggled");
+
+                    $("#js-navbar-collapse").find("ul > li").removeClass("active");
+                    $("#filter-control").addClass("active");
+
                     $scope.$apply(function () {
                         // $rootScope.filterOn = false;
                         // $rootScope.resetFilterModes();
                         // $rootScope.resetFilter();
                     })
                 }
+            });
+
+            /**
+             * Reset filter when click full stock lin
+             */
+            $(document).on('click', '#full-stock', function (event) {
+                event.preventDefault();
+                if ($rootScope.link == 'full') {
+                    $("#js-navbar-collapse").find("ul > li").removeClass("active");
+                    $(this).addClass("active");
+                    $rootScope.resetFilterModes();
+                    $rootScope.resetFilter();
+                }
+                $rootScope.filterOn = false;
             });
 
             /**

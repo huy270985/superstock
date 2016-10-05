@@ -69,6 +69,8 @@ angular.module('superstockApp')
              */
             var notLoading = false;
             function filterChange(loading, filters) {
+                if (!$rootScope.filterOn)
+                    return;
                 if (loading != undefined)
                     notLoading = loading;
                 // if ($rootScope.filterOn) {

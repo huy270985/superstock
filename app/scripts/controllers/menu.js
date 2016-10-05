@@ -24,6 +24,7 @@ angular.module('superstockApp')
             $("#wrapper").toggleClass("toggled");
             if ($("#wrapper").hasClass('toggled')) {
                 $rootScope.filterOn = true;
+                $rootScopescope.filterChangeGlobal();
                 $("#filter-control").removeClass('ng-hide');
             } else {
                 $rootScope.filterOn = true;
@@ -266,6 +267,7 @@ angular.module('superstockApp')
         /**
          * Change password function
          */
+        $scope.checkChangePassword = true;
         $scope.changePassword = function () {
             if (!checkValidate('changePassword')) {
                 $scope.checkChangePassword = true;
@@ -291,6 +293,7 @@ angular.module('superstockApp')
          * Change profile function
          */
 
+        $scope.checkChangeProfile = true;
         $scope.changeProfile = function () {
             if (!checkValidate('changeProfile')) {
                 $scope.checkChangeProfile = true;
@@ -308,8 +311,9 @@ angular.module('superstockApp')
                 $user.child('profile').set(userProfile, function (err) {
                     $scope.$apply(function () {
                         if (err) {
-
+                            $scope.checkChangeProfile = false;
                         } else {
+                            $scope.checkChangeProfile = true;
                             $rootScope.user.displayName = $scope.userProfile.fullName;
                             $rootScope.user.phoneNumber = $scope.userProfile.phoneNumber;
                         }
@@ -487,7 +491,26 @@ angular.module('superstockApp')
 
         $(document).on('hidden.bs.modal', '.modal', function () {
             var $this = $(this);
-            $this.find('input').val('');
+            $scope.$apply(function () {
+                $scope.checkEmail = true;
+                $scope.checkPassword = true;
+                $scope.checkSignIn = true;
+                $scope.checkConfirmPassword = true;
+                $scope.checkFullName = true;
+                $scope.checkNewPassword = true;
+                $scope.checkConfirmNewPassword = true;
+
+            })
+        });
+
+        $(document).on('hidden.bs.modal', '.modal', function () {
+            var $this = $(this);
+            var $inputs = $this.find('input')
+            $.each($inputs, function (index, value) {
+                if ($(value).attr("name")) {
+                    $(value).val('');
+                }
+            });
             $scope.$apply(function () {
                 $scope.checkEmail = true;
                 $scope.checkPassword = true;
