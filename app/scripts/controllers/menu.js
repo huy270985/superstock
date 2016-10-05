@@ -24,10 +24,10 @@ angular.module('superstockApp')
             $("#wrapper").toggleClass("toggled");
             if ($("#wrapper").hasClass('toggled')) {
                 $rootScope.filterOn = true;
-                $rootScopescope.filterChangeGlobal();
                 $("#filter-control").removeClass('ng-hide');
             } else {
                 $rootScope.filterOn = true;
+                $rootScope.filterChangeGlobal();
                 $rootScope.setDataForDefaultFilter();
                 $("#filter-control").addClass('ng-hide');
             }
