@@ -118,6 +118,9 @@ angular.module('superstockApp')
                     $("#filter-control").removeClass('ng-hide');
                     $("#wrapper").toggleClass("toggled");
 
+                    if (!$scope.filter && !$scope.filterModes)
+                        $rootScope.filterOn = false;
+
                     if (!$rootScope.filterOn) {
                         $("#js-navbar-collapse").find("ul > li").removeClass("active");
                         $("#full-stock").addClass("active");
