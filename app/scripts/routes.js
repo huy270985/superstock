@@ -133,10 +133,12 @@ angular.module('superstockApp')
                     $rootScope.user.displayName = $rootScope.userTmp.displayName;
                     $rootScope.user.phoneNumber = $rootScope.userTmp.phoneNumber;
                 }
-                if ($rootScope.user) {
+                if ($rootScope.user && $rootScope.user != null) {
                     var userRef = Ref.child('users/' + $rootScope.user.uid);
                     $rootScope.$userRefChange = $firebaseObject(userRef);
                     $rootScope.$userRefChange.$loaded(function (user) {
+                        if (!$rootScope.user)
+                            return;
                         var showMessage = false;
                         $rootScope.userSetting = user.userSetting;
                         $rootScope.userFilter = user.filter;
