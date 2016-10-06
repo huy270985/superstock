@@ -471,7 +471,7 @@ body {
 
 .view-containner {
     height: 100%;
-    height: calc(100vh - 55px - 30px);
+    height: calc(100vh - 65px - 30px);
 }
 
 .ag-cell-focus {

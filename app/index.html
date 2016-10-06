@@ -127,7 +127,7 @@
             </ul>
         </div>
         <!-- Add your site or application content here -->
-        <div id="header-area" class="header" ng-controller="MenuCtrl">
+        <div id="header-area" class="header" ng-controller="MenuCtrl" ng-if="$root.user">
             <div class="navbar navbar-default" role="navigation">
                 <div class="container-fluit">
 
@@ -210,10 +210,13 @@
             </div>
         </div>
 
+        <div class="header" ng-if="$root.showUI && !$root.user" ng-include="'./views/header-content.html'"></div>
+
         <div id="container-fluit-area" class="container-fluit">
             <div class="view-containner">
                 <div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%; overflow: auto;"></div>
-                <div ng-if="$root.showUI && !$root.user" class="unauthentication-area" ng-cloak>Mời bạn đăng ký tài khoản ở góc phải màn hình,<br>sau đó đăng nhập để có thể sử dụng được bảng giá</div>
+                <!--<div ng-if="$root.showUI && !$root.user" class="unauthentication-area" ng-cloak>Mời bạn đăng ký tài khoản ở góc phải màn hình,<br>sau đó đăng nhập để có thể sử dụng được bảng giá</div>-->
+                <div ng-if="$root.showUI && !$root.user" ng-include="'./views/home-content.html'" style="height: 100%;"></div>
             </div>
         </div>
 

@@ -1,0 +1,62 @@
+<div class="s-header" ng-controller="MenuCtrl">
+    <img class="header-bg" src="./images/header-bg.png" />
+    <img class="s-logo" src="./images/s-logo.png" />
+    <div class="s-header-content">
+        <button class="s-header-btn" style="width: 162px;" ng-click="signInForm()">
+            <i class="glyphicon glyphicon-user"></i>
+            Đăng nhập</button>
+        <button class="s-header-btn" style="width: 162px;" ng-click="signUpForm()">
+            <i class="glyphicon glyphicon-edit"></i>
+            Đăng ký</button>
+        <button class="s-header-btn pull-right" ng-click="openGuideModal($event)">
+            <i class="glyphicon glyphicon-question-sign"></i>
+            Hướng dẫn</button>
+    </div>
+</div>
+
+<style type="text/css">
+    .s-header {
+        height: 62px;
+        width: 100%;
+        position: relative;
+    }
+    
+    .s-header > .header-bg {
+        width: 100%;
+        max-height: 100%;
+    }
+    
+    .s-header > .s-logo {
+        height: 90px;
+        position: absolute;
+        top: 0;
+        left: 50px;
+        box-shadow: 0px 5px 10px 1px #ECECEC;
+        z-index: 999;
+    }
+    
+    .s-header > .s-header-content {
+        position: absolute;
+        top: 14px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        text-align: center;
+        padding-left: 170px;
+    }
+    
+    .s-header .s-header-btn {
+        text-transform: uppercase;
+        border: solid 1px #FFFFFF;
+        color: #FFFFFF;
+        background: #B4389A;
+        border-radius: 10px;
+        padding: 5px 15px;
+        margin: 0 5px;
+        font-size: 17px;
+        font-weight: 500;
+        box-shadow: none;
+        outline: none;
+        line-height: 1.2;
+    }
+</style>

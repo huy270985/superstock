@@ -9,7 +9,6 @@
  */
 angular.module('superstockApp')
     .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject, $timeout) {
-        $rootScope.user = null;
         $rootScope.link = '';
         var disconnectRef = null;
         var authDataSave = null;
