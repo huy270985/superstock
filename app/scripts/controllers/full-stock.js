@@ -13,7 +13,7 @@ angular.module('superstockApp')
         function ($rootScope, $scope, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout) {
             $rootScope.link = 'full'; //set this page is full-page
-            $window.ga('send', 'event', "Page", "Đầy đủ");
+            $window.ga('send', 'pageview', "Đầy đủ");
             var userFilters = null;
             var user = null;
             var userAuthData = null;
@@ -92,7 +92,7 @@ angular.module('superstockApp')
                 if (filter)
                     filter = filter[0];
 
-                $window.ga('send', 'event', "Filter", filter.filterName);
+                // $window.ga('send', 'event', "Filter", filter.filterName);
 
                 if (!notLoading) {
                     if ($scope.gridOptions.api && $scope.gridOptions.api != null)
@@ -132,6 +132,7 @@ angular.module('superstockApp')
                 $timeout(function () {
                     if (!$scope.gridOptions.api || $scope.gridOptions.api == null)
                         return;
+                    $scope.gridOptions.api.setFilterModel(null);
                     for (var key in $rootScope.filterList) {
                         var filterItem = $rootScope.filterList[key];
                         var filterApi = $scope.gridOptions.api.getFilterApi(key);
@@ -143,8 +144,8 @@ angular.module('superstockApp')
                                     model.push(term[i].value);
                                 }
                                 if (model.length > 0) {
-                                    if (filterApi.selectEverything)
-                                        filterApi.setModel(model);
+                                    // if (filterApi.selectEverything)
+                                    filterApi.setModel(model);
                                 } else {
                                     if (filterApi.selectEverything)
                                         filterApi.selectEverything();
@@ -482,6 +483,7 @@ angular.module('superstockApp')
                             }
                             //add filter for 'shorttermSignal' (filter selete option)
                             if (fieldsArr[i] == 'shorttermSignal') {
+                                def.filter = 'set';
                                 var filter = {
                                     term: null,
                                     selectOptions: [{
@@ -499,6 +501,7 @@ angular.module('superstockApp')
                             }
                             //add filter for 'industry' (filter selete option)
                             else if (fieldsArr[i] == 'industry') {
+                                def.filter = 'set';
                                 var filter = {
                                     term: null,
                                     selectOptions: [{
@@ -595,6 +598,25 @@ angular.module('superstockApp')
                                         }
                                     })
 
+                                    /**
+                                     * Send data to google analytics
+                                     */
+                                    var sortModel = $scope.gridOptions.api.getSortModel();
+                                    if (sortModel) {
+                                        for (var i in sortModel) {
+                                            var colId = sortModel[i].colId;
+                                            var sort = sortModel[i].sort;
+                                            var column = $scope.gridOptions.columnApi.getColumn(colId);
+                                            var headerName = column.colDef.headerName;
+                                            $window.ga('send', {
+                                                hitType: 'event',
+                                                eventCategory: 'Đầy đủ - Sắp xếp dữ liệu',
+                                                eventAction: 'Sắp xếp',
+                                                eventLabel: 'Sắp xếp ' + (sort == 'desc' ? 'giảm dần' : 'tăng dần') + ' theo ' + headerName
+                                            });
+                                        }
+                                    }
+
                                 });
 
                                 //Add event after column pinned
@@ -652,6 +674,26 @@ angular.module('superstockApp')
                                 $scope.gridOptions.api.addEventListener('afterFilterChanged', function (params) {
                                     $scope.gridOptions.api.hideOverlay();
                                     $scope.rowAfterFilter = $scope.gridOptions.api.rowModel.rowsToDisplay;
+
+                                    if (filterMode) {
+                                        var filterModel = $scope.gridOptions.api.getFilterModel();
+                                        for (var i in filterModel) {
+                                            var label = '';
+                                            var column = $scope.gridOptions.columnApi.getColumn(i);
+                                            if (filterModel[i] instanceof Array) {
+                                                label = column.colDef.headerName + ' là ' + filterModel[i].join(' và ')
+                                            } else {
+                                                var filter = $filter('number')(filterModel[i].filter);
+                                                label = column.colDef.headerName + ' có giá trị >= ' + filter;
+                                            }
+                                            $window.ga('send', {
+                                                hitType: 'event',
+                                                eventCategory: 'Bộ lọc',
+                                                eventAction: 'Bộ lọc cá nhân',
+                                                eventLabel: label
+                                            });
+                                        }
+                                    }
                                 });
 
                                 //Add event after column pinned

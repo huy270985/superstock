@@ -8,8 +8,8 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('FilterCtrl', ['$rootScope', '$scope', 'Ref', '$firebaseArray', '$compile',
-        function ($rootScope, $scope, Ref, $firebaseArray, $compile) {
+    .controller('FilterCtrl', ['$rootScope', '$scope', 'Ref', '$firebaseArray', '$compile', '$window',
+        function ($rootScope, $scope, Ref, $firebaseArray, $compile, $window) {
             $scope.defaultFilter = [
                 {
                     "id": 1,
@@ -70,6 +70,18 @@ angular.module('superstockApp')
                     $rootScope.filterModes($scope.filterModes);
 
                 $rootScope.saveFilterSetting();
+
+                /**
+                 * Send data to google analytics
+                 */
+                if (!$scope.filterModes && $rootScope.filterData && $rootScope.filterData.length > 0) {
+                    $window.ga('send', {
+                        hitType: 'event',
+                        eventCategory: 'Bộ lọc',
+                        eventAction: 'Bộ loc có sẵn',
+                        eventLabel: 'Lọc theo ' + $rootScope.filterData[0].filterName
+                    });
+                }
             }
 
             /**

@@ -13,7 +13,7 @@ angular.module('superstockApp')
         function ($rootScope, $scope, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout) {
             $rootScope.link = 'main';
-            $window.ga('send', 'event', "Page", "Tổng hợp");
+            $window.ga('send', 'pageview', "Tổng hợp");
 
             //Setup ag-grid
             $scope.gridMainOptions = {
@@ -240,6 +240,25 @@ angular.module('superstockApp')
                                             updatedNodes.push(node);
                                         });
                                         $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+
+                                        /**
+                                         * Send data to google analytics
+                                         */
+                                        var sortModel = $scope.gridMainOptions.api.getSortModel();
+                                        if (sortModel) {
+                                            for (var i in sortModel) {
+                                                var colId = sortModel[i].colId;
+                                                var sort = sortModel[i].sort;
+                                                var column = $scope.gridMainOptions.columnApi.getColumn(colId);
+                                                var headerName = column.colDef.headerName;
+                                                $window.ga('send', {
+                                                    hitType: 'event',
+                                                    eventCategory: 'Tổng hợp - Sắp xếp dữ liệu',
+                                                    eventAction: 'Xắp xếp',
+                                                    eventLabel: 'Xắp xếp ' + (sort == 'desc' ? 'giảm dần' : 'tăng dần') + ' theo ' + headerName
+                                                });
+                                            }
+                                        }
                                     }
                                 });
 
