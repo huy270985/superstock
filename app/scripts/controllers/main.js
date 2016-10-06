@@ -102,7 +102,7 @@ angular.module('superstockApp')
                                         * - signal1 & signal2 is empty, show empty value
                                         */
                                         if (params.data.signal1 == '' && params.data.signal2 == '') {
-                                            return '';
+                                            return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
                                         }
                                     } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS') {
                                         /*
@@ -115,7 +115,7 @@ angular.module('superstockApp')
                                         } else {
                                             value = $filter('number')(parseFloat(params.value), 2);
                                         }
-                                        return '<div title="' + value + '">' + value + '</div>';
+                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                     }
                                     else {
                                         var value = '';
@@ -129,10 +129,10 @@ angular.module('superstockApp')
                                                     value = value + '%';
                                                 }
                                             }
-                                            return '<div title="' + value + '">' + value + '</div>';
+                                            return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                         }
                                     }
-                                    return params.value;
+                                    return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                 },
                                 headerCellTemplate: function (params) {
                                     /*
@@ -200,7 +200,10 @@ angular.module('superstockApp')
 
                             def.cellClass = function (params) {
                                 // Get cell style
-                                return utils.getCellClassSummary(params, formatList);
+                                var selectedSyle = '';
+                                if (params.data.symbol == $rootScope.mainSelected)
+                                    selectedSyle = $rootScope.mainSelected;
+                                return utils.getCellClassSummary(params, formatList, selectedSyle);
                             }
 
                             columnDefs.push(def);

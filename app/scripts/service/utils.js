@@ -4,10 +4,13 @@ angular
     .module('superstockApp')
     .factory('utils', function () {
         return {
-            getCellClass: function (params, format) {
+            getCellClass: function (params, format, selectedSyle) {
                 var field = params.colDef.field;
                 var value = params.value;
                 var classList = [];
+                if (selectedSyle && selectedSyle != '' && field != 'symbol')
+                    classList.push('ag-cell-focus-bg');
+
                 if (format[field].indexOf('number') > -1 || format[field].indexOf('percent') > -1 || format[field].indexOf('bigNum') > -1)
                     classList.push('ui-cell-align-right');
                 if (params.value && format[field].indexOf('percent') > -1)
@@ -44,13 +47,16 @@ angular
                 }
                 return classList;
             },
-            getCellClassSummary: function (params, format) {
+            getCellClassSummary: function (params, format, selectedSyle) {
                 /**
                  * Define cell style for grid by column
                  */
                 var field = params.colDef.field;
                 var value = params.value;
                 var classList = ['ag-cell-orange-bg'];
+                if (selectedSyle && selectedSyle != '' && field != 'symbol')
+                    classList.push('ag-cell-focus-bg');
+
                 if (format[field].indexOf('number') > -1 || format[field].indexOf('percent') > -1 || format[field].indexOf('bigNum') > -1)
                     classList.push('ui-cell-align-right');
                 if (params.value && format[field].indexOf('percent') > -1)

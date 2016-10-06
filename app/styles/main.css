@@ -622,3 +622,11 @@ body {
     -webkit-align-items: center;
     -ms-flex-align: center;
 }
+
+.ag-cell-hover-bg {
+    background: #DEDDDD !important;
+}
+
+.ag-cell-focus-bg {
+    background: #DEDDDD !important;
+}

@@ -536,4 +536,35 @@ angular.module('superstockApp')
             })
         });
 
+        $(document).on('mouseenter', '.ag-cell', function () {
+            var $this = $(this);
+            var $parent = $this.parent();
+            var $cells = $parent.find('.ag-cell');
+            $cells.addClass('ag-cell-hover-bg');
+        });
+
+        $(document).on('mouseleave', '.ag-cell', function () {
+            var $this = $(this);
+            var $parent = $this.parent();
+            var $cells = $parent.find('.ag-cell');
+            $cells.removeClass('ag-cell-hover-bg');
+        });
+
+        $rootScope.mainSelected = '';
+        $rootScope.fullSelected = '';
+        $(document).on('click', '.ag-cell', function () {
+            var $this = $(this);
+            var symbolVal = $this.find('div').first().data('symbol');
+            if ($rootScope.link == 'main')
+                $rootScope.mainSelected = symbolVal;
+            else
+                $rootScope.fullSelected = symbolVal;
+            var $agRows = $('.ag-row.clicked');
+            var $parent = $this.parent();
+            var $cells = $parent.find('.ag-cell');
+            $agRows.find('.ag-cell').removeClass('ag-cell-focus-bg');
+            $parent.addClass('clicked');
+            $cells.addClass('ag-cell-focus-bg');
+        });
+
     })

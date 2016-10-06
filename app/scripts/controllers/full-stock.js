@@ -363,7 +363,7 @@ angular.module('superstockApp')
                                         * - signal1 & signal2 is empty, show empty value
                                         */
                                         if (params.data.signal1 == '' && params.data.signal2 == '') {
-                                            return '';
+                                            return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
                                         }
                                     } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS'
                                         || params.colDef.field == 'fxEffect' || params.colDef.field == 'cashFlow') {
@@ -377,7 +377,7 @@ angular.module('superstockApp')
                                         } else {
                                             value = $filter('number')(parseFloat(params.value), 2);
                                         }
-                                        return '<div title="' + value + '">' + value + '</div>';
+                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                     } else if (params.colDef.field == 'buyDate') {
                                         // if (params.value && params.value != null && params.value != '')
                                         //     return $filter('date')(params.value, 'dd/MM/yyyy');
@@ -393,10 +393,10 @@ angular.module('superstockApp')
                                                     value = value + '%';
                                                 }
                                             }
-                                            return '<div title="' + value + '">' + value + '</div>';
+                                            return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                         }
                                     }
-                                    return params.value;
+                                    return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                 },
                                 headerCellTemplate: function () {
                                     return (
@@ -526,7 +526,10 @@ angular.module('superstockApp')
 
                             //add css class for cell base on cell date (utils factory)
                             def.cellClass = function (params) {
-                                return utils.getCellClass(params, formatList);
+                                var selectedSyle = '';
+                                if (params.data.symbol == $rootScope.fullSelected)
+                                    selectedSyle = $rootScope.fullSelected;
+                                return utils.getCellClass(params, formatList, selectedSyle);
                             }
                             columnDefs.push(def);
                         }
