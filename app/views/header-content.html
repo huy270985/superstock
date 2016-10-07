@@ -2,15 +2,34 @@
     <img class="header-bg" src="./images/header-bg.png" />
     <img class="s-logo" src="./images/s-logo.png" />
     <div class="s-header-content">
-        <button class="s-header-btn" style="width: 162px;" ng-click="signInForm()">
+        <button class="s-header-btn s-hidden-xs" style="width: 162px;" ng-click="signInForm()">
             <i class="glyphicon glyphicon-user"></i>
             Đăng nhập</button>
-        <button class="s-header-btn" style="width: 162px;" ng-click="signUpForm()">
+        <button class="s-header-btn s-hidden-xs" style="width: 162px;" ng-click="signUpForm()">
             <i class="glyphicon glyphicon-edit"></i>
             Đăng ký</button>
-        <button class="s-header-btn pull-right" ng-click="openGuideModal($event)">
+        <button class="s-header-btn s-hidden-xs pull-right" ng-click="openGuideModal($event)">
             <i class="glyphicon glyphicon-question-sign"></i>
             Hướng dẫn</button>
+
+        <div class="dropdown s-dropdown pull-right">
+            <button class="s-header-btn s-header-btn-icon s-visible-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <i class="glyphicon glyphicon-th-large"></i>
+            </button>
+
+            <ul class="dropdown-menu s-dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li>
+                    <a ng-click="signInForm()"><i class="glyphicon glyphicon-user"></i> Đăng nhập</a>
+                </li>
+                <li>
+                    <a ng-click="signUpForm()"><i class="glyphicon glyphicon-edit"></i> Đăng ký</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a ng-click="openGuideModal($event)"><i class="glyphicon glyphicon-question-sign"></i> Hướng dẫn</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -22,6 +41,7 @@
     }
     
     .s-header > .header-bg {
+        height: 100%;
         width: 100%;
         max-height: 100%;
     }
@@ -38,7 +58,7 @@
     .s-header > .s-header-content {
         position: absolute;
         top: 14px;
-        left: 0;
+        left: 170px;
         right: 0;
         bottom: 0;
         text-align: center;
@@ -58,5 +78,64 @@
         box-shadow: none;
         outline: none;
         line-height: 1.2;
+    }
+    
+    .s-header .s-header-btn.s-header-btn-icon {
+        border: none;
+        font-size: 30px;
+        padding: 0px 15px;
+    }
+    
+    .s-dropdown {}
+    
+    .s-dropdown .s-dropdown-menu {
+        background: #B4389A;
+        border-color: #FFFFFF;
+        margin: 10px 0 0;
+        padding: 0 0;
+    }
+    
+    .s-dropdown .s-dropdown-menu li {}
+    
+    .s-dropdown .s-dropdown-menu li a {
+        color: #FFFFFF;
+        text-transform: uppercase;
+        padding: 5px 20px;
+    }
+    
+    .s-dropdown .s-dropdown-menu li a:hover {
+        background: #FEDAFE;
+        /*color: #126CB6;*/
+        color: #94959A; 
+        cursor: pointer;
+    }
+    
+    @media(max-width: 400px) {
+        .s-header > .s-logo {
+            left: 10px;
+        }
+    }
+    
+    .s-header .s-hidden-xs {
+        display: initial;
+    }
+    
+    .s-header .s-visible-xs {
+        display: none;
+    }
+    
+    @media(max-width: 867px) {
+        .s-header > .s-logo {
+            left: 10px;
+        }
+        .s-header .s-hidden-xs {
+            display: none;
+        }
+        .s-header .s-visible-xs {
+            display: initial;
+        }
+        .s-header > .s-header-content {
+            padding-left: 0;
+        }
     }
 </style>

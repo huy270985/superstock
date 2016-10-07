@@ -46,7 +46,20 @@
     
     .s-carousel {}
     
-    .s-carousel .carousel-indicators {}
+    .s-carousel .carousel-indicators {
+        bottom: 7px;
+    }
+    
+    .s-carousel .carousel-indicators li {
+        height: 15px;
+        width: 15px;
+        border-color: #B33A9B;
+    }
+    
+    .s-carousel .carousel-indicators li.active {
+        background: #B33A9B;
+        margin: 1px;
+    }
     
     .s-carousel .carousel-inner {}
     
@@ -57,15 +70,30 @@
     
     .s-carousel .carousel-inner .item img {
         display: initial;
-        min-height: 400px;
+        min-height: 200px;
     }
     
     .s-carousel .carousel-control {
         width: 40px;
         background: none;
+        display: none
     }
     
-    .s-carousel .carousel-control.left {}
+    .s-carousel:hover .carousel-control {
+        display: block;
+    }
     
-    .s-carousel .carousel-control.right {}
+    .s-carousel .carousel-control.left {
+        color: #B33A9B;
+    }
+    
+    .s-carousel .carousel-control.right {
+        color: #B33A9B;
+    }
+    
+    @media(max-width: 400px) {
+        .s-carousel .carousel-inner .item img {
+            min-height: auto;
+        }
+    }
 </style>
