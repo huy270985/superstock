@@ -40,6 +40,10 @@ For Tổng hợp:
 
 Market summary:
 - https://superstock.firebaseio.com/market_summary.json
+  {
+    'data': 'actual text',
+    'color': '#ff9900',
+  }
 
 Company profile:
 In /profile/<symbol>, e.g.:
