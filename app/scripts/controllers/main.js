@@ -35,7 +35,11 @@ angular.module('superstockApp')
             /*
             * Get market summary data
             */
-            $scope.headerTitle = utils.getMarketSummary();
+            utils.getMarketSummary().then(function (data) {
+                $scope.headerTitle = data;
+            }).catch(function (ex) {
+
+            });
 
             /*
             * Load title, header and format of field form server

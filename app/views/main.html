@@ -1,9 +1,8 @@
-
-<div class="header-title" style="border-bottom: solid 1px #000000;">
-    <h4 ng-bind-html="headerTitle"></h4>
+<div class="header-title" style="border-bottom: solid 1px #000000; background: {{headerTitle.color}};">
+    <h4 ng-bind-html="headerTitle.content1"></h4>
 </div>
 <div class="header-title">
-    <h4 style="font-size: 18px;">Các mã cp đáng chú ý nhất phiên</h4>
+    <h4 style="font-size: 18px;" ng-bind-html="headerTitle.content2">Các mã cp đáng chú ý nhất phiên</h4>
 </div>
 <div class="grid-area">
     <div ng-grid="gridMainOptions" ag-grid="gridMainOptions" class="ag-fresh" style="width: 100%;"></div>
