@@ -5,7 +5,8 @@
     <h4 style="font-size: 18px;" ng-bind-html="headerTitle.content2">Các mã cp đáng chú ý nhất phiên</h4>
 </div>
 <div class="grid-area">
-    <div ng-grid="gridMainOptions" ag-grid="gridMainOptions" class="ag-fresh" style="width: 100%;"></div>
+    <div ng-grid="gridMainOptions" ag-grid="gridMainOptions" class="ag-grid-custom ag-fresh" style="width: calc(100% - 70px);"></div>
+    <div id="grid-market-options" class="ag-grid-custom custom ag-fresh" style="width: 70px;"></div>
 </div>
 <!--Graph view-->
 <div class="modal fade" id="myModal" role="dialog">

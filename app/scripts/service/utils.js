@@ -223,7 +223,13 @@ angular
                         if (data && data.data && data.data.data) {
                             if (data && data.data && data.data.data) {
                                 var rs = data.data.data;
-                                result = rs.split('|');
+                                var arr = rs.split('|');
+                                for (var i in arr) {
+                                    var market = {
+                                        sellSignal: arr[i]
+                                    };
+                                    result.push(market);
+                                }
                             }
                             deferred.resolve(result);
                         }

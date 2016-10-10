@@ -31,6 +31,51 @@ angular.module('superstockApp')
                 onAfterFilterChanged: function () { },
                 onCellClicked: function (params) { }
             };
+            var columnDefs = [
+                {
+                    headerName: "Báo bán",
+                    field: "sellSignal",
+                    width: 70,
+                    headerCellTemplate: function (params) {
+                        /*
+                        * Header cell template, this will be render for all header cell of grid
+                        */
+                        var colorClass = 'ag-header-cell-red';
+
+                        return (
+                            '<div class="ag-header-cell ' + colorClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
+                            '<table style="width:100%;height:100%">' +
+                            '<tr>' +
+                            '<td>' +
+                            '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
+                            '<span id="agText" class="ag-header-cell-text"></span>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>' +
+                            '</table>' +
+                            '</div>'
+                        )
+                    },
+                    cellClass: function (params) {
+                        // Get cell style
+                        var selectedSyle = '';
+                        if (params.data.symbol == $rootScope.mainSelected)
+                            selectedSyle = $rootScope.mainSelected;
+                        return utils.getCellClassSummary(params, { sellSignal: '' }, selectedSyle);
+                    }
+                }
+            ];
+
+
+            $scope.gridMarketOptions = {
+                enableSorting: false,
+                enableFilter: false,
+                rowData: [],
+                data: [],
+                headerHeight: 50,
+                enableColResize: false,
+                columnDefs: columnDefs
+            }
 
             /*
             * Get market summary data
@@ -56,13 +101,9 @@ angular.module('superstockApp')
                         var formatArr = format.data.split('|');
                         var formatList = {};
 
-                        //For Sell signal
-                        titlesArr.push('Báo bán')
-                        fieldsArr.push('sellSignal');
-                        formatArr.push('text');
                         // Define size of field in client
                         var sizeArr = [
-                            80, 150, 125, 95, 75, 95, 105, 135, 140, 60, 140, 70
+                            80, 150, 125, 95, 75, 95, 110, 150, 140, 60, 140, 70
                         ]
                         var columnDefs = [];
                         var config = {
@@ -227,6 +268,9 @@ angular.module('superstockApp')
                         if ($scope.gridMainOptions.api) {
                             $scope.gridMainOptions.api.setColumnDefs(columnDefs);
 
+                            var gridDiv = document.querySelector('#grid-market-options');
+                            new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
+
                             draw.drawGrid(Ref.child('summary_data'), config, function (data) {
                                 //loading data
                                 $scope.gridMainOptions.api.showLoadingOverlay()
@@ -281,16 +325,10 @@ angular.module('superstockApp')
                                                      * Fill data for sell signal column
                                                      */
                                                     utils.getSellSignals().then(function (data) {
-                                                        var sellSignalDatas = data;
-                                                        var updatedNodes = [];
-                                                        $scope.gridMainOptions.api.forEachNode(function (node) {
-                                                            var value = '';
-                                                            if (sellSignalDatas[node.childIndex])
-                                                                value = sellSignalDatas[node.childIndex];
-                                                            node.data.sellSignal = value;
-                                                            updatedNodes.push(node);
-                                                        });
-                                                        $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                                        $scope.gridMarketOptions.api.setRowData(data);
+                                                        try {
+                                                            console.clear();
+                                                        } catch (e) { }
                                                     }).catch(function (ex) {
                                                     });
                                                 }
@@ -311,32 +349,35 @@ angular.module('superstockApp')
                                     }
                                 })
                         }
-                        /*
-                        * Graph chart click event
-                        */
-                        $(document).on('click', '.chart-icon', function () {
-                            $('#myModal').modal('show');
-                            $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
-                            $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
-                            $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
-                        });
 
-                        /*
-                        * Company information click event
-                        */
-                        $(document).on('click', '.information-icon', function () {
-                            $('#companyModal').modal('show');
-                            var symbolVal = $(this).data('symbol');
-                            var industryVal = $(this).data('industry');
-                            $scope.companyInfo = symbolVal + ' - ' + industryVal;
-
-                            utils.getCompanyInformation(symbolVal).then(function (data) {
-                                $scope.companyDatas = data;
-                            }).catch(function (ex) {
-
+                        $(document).ready(function () {
+                            /*
+                            * Graph chart click event
+                            */
+                            $(document).on('click', '.chart-icon', function () {
+                                $('#myModal').modal('show');
+                                $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
+                                $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
+                                $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
                             });
-                        });
 
+                            /*
+                            * Company information click event
+                            */
+                            $(document).on('click', '.information-icon', function () {
+                                $('#companyModal').modal('show');
+                                var symbolVal = $(this).data('symbol');
+                                var industryVal = $(this).data('industry');
+                                $scope.companyInfo = symbolVal + ' - ' + industryVal;
+
+                                utils.getCompanyInformation(symbolVal).then(function (data) {
+                                    $scope.companyDatas = data;
+                                }).catch(function (ex) {
+
+                                });
+                            });
+
+                        });
                     })
                 })
             })
