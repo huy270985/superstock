@@ -561,6 +561,12 @@
         // ga('create', 'UA-85283470-1');
         
         ga('send', 'pageview');
+
+        setInterval(function() {
+            ga('send', 'pageview', {
+                nonInteraction: true
+            });
+        }, 60 * 1000);
     </script>
 
     <!-- build:js(.) scripts/vendor.js -->
