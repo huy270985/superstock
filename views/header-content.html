@@ -1,4 +1,4 @@
-<div class="s-header" ng-controller="MenuCtrl"> <img class="header-bg" src="./images/header-bg.png"> <img class="s-logo" src="./images/s-logo.png"> <div class="s-header-content"> <button class="s-header-btn s-hidden-xs" style="width: 162px" ng-click="signInForm()"> <i class="glyphicon glyphicon-user"></i> Đăng nhập</button> <button class="s-header-btn s-hidden-xs" style="width: 162px" ng-click="signUpForm()"> <i class="glyphicon glyphicon-edit"></i> Đăng ký</button> <button class="s-header-btn s-hidden-xs pull-right" ng-click="openGuideModal($event)"> <i class="glyphicon glyphicon-question-sign"></i> Hướng dẫn</button> <div class="dropdown s-dropdown pull-right"> <button class="s-header-btn s-header-btn-icon s-visible-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="glyphicon glyphicon-th-large"></i> </button> <ul class="dropdown-menu s-dropdown-menu" aria-labelledby="dropdownMenu1"> <li> <a ng-click="signInForm()"><i class="glyphicon glyphicon-user"></i> Đăng nhập</a> </li> <li> <a ng-click="signUpForm()"><i class="glyphicon glyphicon-edit"></i> Đăng ký</a> </li> <li role="separator" class="divider"></li> <li> <a ng-click="openGuideModal($event)"><i class="glyphicon glyphicon-question-sign"></i> Hướng dẫn</a> </li> </ul> </div> </div> </div> <style type="text/css">.s-header {
+<div class="s-header" ng-controller="MenuCtrl"> <img class="header-bg" src="./images/header-bg.png"> <img class="s-logo" src="./images/s-logo.png"> <div class="s-header-content"> <h4 class="pull-left s-header-hotline">HOTLINE: 0938.326.999/ SKYPE: CANSLIM_VN</h4> <button class="s-header-btn s-hidden-xs" style="width: 162px" ng-click="signInForm()"> <i class="glyphicon glyphicon-user"></i> Đăng nhập</button> <button class="s-header-btn s-hidden-xs" style="width: 162px" ng-click="signUpForm()"> <i class="glyphicon glyphicon-edit"></i> Đăng ký</button> <button class="s-header-btn s-hidden-xs pull-right" ng-click="openGuideModal($event)"> <i class="glyphicon glyphicon-question-sign"></i> Hướng dẫn</button> <div class="dropdown s-dropdown pull-right"> <button class="s-header-btn s-header-btn-icon s-visible-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="glyphicon glyphicon-th-large"></i> </button> <ul class="dropdown-menu s-dropdown-menu" aria-labelledby="dropdownMenu1"> <li> <a ng-click="signInForm()"><i class="glyphicon glyphicon-user"></i> Đăng nhập</a> </li> <li> <a ng-click="signUpForm()"><i class="glyphicon glyphicon-edit"></i> Đăng ký</a> </li> <li role="separator" class="divider"></li> <li> <a ng-click="openGuideModal($event)"><i class="glyphicon glyphicon-question-sign"></i> Hướng dẫn</a> </li> </ul> </div> </div> </div> <style type="text/css">.s-header {
         height: 62px;
         width: 100%;
         position: relative;
@@ -29,6 +29,11 @@
         /*padding-left: 170px;*/
     }
     
+    .s-header > .s-header-content .s-header-hotline {
+        padding-left: 10px;
+        color: #FFFFFF;
+    }
+
     .s-header .s-header-btn {
         text-transform: uppercase;
         border: solid 1px #FFFFFF;
