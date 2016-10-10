@@ -412,7 +412,7 @@ AddDefaultCharset utf-8
 # your site: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.5.
 
 # <IfModule mod_headers.c>
-    Header set Cache-Control "max-age=2628000, public"
+#    Header set Cache-Control "no-transform"
 # </IfModule>
 
 # ------------------------------------------------------------------------------

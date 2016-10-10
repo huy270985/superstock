@@ -1,4 +1,4 @@
-<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"><meta http-equiv="cache-control" content="max-age=3600" /> <title></title> <meta name="description" content=""> <!--<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0">--> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.5d4d993a.css"> <link rel="stylesheet" href="styles/main.5cb0373f.css">  <body ng-app="superstockApp" ng-cloak> <!--[if lt IE 7]>
+<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title></title> <meta name="description" content=""> <!--<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0">--> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.4bfcbf63.css"> <link rel="stylesheet" href="styles/main.960b7c4c.css">  <body ng-app="superstockApp" ng-cloak> <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
   your browser</a> to improve your experience.</p>
 <![endif]--> <div id="wrapper" class="toggled" ng-controller="FilterCtrl"> <div id="sidebar-wrapper" style="background:#f9f9f9;overflow-x:hidden"> <!--<ul class="sidebar-nav">
@@ -34,7 +34,13 @@
         ga('create', 'UA-82928411-1');
         // ga('create', 'UA-85283470-1');
         
-        ga('send', 'pageview');</script> <script src="scripts/vendor.04b8ca48.js"></script> <script>var config = {
+        ga('send', 'pageview');
+
+        setInterval(function() {
+            ga('send', 'pageview', {
+                nonInteraction: true
+            });
+        }, 60 * 1000);</script> <script src="scripts/vendor.25b6d71f.js"></script> <script>var config = {
             apiKey: "AIzaSyA_i_1kEu9yJGgReldWXXtEgm3C2Qfm5s4",
             authDomain: "superstock.firebaseapp.com",
             databaseURL: "https://superstock.firebaseio.com",
@@ -57,4 +63,4 @@
         // };
 
         firebase.initializeApp(config);
-        agGrid.initialiseAgGridWithAngular1(angular);</script> <script src="scripts/scripts.c81eb867.js"></script> <script src="scripts/scripts_ex.4fb8f25d.js"></script>  
+        agGrid.initialiseAgGridWithAngular1(angular);</script> <script src="scripts/scripts.8e582d7a.js"></script> <script src="scripts/scripts_ex.4fb8f25d.js"></script>  
