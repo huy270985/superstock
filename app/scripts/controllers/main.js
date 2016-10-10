@@ -261,10 +261,6 @@ angular.module('superstockApp')
                                         }
                                     }
                                 });
-
-                                setTimeout(function () {
-                                    align();
-                                }, 1000);
                             }, {
                                     added: function (data, childSnapshot, id) {
                                         /*
@@ -328,24 +324,6 @@ angular.module('superstockApp')
                             $scope.companyInfo = symbolVal + ' - ' + industryVal;
                             $scope.companyDatas = utils.getCompanyInformation(symbolVal);
                         });
-
-                        /*
-                        * Format header cell text
-                        * - Set text align
-                        * - Set margin
-                        */
-                        function align() {
-                            $('.ui-grid-header-cell').each(function () {
-                                var thisTag = $(this);
-                                var span = thisTag.find('span');
-                                if (span.text().indexOf('\n') < 0) {
-                                    span.parent().css('line-height', '40px');
-                                    thisTag.css('text-align', 'center');
-                                } else {
-                                    span.last().css('margin-top', '-2px');
-                                }
-                            })
-                        };
 
                     })
                 })
