@@ -189,9 +189,7 @@ angular
                     * Get sell signals data
                     * From link: https://superstock.firebaseio.com/market_summary.json
                     */
-
                     var deferred = $q.defer();
-
                     var result = {};
                     $http.get('https://superstock.firebaseio.com/market_summary.json', {}).then(function (data) {
                         if (data && data.data && data.data.data) {
@@ -219,30 +217,40 @@ angular
                     * Get market summary data
                     * From link: https://superstock.firebaseio.com/market_summary.json
                     */
-                    $.ajaxSetup({
-                        async: false
-                    });
+                    var deferred = $q.defer();
                     var result = [];
-                    $.getJSON('https://superstock.firebaseio.com/sell_symbols.json', {}, function (data) {
-                        if (data && data.data)
-                            result = data.data.split('|');
+                    $http.get('https://superstock.firebaseio.com/sell_symbols.json', {}).then(function (data) {
+                        if (data && data.data && data.data.data) {
+                            if (data && data.data && data.data.data) {
+                                var rs = data.data.data;
+                                result = rs.split('|');
+                            }
+                            deferred.resolve(result);
+                        }
+                    }, function (err) {
+                        deferred.reject(err);
                     });
-                    return result;
+                    return deferred.promise;
                 },
                 getCompanyInformation: function (id) {
                     /*
                     * Get market summary data
                     * From link: https://superstock.firebaseio.com/profile/{{id}}.json
                     */
-                    $.ajaxSetup({
-                        async: false
-                    });
+                    var deferred = $q.defer();
                     var result = [];
-                    $.getJSON('https://superstock.firebaseio.com/profile/' + id + '.json', {}, function (data) {
-                        if (data && data.data)
-                            result = data.data;
+                    $http.get('https://superstock.firebaseio.com/profile/' + id + '.json', {}).then(function (data) {
+                        if (data && data.data && data.data.data) {
+                            if (data && data.data && data.data.data) {
+                                var rs = data.data.data;
+                                result = rs;
+                            }
+                            deferred.resolve(result);
+                        }
+                    }, function (err) {
+                        deferred.reject(err);
                     });
-                    return result;
+                    return deferred.promise;
                 },
                 writeData2Worksheet: function (data, config) {
                     /**

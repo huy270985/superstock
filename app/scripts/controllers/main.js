@@ -280,16 +280,19 @@ angular.module('superstockApp')
                                                     /**
                                                      * Fill data for sell signal column
                                                      */
-                                                    sellSignalDatas = utils.getSellSignals();
-                                                    var updatedNodes = [];
-                                                    $scope.gridMainOptions.api.forEachNode(function (node) {
-                                                        var value = '';
-                                                        if (sellSignalDatas[node.childIndex])
-                                                            value = sellSignalDatas[node.childIndex];
-                                                        node.data.sellSignal = value;
-                                                        updatedNodes.push(node);
+                                                    utils.getSellSignals().then(function (data) {
+                                                        var sellSignalDatas = data;
+                                                        var updatedNodes = [];
+                                                        $scope.gridMainOptions.api.forEachNode(function (node) {
+                                                            var value = '';
+                                                            if (sellSignalDatas[node.childIndex])
+                                                                value = sellSignalDatas[node.childIndex];
+                                                            node.data.sellSignal = value;
+                                                            updatedNodes.push(node);
+                                                        });
+                                                        $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
+                                                    }).catch(function (ex) {
                                                     });
-                                                    $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
                                                 }
                                                 $gridData = [];
                                                 $eventTimeout = undefined;
@@ -326,7 +329,12 @@ angular.module('superstockApp')
                             var symbolVal = $(this).data('symbol');
                             var industryVal = $(this).data('industry');
                             $scope.companyInfo = symbolVal + ' - ' + industryVal;
-                            $scope.companyDatas = utils.getCompanyInformation(symbolVal);
+
+                            utils.getCompanyInformation(symbolVal).then(function (data) {
+                                $scope.companyDatas = data;
+                            }).catch(function (ex) {
+
+                            });
                         });
 
                     })

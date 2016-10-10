@@ -851,7 +851,12 @@ angular.module('superstockApp')
                     var symbolVal = $(this).data('symbol');
                     var industryVal = $(this).data('industry');
                     $scope.companyInfo = symbolVal + ' - ' + industryVal;
-                    $scope.companyDatas = utils.getCompanyInformation(symbolVal);
+
+                    utils.getCompanyInformation(symbolVal).then(function (data) {
+                        $scope.companyDatas = data;
+                    }).catch(function (ex) {
+
+                    });
                 });
             });
         }])
