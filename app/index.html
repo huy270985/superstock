@@ -222,6 +222,7 @@
 
         <div id="footer-area" class="footer" ng-if="$root.user">
             <div class="controls">
+                <a class="pull-left" ng-click="$root.activeDeactiveAccount($root.user.uid, $event)">Active/Deactive</a>
             </div>
             <p>Copyright @superstock</p>
         </div>
@@ -588,9 +589,17 @@
     <script src="bower_components/angular-ui-slider/src/slider.js"></script>
     <script src="bower_components/angular-bootstrap-multiselect/index.js"></script>
     <script src="bower_components/angular-ui-switch/angular-ui-switch.js"></script>
-    <script src="bower_components/ag-grid-enterprice/index.js"></script>
     <script src="bower_components/file-saver/FileSaver.js"></script>
     <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts_ex.js -->
+    <script src="scripts/libs/js-xlsx/cpexcel.js"></script>
+    <script src="scripts/libs/js-xlsx/ods.js"></script>
+    <script src="scripts/libs/js-xlsx/shim.js"></script>
+    <script src="scripts/libs/js-xlsx/xlsx.core.min.js"></script>
+    <script src="scripts/libs/js-xlsx/xlsx.full.min.js"></script>
+    <script src="scripts/libs/ag-grid-enterprise/index.js"></script>
     <!-- endbuild -->
 
     <script>
@@ -637,14 +646,6 @@
     <script src="scripts/directives/ngHideAuth.js"></script>
     <script src="scripts/directives/directive.js"></script>
     <script src="scripts/routes.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js({.tmp,app}) scripts/scripts_ex.js -->
-    <script src="scripts/libs/js-xlsx/cpexcel.js"></script>
-    <script src="scripts/libs/js-xlsx/ods.js"></script>
-    <script src="scripts/libs/js-xlsx/shim.js"></script>
-    <script src="scripts/libs/js-xlsx/xlsx.core.min.js"></script>
-    <script src="scripts/libs/js-xlsx/xlsx.full.min.js"></script>
     <!-- endbuild -->
 
 </body>

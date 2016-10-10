@@ -201,9 +201,11 @@ angular
                             }
                             if (rs.content[0] && rs.content[0] instanceof Array) {
                                 result.content1 = rs.content[0].join('<br />');
+                                result.content1 = result.content1.replace('\n', '<br />');
                             }
                             if (rs.content[1] && rs.content[1] instanceof Array) {
                                 result.content2 = rs.content[1].join('<br />');
+                                result.content2 = result.content2.replace('\n', '<br />');
                             }
                             deferred.resolve(result);
                         }

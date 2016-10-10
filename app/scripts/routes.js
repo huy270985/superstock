@@ -155,7 +155,7 @@ angular.module('superstockApp')
 
                             if ($rootScope.user.account.expired_date)
                                 $rootScope.user.account.expired_date = new Date($rootScope.user.account.expired_date);
-                            $rootScope.user.account.active = true; // Always pass for development
+                            // $rootScope.user.account.active = true; // Always pass for development
                         } else {
                             $rootScope.user.account = {
                                 active: true // For new user trial

@@ -103,7 +103,7 @@ angular.module('superstockApp')
 
                         // Define size of field in client
                         var sizeArr = [
-                            80, 150, 125, 95, 75, 95, 110, 150, 140, 60, 140, 70
+                            80, 150, 125, 95, 75, 95, 110, 150, 134, 70, 134, 70
                         ]
                         var columnDefs = [];
                         var config = {
@@ -262,7 +262,7 @@ angular.module('superstockApp')
                         var $eventTimeout;
                         var $gridData = [];
                         try {
-                            console.clear();
+                            // console.clear();
                         } catch (e) { }
                         var sellSignalDatas = [];
                         if ($scope.gridMainOptions.api) {
@@ -326,9 +326,16 @@ angular.module('superstockApp')
                                                      */
                                                     utils.getSellSignals().then(function (data) {
                                                         $scope.gridMarketOptions.api.setRowData(data);
-                                                        try {
-                                                            console.clear();
-                                                        } catch (e) { }
+                                                        /**
+                                                         * Set height for sellSignal
+                                                         */
+                                                        var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
+                                                        var $pinLeft = $('div[ng-grid="gridMainOptions"]').find('.ag-pinned-left-cols-container');
+                                                        var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
+                                                        var height = $pinLeft.height();
+                                                        if (height >= $agBody.height())
+                                                            height = $agBody.height();
+                                                        $gridMarket.height(height);
                                                     }).catch(function (ex) {
                                                     });
                                                 }
