@@ -261,9 +261,7 @@ angular.module('superstockApp')
                         */
                         var $eventTimeout;
                         var $gridData = [];
-                        try {
-                            // console.clear();
-                        } catch (e) { }
+                        
                         var sellSignalDatas = [];
                         if ($scope.gridMainOptions.api) {
                             $scope.gridMainOptions.api.setColumnDefs(columnDefs);
