@@ -175,6 +175,8 @@ angular.module('superstockApp')
                         $rootScope.$userRefChange.$destroy();
                     if ($rootScope.filterRef)
                         $rootScope.filterRef.$destroy();
+                    if ($rootScope.$userRef)
+                        $rootScope.$userRef.$destroy();
                 }
                 $rootScope.showUI = true;
             });
