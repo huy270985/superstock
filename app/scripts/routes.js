@@ -129,7 +129,7 @@ angular.module('superstockApp')
             // watch for login status changes and redirect if appropriate
             auth.$onAuthStateChanged(function (authData) {
                 $rootScope.user = authData ? authData.toJSON() : undefined;
-                if ($rootScope.userTmp) {
+                if ($rootScope.userTmp && $rootScope.user) {
                     $rootScope.user.displayName = $rootScope.userTmp.displayName;
                     $rootScope.user.phoneNumber = $rootScope.userTmp.phoneNumber;
                 }
@@ -153,8 +153,12 @@ angular.module('superstockApp')
                                 $rootScope.user.displayName = $rootScope.fullName;
                             }
 
-                            if ($rootScope.user.account.expired_date)
-                                $rootScope.user.account.expired_date = new Date($rootScope.user.account.expired_date);
+                            if ($rootScope.user.account.expiredDate)
+                                $rootScope.user.account.expiredDate = new Date($rootScope.user.account.expiredDate);
+
+                            if ($rootScope.user.account.active != true)
+                                $rootScope.user.account.active = false;
+
                             // $rootScope.user.account.active = true; // Always pass for development
                         } else {
                             $rootScope.user.account = {

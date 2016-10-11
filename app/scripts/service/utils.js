@@ -192,21 +192,13 @@ angular
                     var deferred = $q.defer();
                     var result = {};
                     $http.get('https://superstock.firebaseio.com/market_summary.json', {}).then(function (data) {
-                        if (data && data.data && data.data.data) {
-                            var rs = data.data.data;
+                        if (data && data.data) {
+                            var rs = data.data;
                             var result = {
                                 color: rs.color,
-                                content1: '',
-                                content2: ''
+                                content: data.data.data ? data.data.data : ''
                             }
-                            if (rs.content[0] && rs.content[0] instanceof Array) {
-                                result.content1 = rs.content[0].join('<br />');
-                                result.content1 = result.content1.replace('\n', '<br />');
-                            }
-                            if (rs.content[1] && rs.content[1] instanceof Array) {
-                                result.content2 = rs.content[1].join('<br />');
-                                result.content2 = result.content2.replace('\n', '<br />');
-                            }
+                            result.content=result.content.replace('\n', '<br />');
                             deferred.resolve(result);
                         }
                     }, function (err) {

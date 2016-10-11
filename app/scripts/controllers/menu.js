@@ -344,6 +344,8 @@ angular.module('superstockApp')
                     }
                 });
             }).then(function (user) {
+                if (!user)
+                    user = userData.toJSON();
                 return new Promise(function (resolve, reject) {
                     var $user = Ref.child('users/');
                     var child = user.uid;
@@ -353,6 +355,7 @@ angular.module('superstockApp')
                             email: user.email
                         },
                         account: {
+                            registerdDate: firebase.database.ServerValue.TIMESTAMP,
                             active: true //For new user trial
                         }
                     };
@@ -369,7 +372,6 @@ angular.module('superstockApp')
                             child = 'profile';
                             userProfile = userProfile.profile;
                         }
-
                     }
 
                     $user.child(child).set(userProfile, function (err) {
