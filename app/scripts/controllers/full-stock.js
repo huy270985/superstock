@@ -499,6 +499,7 @@ angular.module('superstockApp')
                             }
                             //add filter for 'shorttermSignal' (filter selete option)
                             if (fieldsArr[i] == 'shorttermSignal') {
+                                /*
                                 def.filter = 'set';
                                 var filter = {
                                     term: null,
@@ -514,6 +515,7 @@ angular.module('superstockApp')
                                     headerName: def.headerName,
                                     filter: filter
                                 }
+                                */
                             }
                             //add filter for 'industry' (filter selete option)
                             else if (fieldsArr[i] == 'industry') {
@@ -524,6 +526,24 @@ angular.module('superstockApp')
                                         value: 'Bao bì & đóng gói',
                                         label: 'Bao bì & đóng gói'
                                     }, {
+                                        value: 'Công trình xây dựng',
+                                        label: 'Công trình xây dựng'
+                                    }, {
+                                        value: 'Dịch vụ đầu tư',
+                                        label: 'Dịch vụ đầu tư'
+                                    }, {
+                                        value: 'Đầu tư và phát triển BDS',
+                                        label: 'Đầu tư và phát triển BDS'
+                                    }, {
+                                        value: 'Đồ may mặc trang sức phụ kiện',
+                                        label: 'Đồ may mặc trang sức phụ kiện'
+                                    }, {
+                                        value: 'Dược phẩm',
+                                        label: 'Dược phẩm'
+                                    }, {
+                                        value: 'GAS',
+                                        label: 'GAS'
+                                    }, {
                                         value: 'Nông sản và thủy hải sản',
                                         label: 'Nông sản và thủy hải sản'
                                     }, {
@@ -532,6 +552,12 @@ angular.module('superstockApp')
                                     }, {
                                         value: 'Thực phẩm',
                                         label: 'Thực phẩm'
+                                    }, {
+                                        value: 'Thép',
+                                        label: 'Thép'
+                                    }, {
+                                        value: 'Vận tải biển',
+                                        label: 'Vận tải biển'
                                     }],
                                     typeSearch: 'multiple'
                                 }

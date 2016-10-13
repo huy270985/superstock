@@ -45,7 +45,21 @@ angular.module('superstockApp')
                     "totalValue": { term: 3e9, condition: 'greaterThanOrEqual' },
                     "pricePeak": { term: "Cao nhất 30 phiên", condition: 'contains' },
                     "filterName": "Vượt đỉnh"
+                }, {
+                    "id": 7,
+                    "totalValue": { term: 2e9, condition: 'greaterThanOrEqual' },
+                    "disruptQtty": { term: 30, condition: 'greaterThanOrEqual' },
+                    "maVol30": { term: 20e3, condition: 'greaterThanOrEqual' },
+                    "filterName": "Đột biến KL"
+                }, {
+                    "id": 8,
+                    "totalValue": { term: 2e9, condition: 'greaterThanOrEqual' },
+                    "maVol30": { term: 20e3, condition: 'greaterThanOrEqual' },
+                    "priceChange": { term: 1, condition: 'greaterThanOrEqual' },
+                    "shorttermSignal": { term: "xMua nếu cơ bản tốt", condition: 'contains' },
+                    "filterName": "Điểm mua ngắn hạn"
                 }];
+
             $scope.individualFilter = false;
             $scope.publicFilter = true;
             $scope.filterModes;
