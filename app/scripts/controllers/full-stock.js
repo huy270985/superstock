@@ -377,7 +377,7 @@ angular.module('superstockApp')
                                         if (params.data.buySignal1 == '' && params.data.buySignal2 == '')
                                             return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
                                         else
-                                            return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
+                                            return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '" data-industry = "' + params.node.data.industry + '">' + params.value + '</div>';
                                     } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS'
                                         || params.colDef.field == 'fxEffect' || params.colDef.field == 'cashFlow') {
                                         /*
