@@ -364,12 +364,17 @@ angular.module('superstockApp')
                                         * For "symbol2" column
                                         * - signal1 & signal2 is empty, show empty value
                                         */
-                                        if (!params.data.signal1)
-                                            params.data.signal1 = '';
-                                        if (!params.data.signal2)
-                                            params.data.signal2 = '';
-                                            
-                                        if (params.data.signal1 == '' && params.data.signal2 == '')
+                                        if (!params.data.buySignal1)
+                                            params.data.buySignal1 = '';
+                                        else {
+                                            console.log('');
+                                        }
+                                        if (!params.data.buySignal2)
+                                            params.data.buySignal2 = '';
+                                        else {
+                                            console.log('');
+                                        }
+                                        if (params.data.buySignal1 == '' && params.data.buySignal2 == '')
                                             return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
                                         else
                                             return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
