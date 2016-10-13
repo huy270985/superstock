@@ -322,12 +322,12 @@ angular.module('superstockApp')
                         // console.log(fieldsArr);
                         //set up column size
                         var sizeArr = [
-                            65, 250, 130, 100, 120, 140, 140, 130,
-                            80, 150, 160, 150, 90, 140, 100, 120,
-                            140, 120, 120, 120, 100, 120, 90, 140,
-                            140, 140, 170, 80, 140, 110, 140, 100,
-                            120, 120, 140, 120, 120, 120, 120, 100,
-                            140, 140, 80, 140
+                            90, 220, 130, 95, 100, 140, 140, 120,
+                            90, 135, 145, 135, 75, 155, 90, 110,
+                            125, 120, 120, 100, 80, 120, 90, 125,
+                            125, 125, 155, 100, 150, 100, 100, 90,
+                            110, 110, 130, 120, 120, 110, 100, 95,
+                            130, 125, 80, 125
                         ];
                         var columnDefs = [];
                         var config = {
@@ -458,10 +458,10 @@ angular.module('superstockApp')
                                         min: (arr[0] == 'bigNum') ? parseFloat(arr[1]) * bigNum : parseFloat(arr[1]),
                                         bigNum: (arr[0] == 'bigNum') ? true : false
                                     }, {
-                                            condition: 'lessThan',
-                                            term: Infinity,
-                                            max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
-                                        }];
+                                        condition: 'lessThan',
+                                        term: Infinity,
+                                        max: (arr[0] == 'bigNum') ? parseFloat(arr[3]) * bigNum : parseFloat(arr[3])
+                                    }];
                                     $rootScope.filterList[def.field] = {
                                         headerName: def.headerName,
                                         filters: filters
@@ -469,7 +469,6 @@ angular.module('superstockApp')
                                 }
                             }
                             if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
-                                def.width = 80;
                                 def.filter = 'text';
                                 def.pinned = 'left'; //pin column to left
                                 def.cellRenderer = function (params) { // render 'symbol' cell template
@@ -490,9 +489,9 @@ angular.module('superstockApp')
                                         value: 'xBán',
                                         label: 'Bán'
                                     }, {
-                                            value: 'xMua nếu cơ bản tốt',
-                                            label: 'Mua'
-                                        }]
+                                        value: 'xMua nếu cơ bản tốt',
+                                        label: 'Mua'
+                                    }]
                                 }
                                 $rootScope.filterList[def.field] = {
                                     headerName: def.headerName,
@@ -508,15 +507,15 @@ angular.module('superstockApp')
                                         value: 'Bao bì & đóng gói',
                                         label: 'Bao bì & đóng gói'
                                     }, {
-                                            value: 'Nông sản và thủy hải sản',
-                                            label: 'Nông sản và thủy hải sản'
-                                        }, {
-                                            value: 'Ngân hàng',
-                                            label: 'Ngân hàng'
-                                        }, {
-                                            value: 'Thực phẩm',
-                                            label: 'Thực phẩm'
-                                        }],
+                                        value: 'Nông sản và thủy hải sản',
+                                        label: 'Nông sản và thủy hải sản'
+                                    }, {
+                                        value: 'Ngân hàng',
+                                        label: 'Ngân hàng'
+                                    }, {
+                                        value: 'Thực phẩm',
+                                        label: 'Thực phẩm'
+                                    }],
                                     typeSearch: 'multiple'
                                 }
                                 $rootScope.filterList[def.field] = {
