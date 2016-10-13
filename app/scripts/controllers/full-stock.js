@@ -343,6 +343,7 @@ angular.module('superstockApp')
                             var formatType = null;
                             var cellClass = null;
                             var filter = 'text';
+
                             if (formatArr[i].indexOf('bigNum') > -1 || formatArr[i].indexOf('number') > -1) {
                                 formatType = 'number';
                                 filter = 'number';
@@ -394,8 +395,24 @@ angular.module('superstockApp')
                                                     value = value + '%';
                                                 }
                                             }
+
+                                            if (params.colDef.field == 'maVol30') {
+                                                value = $filter('number')(params.value, 0);
+                                                if (value < 0)
+                                                    value = '';
+                                            } else if (params.colDef.field == 'pe') {
+                                                value = $filter('number')(params.value, 2);
+                                            }
                                             return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                         }
+                                    }
+
+                                    if (params.colDef.field == 'pe') {
+                                        var value = parseFloat(params.value);
+                                        if (isNaN(value))
+                                            value = 0;
+                                        value = $filter('number')(value, 2);
+                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                     }
                                     return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                 },
