@@ -2,8 +2,8 @@
 
 angular
     .module('superstockApp')
-    .factory('utils', ['$http', '$q',
-        function ($http, $q) {
+    .factory('utils', ['$http', '$q', '$rootScope',
+        function ($http, $q, $rootScope) {
             return {
                 getCellClass: function (params, format, selectedSyle) {
                     var field = params.colDef.field;
@@ -82,6 +82,16 @@ angular
                                 }
                             }
                             break;
+                        case 'industry':
+                            /**
+                             * Fix for industry
+                             * industry is data which is a total value from server
+                             */
+                            if (value >= 5e9 && $rootScope.link == 'main') {
+                                classList.push('ag-cell-purple-color');
+                                classList.push('ag-cell-fill-bg');
+                            }
+                            break;
                         case 'totalValue':
                             /**
                             * When this field has value and greater than 5.000.000.000
@@ -133,7 +143,10 @@ angular
                             */
                             if (value != '') {
                                 classList.push('ag-cell-fill-bg');
-                                classList.push('ag-cell-purple-color');
+                                if (value == '..Rủi ro')
+                                    classList.push('grid-cell-red');
+                                else
+                                    classList.push('ag-cell-purple-color');
                             } else {
 
                             }
@@ -198,7 +211,7 @@ angular
                                 color: rs.color,
                                 content: data.data.data ? data.data.data : ''
                             }
-                            result.content=result.content.replace('\n', '<br />');
+                            result.content = result.content.replace('\n', '<br />');
                             deferred.resolve(result);
                         }
                     }, function (err) {

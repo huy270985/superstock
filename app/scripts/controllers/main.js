@@ -103,7 +103,7 @@ angular.module('superstockApp')
 
                         // Define size of field in client
                         var sizeArr = [
-                            80, 150, 125, 95, 75, 95, 110, 150, 134, 70, 134, 70
+                            90, 130, 105, 95, 90, 75, 110, 150, 134, 70, 134, 70
                         ]
                         var columnDefs = [];
                         var config = {
@@ -148,6 +148,8 @@ angular.module('superstockApp')
                                         */
                                         if (params.data.signal1 == '' && params.data.signal2 == '') {
                                             return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
+                                        } else {
+                                            return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                         }
                                     } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS') {
                                         /*
@@ -156,9 +158,9 @@ angular.module('superstockApp')
                                         */
                                         var value = '';
                                         if (isNaN(parseFloat(params.value))) {
-                                            value = $filter('number')(0, 2);
+                                            value = $filter('number')(0, 0);
                                         } else {
-                                            value = $filter('number')(parseFloat(params.value), 2);
+                                            value = $filter('number')(parseFloat(params.value), 0);
                                         }
                                         return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                                     }
@@ -236,11 +238,8 @@ angular.module('superstockApp')
                                 def.suppressSorting = true;
                             }
 
-                            if (def.field == 'totalValue') {
+                            if (def.field == 'EPS') {
                                 def.sort = 'desc';
-                            }
-                            if (def.field == 'industry') {
-                                def.minWidth = 200;
                             }
 
                             def.cellClass = function (params) {
@@ -261,7 +260,7 @@ angular.module('superstockApp')
                         */
                         var $eventTimeout;
                         var $gridData = [];
-                        
+
                         var sellSignalDatas = [];
                         if ($scope.gridMainOptions.api) {
                             $scope.gridMainOptions.api.setColumnDefs(columnDefs);
@@ -274,6 +273,7 @@ angular.module('superstockApp')
                                 $scope.gridMainOptions.api.showLoadingOverlay()
                             }, function (data) {
                                 //loaded data
+                                $scope.gridMainOptions.api.setRowData(data);
                                 // add the handler function
                                 $scope.gridMainOptions.api.addEventListener('afterSortChanged', function (params) {
                                     var updatedNodes = [];
@@ -318,7 +318,7 @@ angular.module('superstockApp')
                                         } else {
                                             $eventTimeout = $timeout(function () {
                                                 if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
-                                                    $scope.gridMainOptions.api.setRowData($gridData);
+                                                    // $scope.gridMainOptions.api.setRowData($gridData);
                                                     /**
                                                      * Fill data for sell signal column
                                                      */
@@ -361,7 +361,7 @@ angular.module('superstockApp')
                             */
                             $(document).on('click', '.chart-icon', function () {
                                 $('#myModal').modal('show');
-                                $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
+                                $scope.stockInfo = $(this).data('symbol');
                                 $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
                                 $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
                             });
@@ -373,7 +373,7 @@ angular.module('superstockApp')
                                 $('#companyModal').modal('show');
                                 var symbolVal = $(this).data('symbol');
                                 var industryVal = $(this).data('industry');
-                                $scope.companyInfo = symbolVal + ' - ' + industryVal;
+                                $scope.companyInfo = symbolVal;
 
                                 utils.getCompanyInformation(symbolVal).then(function (data) {
                                     $scope.companyDatas = data;

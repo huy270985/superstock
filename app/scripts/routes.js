@@ -159,7 +159,7 @@ angular.module('superstockApp')
                             if ($rootScope.user.account.active != true)
                                 $rootScope.user.account.active = false;
 
-                            // $rootScope.user.account.active = true; // Always pass for development
+                            $rootScope.user.account.active = true; // Always pass for development
                         } else {
                             $rootScope.user.account = {
                                 active: true // For new user trial
