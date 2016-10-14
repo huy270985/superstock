@@ -540,6 +540,7 @@ angular.module('superstockApp')
                 $scope.checkEmail = true;
                 $scope.checkPassword = true;
                 $scope.checkSignIn = true;
+                $scope.checkSignUp = true;
                 $scope.checkConfirmPassword = true;
                 $scope.checkFullName = true;
                 $scope.checkNewPassword = true;
