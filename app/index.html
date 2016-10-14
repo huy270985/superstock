@@ -388,6 +388,7 @@
 									<input type="password" name="confirm_password" class="form-control input-sm" ng-model="userSignup.confirmPassword" placeholder="Nhập lại mật khẩu"
 										required/>
 									<span ng-show="(form_signup.$submitted && !checkConfirmPassword)" style="color: red;">Nhập lại mật khẩu không đúng.</span>
+									<span ng-show="(form_signup.$submitted && !checkSignUp)" style="color: red;">{{checkSignUpMessage}}</span>
 								</div>
 							</div>
 						</div>

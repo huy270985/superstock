@@ -114,6 +114,7 @@ angular.module('superstockApp')
         };
 
         $scope.oauthSignUp = function () {
+            $scope.checkSignUpMessage = '';
             // Check validate
             if (!checkValidate('signup'))
                 return;
@@ -147,7 +148,11 @@ angular.module('superstockApp')
                     $scope.disabledButton = false;
                     $scope.loading = false;
                     if (err.code) {
-                        $scope.checkSignIn = false;
+                        $scope.checkSignUp = false;
+                        if (err.code == 'auth/email-already-in-use')
+                            $scope.checkSignUpMessage = 'Email đã được sử dụng bởi người dùng khác.';
+                        else
+                            $scope.checkSignUpMessage = err.message;
                     }
                 });
         }
@@ -251,7 +256,7 @@ angular.module('superstockApp')
         $scope.signUpForm = function () {
             $scope.checkEmail = true;
             $scope.checkPassword = true;
-            $scope.checkSignIn = true;
+            $scope.checkSignUp = true;
             $scope.checkConfirmPassword = true;
             $scope.checkFullName = true;
             $scope.checkPhoneNumber = true;
