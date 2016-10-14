@@ -8,7 +8,7 @@
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
-    .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject, $timeout) {
+    .controller('MenuCtrl', function ($rootScope, $scope, auth, $location, Ref, $firebaseObject, $timeout, $window) {
         $rootScope.link = '';
         var disconnectRef = null;
         var authDataSave = null;
@@ -59,6 +59,15 @@ angular.module('superstockApp')
          * Ex: facebook,...
          */
         $scope.oauthLogin = function (provider) {
+
+            // Send GA data
+            $window.ga('send', {
+                hitType: 'event',
+                eventCategory: 'Đăng nhập tài khoản',
+                eventAction: 'Đăng nhập',
+                eventLabel: ''
+            });
+
             var providerData = getProviderData(provider);
             if (provider == 'facebook') {
                 /**
@@ -108,6 +117,14 @@ angular.module('superstockApp')
             // Check validate
             if (!checkValidate('signup'))
                 return;
+
+            // Send GA data
+            $window.ga('send', {
+                hitType: 'event',
+                eventCategory: 'Đăng ký tài khoản',
+                eventAction: 'Đăng ký',
+                eventLabel: ''
+            });
 
             // Signup
             $scope.disabledButton = true;
