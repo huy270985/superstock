@@ -367,12 +367,12 @@ angular.module('superstockApp')
                                         if (!params.data.buySignal1)
                                             params.data.buySignal1 = '';
                                         else {
-                                            console.log('');
+                                            // console.log('');
                                         }
                                         if (!params.data.buySignal2)
                                             params.data.buySignal2 = '';
                                         else {
-                                            console.log('');
+                                            // console.log('');
                                         }
                                         if (params.data.buySignal1 == '' && params.data.buySignal2 == '')
                                             return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
@@ -546,14 +546,14 @@ angular.module('superstockApp')
                                         value: 'Đầu tư và phát triển BDS',
                                         label: 'Đầu tư và phát triển BDS'
                                     }, {
-                                        value: 'Đồ may mặc trang sức phụ kiện',
-                                        label: 'Đồ may mặc trang sức phụ kiện'
+                                        value: 'Đồ may mặc, trang sức, phụ kiện',
+                                        label: 'Đồ may mặc, trang sức, phụ kiện'
                                     }, {
                                         value: 'Dược phẩm',
                                         label: 'Dược phẩm'
                                     }, {
-                                        value: 'GAS',
-                                        label: 'GAS'
+                                        value: 'Gas',
+                                        label: 'Gas'
                                     }, {
                                         value: 'Nông sản và thủy hải sản',
                                         label: 'Nông sản và thủy hải sản'
