@@ -28,9 +28,11 @@ angular.module('superstockApp')
                 $rootScope.filterRef = filter;
                 filter.$loaded(function (data) {
                     filterData = {};
-                    for (var i in data) {
-                        if (i.charAt(0) != '$' && i != 'forEach') {
-                            filterData[i] = data[i];
+                    if (data.individualFilter) {
+                        for (var i in data.individualFilter) {
+                            if (i.charAt(0) != '$' && i != 'forEach') {
+                                filterData[i] = data[i];
+                            }
                         }
                     }
                 });
@@ -50,16 +52,16 @@ angular.module('superstockApp')
                 sortingOrder: ['desc', 'asc'],
                 //filter changed event
                 onAfterFilterChanged: function () {
-                    user = Ref.child('users/' + currentAuth.uid);
-                    var filter = filterConvert($rootScope.filterList, null);
-                    //save filter
-                    user.child('filter').set(filter, function (err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('Saved filter');
-                        }
-                    });
+                    // user = Ref.child('users/' + currentAuth.uid);
+                    // var filter = filterConvert($rootScope.filterList, null);
+                    // //save filter
+                    // user.child('filter').set(filter, function (err) {
+                    //     if (err) {
+                    //         console.log(err);
+                    //     } else {
+                    //         console.log('Saved filter');
+                    //     }
+                    // });
                 },
                 onCellClicked: function (params) { }
             };
@@ -935,7 +937,7 @@ function filterConvert(rowDefs, filters) {
                     rowDefs[i].filter.term = filters[i];
             }
             if (rowDefs[i].filters) {
-                if (filters && filters[i])
+                if (filters && (filters[i] || filters[i] == 0))
                     rowDefs[i].filters[0].term = filters[i];
             }
         }
@@ -948,7 +950,7 @@ function filterConvert(rowDefs, filters) {
                     filters[i] = rowDefs[i].filter.term;
             }
             if (rowDefs[i].filters) {
-                if (rowDefs[i].filters[0].term)
+                if (rowDefs[i].filters[0].term || rowDefs[i].filters[0].term == 0)
                     filters[i] = rowDefs[i].filters[0].term;
             }
         }
