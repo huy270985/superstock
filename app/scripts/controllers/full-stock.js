@@ -50,16 +50,16 @@ angular.module('superstockApp')
                 sortingOrder: ['desc', 'asc'],
                 //filter changed event
                 onAfterFilterChanged: function () {
-                    // user = Ref.child('users/' + currentAuth.uid);
-                    // var filter = filterConvert($rootScope.filterList, null);
-                    // //save filter
-                    // user.child('filter').set(filter, function (err) {
-                    //     if (err) {
-                    //         console.log(err);
-                    //     } else {
-                    //         console.log('Saved filter');
-                    //     }
-                    // });
+                    user = Ref.child('users/' + currentAuth.uid);
+                    var filter = filterConvert($rootScope.filterList, null);
+                    //save filter
+                    user.child('filter').set(filter, function (err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('Saved filter');
+                        }
+                    });
                 },
                 onCellClicked: function (params) { }
             };
