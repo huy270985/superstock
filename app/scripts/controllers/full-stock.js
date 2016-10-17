@@ -159,7 +159,7 @@ angular.module('superstockApp')
                             if (filterItem.filters[0]) {
                                 var filterGreater = $scope.gridOptions.api.getFilterApi(key);
                                 if (filterGreater.GREATER_THAN || filterItem.filters[0].condition) {
-                                    if (filterItem.filters[0].term) {
+                                    if (filterItem.filters[0].term || filterItem.filters[0].term == 0) {
                                         var filterType = filterGreater.GREATER_THAN ? filterGreater.GREATER_THAN : filterItem.filters[0].condition
                                         filterGreater.setType(filterType);
                                         filterGreater.setFilter(filterItem.filters[0].term);
