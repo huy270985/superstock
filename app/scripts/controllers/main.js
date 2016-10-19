@@ -74,6 +74,7 @@ angular.module('superstockApp')
                 data: [],
                 headerHeight: 50,
                 enableColResize: false,
+                suppressNoRowsOverlay: true,
                 columnDefs: columnDefs
             }
 
@@ -318,7 +319,7 @@ angular.module('superstockApp')
                                         } else {
                                             $eventTimeout = $timeout(function () {
                                                 if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
-                                                    // $scope.gridMainOptions.api.setRowData($gridData);
+                                                    $scope.gridMainOptions.api.setRowData($gridData);
                                                     /**
                                                      * Fill data for sell signal column
                                                      */
@@ -334,6 +335,7 @@ angular.module('superstockApp')
                                                         if (height >= $agBody.height())
                                                             height = $agBody.height();
                                                         $gridMarket.height(height);
+                                                        $gridMarket.css('background', '#F4CCCC');
                                                     }).catch(function (ex) {
                                                     });
                                                 }

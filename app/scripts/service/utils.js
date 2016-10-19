@@ -238,8 +238,8 @@ angular
                                     result.push(market);
                                 }
                             }
-                            deferred.resolve(result);
                         }
+                        deferred.resolve(result);
                     }, function (err) {
                         deferred.reject(err);
                     });
