@@ -47,7 +47,10 @@ angular
                     var arr = childSnapshot.val().split('|');
                     for (var j in config.labelList) {
                         if (config.labelList[j].format.indexOf('percent') > -1) {
-                            dataConvert[config.labelList[j].fieldName] = Math.ceil(arr[j] * 10000) / 100; // + '%';
+                            if (arr[j] == '')
+                                dataConvert[config.labelList[j].fieldName] = '';
+                            else
+                                dataConvert[config.labelList[j].fieldName] = Math.ceil(arr[j] * 10000) / 100; // + '%';
                             if (isNaN(dataConvert[config.labelList[j].fieldName]))
                                 dataConvert[config.labelList[j].fieldName] = '';
                         } else if (config.labelList[j].format.indexOf('bigNum') > -1 || config.labelList[j].format.indexOf('number') > -1) {
