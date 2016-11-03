@@ -103,9 +103,19 @@ angular.module('superstockApp')
                         var formatList = {};
 
                         // Define size of field in client
-                        var sizeArr = [
-                            90, 130, 105, 95, 90, 75, 110, 150, 134, 70, 134, 70
-                        ]
+                        var sizes = { 
+                            symbol: 90,
+                            matchPrice: 95,
+                            priceChange: 105,
+                            totalValue: 140,
+                            volumeChange: 95,
+                            eps: 95,
+                            point: 90,
+                            canslim: 125,
+                            peak30: 140,
+                            buysignal1: 125,
+                            symbol2: 90
+                        }
                         var columnDefs = [];
                         var config = {
                             idLabel: 'Mã',
@@ -136,7 +146,7 @@ angular.module('superstockApp')
                             //Setup column data
                             var def = {
                                 field: fieldsArr[i], //field name
-                                width: sizeArr[count], //column width
+                                width: sizes[fieldsArr[i]] || 90, //column width
                                 headerName: titlesArr[i], //column title
                                 cellClass: cellClass, //css class of cell in column
                                 enableTooltip: true,
