@@ -193,7 +193,17 @@ angular
                              */
                             classList.push('ag-cell-red-bg');
                             classList.push('text-center');
-                            break
+                            break;
+                        case 'matchPrice':
+                            /**
+                             * Fix for industry
+                             * industry is data which is a total value from server
+                             */
+                            if (value >= 30 && $rootScope.link == 'main') {
+                                classList.push('ag-cell-purple-color');
+                                classList.push('ag-cell-fill-bg');
+                            }
+                            break;
                     }
                     return classList;
                 },

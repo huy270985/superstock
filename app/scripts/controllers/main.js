@@ -103,18 +103,20 @@ angular.module('superstockApp')
                         var formatList = {};
 
                         // Define size of field in client
+                        //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
                         var sizes = { 
                             symbol: 90,
-                            matchPrice: 95,
-                            priceChange: 105,
-                            totalValue: 140,
+                            matchPrice: 100,
+                            priceChange: 100,
+                            totalValue: 125,
                             volumeChange: 95,
-                            eps: 95,
-                            point: 90,
-                            canslim: 125,
-                            peak30: 140,
-                            buysignal1: 125,
-                            symbol2: 90
+                            EPS: 65,
+                            newPoint: 75,
+                            Canslim: 105,
+                            pricePeak: 100,
+                            signal1: 125,
+                            symbol2: 75,
+                            signal2: 125
                         }
                         var columnDefs = [];
                         var config = {
@@ -231,6 +233,9 @@ angular.module('superstockApp')
                                     )
                                 }
                             };
+                            if(def.field === 'totalValue') {
+                                def.sort = 'desc';
+                            }
                             count++;
 
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
@@ -247,10 +252,6 @@ angular.module('superstockApp')
                                 }
                             } else if (fieldsArr[i] == 'sellSignal') {
                                 def.suppressSorting = true;
-                            }
-
-                            if (def.field == 'EPS') {
-                                def.sort = 'desc';
                             }
 
                             def.cellClass = function (params) {
