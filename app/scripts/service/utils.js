@@ -194,10 +194,10 @@ angular
                             classList.push('ag-cell-red-bg');
                             classList.push('text-center');
                             break;
-                        case 'matchPrice':
+                        case 'volumeChange':
                             /**
-                             * Fix for industry
-                             * industry is data which is a total value from server
+                             * Fix for volumeChange
+                             * volumeChange is data which is a total value from server
                              */
                             if (value >= 30 && $rootScope.link == 'main') {
                                 classList.push('ag-cell-purple-color');
