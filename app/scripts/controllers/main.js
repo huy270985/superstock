@@ -114,9 +114,9 @@ angular.module('superstockApp')
                             newPoint: 75,
                             Canslim: 105,
                             pricePeak: 100,
-                            signal1: 125,
+                            signal1: 130,
                             symbol2: 75,
-                            signal2: 125
+                            signal2: 130
                         }
                         var columnDefs = [];
                         var config = {
