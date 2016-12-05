@@ -30,7 +30,7 @@ Sau khi build thành công grunt sẽ tạo ra thư mục ```dist```
 
 Sử dụng webserver (like Apache, IIS, nginx,..) để serve thư mục (```dist```)
 
-Để deploy lên [Github page](https://pages.github.com/), push tất cả các files trong ```dist`` lên branch ```gh-pages```
+Để deploy lên [Github page](https://pages.github.com/), push tất cả các files trong ```dist``` lên branch ```gh-pages```
 
 Page sẽ đc chạy trên https://superstock.github.io/stockboard
 
