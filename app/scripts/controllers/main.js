@@ -103,9 +103,21 @@ angular.module('superstockApp')
                         var formatList = {};
 
                         // Define size of field in client
-                        var sizeArr = [
-                            90, 130, 105, 95, 90, 75, 110, 150, 134, 70, 134, 70
-                        ]
+                        //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
+                        var sizes = { 
+                            symbol: 90,
+                            matchPrice: 100,
+                            priceChange: 100,
+                            totalValue: 125,
+                            volumeChange: 95,
+                            EPS: 65,
+                            newPoint: 75,
+                            Canslim: 105,
+                            pricePeak: 100,
+                            signal1: 130,
+                            symbol2: 75,
+                            signal2: 130
+                        }
                         var columnDefs = [];
                         var config = {
                             idLabel: 'Mã',
@@ -136,7 +148,7 @@ angular.module('superstockApp')
                             //Setup column data
                             var def = {
                                 field: fieldsArr[i], //field name
-                                width: sizeArr[count], //column width
+                                width: sizes[fieldsArr[i]] || 90, //column width
                                 headerName: titlesArr[i], //column title
                                 cellClass: cellClass, //css class of cell in column
                                 enableTooltip: true,
@@ -221,6 +233,9 @@ angular.module('superstockApp')
                                     )
                                 }
                             };
+                            if(def.field === 'totalValue') {
+                                def.sort = 'desc';
+                            }
                             count++;
 
                             if (formatType) def.cellFilter = formatType; // add cell format (number or string)
@@ -237,10 +252,6 @@ angular.module('superstockApp')
                                 }
                             } else if (fieldsArr[i] == 'sellSignal') {
                                 def.suppressSorting = true;
-                            }
-
-                            if (def.field == 'EPS') {
-                                def.sort = 'desc';
                             }
 
                             def.cellClass = function (params) {

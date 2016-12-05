@@ -22,9 +22,17 @@ Project based on AngularJS, used the ui-grid (angular module) for layout stock b
 
 ## Build
 
+Mở thư mục gốc của source code và execute command sau:
+
 ```grunt build```
 
-The production is created in the folder ```dist```
+Sau khi build thành công grunt sẽ tạo ra thư mục ```dist```
+
+Sử dụng webserver (like Apache, IIS, nginx,..) để serve thư mục (```dist```)
+
+Để deploy lên [Github page](https://pages.github.com/), push tất cả các files trong ```dist``` lên branch ```gh-pages```
+
+Page sẽ đc chạy trên https://superstock.github.io/stockboard
 
 This is the new view (2016-08-20):
 - summary_data
