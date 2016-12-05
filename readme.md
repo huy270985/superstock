@@ -1,4 +1,6 @@
-# Introduction
+# Super Stock
+
+## Introduction
 
 This is the front-end for the superstock project. This app allows user to monitor strongest stocks as well as add their own filters to find best-value stocks.
 
@@ -8,16 +10,21 @@ There are 2 pages:
 
 User can log-in using Facebook account and save their filters preference in real-time
 
-# Technical stack
-This project is built around the [SlickGrid](https://github.com/mleibman/SlickGrid), with the slider by [jQuery mobile](https://demos.jquerymobile.com/1.2.0/docs/forms/slider/) with the backend is powered by [Firebase](https://www.firebase.com)
+## Technical stack
 
-To run the project, simply supply a HTTP server, e.g:
+Project based on AngularJS, used the ui-grid (angular module) for layout stock board
 
-```
-python -m SimpleHTTPServer
-```
+## Prerequisite
 
-# Firebase Data
+```npm install```
+
+```bower install```
+
+## Build
+
+```grunt build```
+
+The production is created in the folder ```dist```
 
 This is the new view (2016-08-20):
 - summary_data
@@ -29,14 +36,7 @@ The data is stored in Firebase with these endpoints:
 - superstock_titles: titles of of the corresponding fields
 - superstock_format: format of each field - in [type]:[from]:[value]:[to]
 
-For Tổng hợp:
-- longterm_data
-- longterm_headers
-- longterm_titles
-
-- shortterm_data
-- shortterm_headers
-- shortterm_titles
+Default URL to access: [http://localhost:9000/](http://localhost:9000/)
 
 Market summary:
 - https://superstock.firebaseio.com/market_summary.json
@@ -53,3 +53,10 @@ Stocks that have sell signals:
 - https://superstock.firebaseio.com/sell_symbols.json
 
 Data is stored in pipe delimiter format, e.g.: [field1]|[field2]|[field3]etc
+
+## Run
+```grunt serve```
+
+## Detect errors and potential problems in code.
+```grunt jshint```
+
