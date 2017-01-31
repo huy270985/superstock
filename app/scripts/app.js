@@ -24,7 +24,9 @@ angular.module('superstockApp', [
     'ui.slider',
     'btorfs.multiselect',
     'uiSwitch'
-])
+]).config(['$locationProvider', function($locationProvider) {
+  $locationProvider.hashPrefix('');
+}]);
 
 $(document).on('click', '.ag-row', function() {
     var thisRow = $(this);
