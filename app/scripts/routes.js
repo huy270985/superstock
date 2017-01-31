@@ -42,7 +42,7 @@ angular.module('superstockApp')
      * Commented due to issues with the new SDK
      *
      .config(['$routeProvider', 'SECURED_ROUTES', function ($routeProvider, SECURED_ROUTES) {
-    
+
      // credits for this idea: https://groups.google.com/forum/#!msg/angular/dPr9BpIZID0/MgWVluo_Tg8J
      // unfortunately, a decorator cannot be use here because they are not applied until after
      // the .config calls resolve, so they can't be used during route configuration, so we have
@@ -162,7 +162,7 @@ angular.module('superstockApp')
                             // $rootScope.user.account.active = true; // Always pass for development
                         } else {
                             $rootScope.user.account = {
-                                active: true // For new user trial
+                                active: false // For new user trial
                             };
                         }
                         showMessage = !$rootScope.user.account.active;
