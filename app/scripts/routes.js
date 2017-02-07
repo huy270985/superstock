@@ -124,7 +124,8 @@ angular.module('superstockApp')
      */
     .run(['$rootScope', '$location', 'loginRedirectPath', 'auth', '$firebaseObject', 'Ref',
         function ($rootScope, $location, loginRedirectPath, auth, $firebaseObject, Ref, event, next, previous, error) {
-
+            // For new user trial
+            $rootScope.globalActive = false;
 
             // watch for login status changes and redirect if appropriate
             auth.$onAuthStateChanged(function (authData) {
@@ -162,7 +163,7 @@ angular.module('superstockApp')
                             // $rootScope.user.account.active = true; // Always pass for development
                         } else {
                             $rootScope.user.account = {
-                                active: false // For new user trial
+                                active: $rootScope.globalActive // For new user trial
                             };
                         }
                         showMessage = !$rootScope.user.account.active;

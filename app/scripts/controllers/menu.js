@@ -378,7 +378,7 @@ angular.module('superstockApp')
                         },
                         account: {
                             registerdDate: firebase.database.ServerValue.TIMESTAMP,
-                            active: true //For new user trial
+                            active: $rootScope.globalActive //For new user trial
                         }
                     };
                     if (type == 'password') {
