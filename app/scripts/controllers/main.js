@@ -104,7 +104,7 @@ angular.module('superstockApp')
 
                         // Define size of field in client
                         //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
-                        var sizes = { 
+                        var sizes = {
                             symbol: 90,
                             matchPrice: 100,
                             priceChange: 100,
@@ -233,7 +233,7 @@ angular.module('superstockApp')
                                     )
                                 }
                             };
-                            if(def.field === 'totalValue') {
+                            if(def.field === 'newPoint') { // default sort on point
                                 def.sort = 'desc';
                             }
                             count++;
