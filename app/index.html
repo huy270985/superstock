@@ -214,7 +214,7 @@
 
 		<div id="container-fluit-area" class="container-fluit">
 			<div class="view-containner">
-				<div ng-view="" ng-if="$root.user && $root.user.account && $root.user.account.active" style="height: 100%; width: 100%; overflow: auto;"></div>
+				<div ng-view="" ng-if="$root.user && $root.user.account" style="height: 100%; width: 100%; overflow: auto;"></div>
 				<!--<div ng-if="$root.showUI && !$root.user" class="unauthentication-area" ng-cloak>Mời bạn đăng ký tài khoản ở góc phải màn hình,<br>sau đó đăng nhập để có thể sử dụng được bảng giá</div>-->
 				<div ng-if="$root.showUI && !$root.user" ng-include="'./views/home-content.html'" style="height: 100%;"></div>
 			</div>
@@ -254,7 +254,7 @@
 					<h4 id="modal-label">SuperStock</h4>
 				</div>
 				<div class="modal-body">
-					<h4>Tài khoản đã bị khóa hoặc hết hạn sử dụng. Vui lòng liên hệ với 0938.326.999 để được hướng dẫn chi tiết, xin cám ơn</h4>
+					<h4>Tài khoản đã bị khóa hoặc hết hạn sử dụng. Vui lòng liên hệ với 0938.326.999 để được hướng dẫn chi tiết đăng ký sử dụng đầy đủ tính năng, xin cám ơn</h4>
 				</div>
 			</div>
 		</div>
@@ -560,7 +560,7 @@
         }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
         ga('create', 'UA-82928411-1');
         // ga('create', 'UA-85283470-1');
-        
+
         ga('send', 'pageview');
 
         setInterval(function() {

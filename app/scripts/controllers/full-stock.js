@@ -219,7 +219,7 @@ angular.module('superstockApp')
             $scope.rowAfterFilter = [];
             $rootScope.exportDatasheet = function ($event) {
                 $event.preventDefault();
-                // Show loading      
+                // Show loading
                 $('#exportProccessing').modal('show');
 
                 $timeout(function () {
@@ -288,7 +288,7 @@ angular.module('superstockApp')
                         cell: characters[1],
                         format: ''
                     };
-            
+
                     config['chartCustom'] = {
                         cell: characters[2],
                         format: ''
@@ -314,7 +314,7 @@ angular.module('superstockApp')
             var format = $firebaseObject(Ref.child('superstock_format'));
             fields.$loaded(function () { //load superstock_fields
                 titles.$loaded(function () { //load superstock_titles
-                    format.$loaded(function () { //load 
+                    format.$loaded(function () { //load
                         var titlesArr = titles.data.split('|');
                         var fieldsArr = fields.data.split('|');
                         var formatArr = format.data.split('|');

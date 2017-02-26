@@ -169,6 +169,8 @@ angular.module('superstockApp')
                         showMessage = !$rootScope.user.account.active;
                         if (showMessage) {
                             $('#expiredMessageModal').modal('show');
+                            // redirect automatically to home if user is not active
+                            $location.path('/');
                         }
                     });
                 } else {
