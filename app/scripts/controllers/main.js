@@ -284,6 +284,19 @@ angular.module('superstockApp')
                                 //loading data
                                 $scope.gridMainOptions.api.showLoadingOverlay()
                             }, function (data) {
+                                /*
+                                Hide data for unpaid user
+                                */
+                                console.log('data', data)
+                                if(!$rootScope.user.account.active) {
+                                    for(var i = 0; i < data.length; i++) {
+                                        var txt = "Bản thu phí";
+                                        data[i].signal1 = txt;
+                                        data[i].signal2 = txt;
+                                        data[i].symbol2 = txt;
+                                        data[i].Canslim = txt;
+                                    }
+                                }
                                 //loaded data
                                 $scope.gridMainOptions.api.setRowData(data);
                                 // add the handler function
@@ -324,14 +337,14 @@ angular.module('superstockApp')
                                         /*
                                         * Update data in grid when server update data
                                         * Here we hide signal for inactive user, only paid user see the details.
+                                        TODO: duplicate with first load process
                                         */
-                                        console.log('Received data', data, $rootScope.user);
                                         if(!$rootScope.user.account.active) {
-                                            console.log('Inactive user, filter out');
                                             var txt = "Bản thu phí";
                                             data.signal1 = txt;
                                             data.signal2 = txt;
                                             data.symbol2 = txt;
+                                            data.Canslim = txt;
                                         }
 
                                         $gridData.push(data);
