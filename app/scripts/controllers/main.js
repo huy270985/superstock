@@ -323,7 +323,17 @@ angular.module('superstockApp')
                                     added: function (data, childSnapshot, id) {
                                         /*
                                         * Update data in grid when server update data
+                                        * Here we hide signal for inactive user, only paid user see the details.
                                         */
+                                        console.log('Received data', data, $rootScope.user);
+                                        if(!$rootScope.user.account.active) {
+                                            console.log('Inactive user, filter out');
+                                            var txt = "Bản thu phí";
+                                            data.signal1 = txt;
+                                            data.signal2 = txt;
+                                            data.symbol2 = txt;
+                                        }
+
                                         $gridData.push(data);
                                         if ($eventTimeout) {
                                             //
