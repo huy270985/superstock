@@ -52,9 +52,18 @@ angular
                     /**
                      * Define cell style for grid by column
                      */
+
+
                     var field = params.colDef.field;
                     var value = params.value;
-                    console.log('Cell Class Summary', params, params.colDef.field);
+
+                    /**
+                    Util to determine if a strong is truely strong
+                    */
+                    function is_strong_stock(stock) {
+                        return stock.EPS >= 3000 && stock.newPoint >= 6;
+                    }
+
                     var classList = ['ag-cell-orange-bg'];
                     if (selectedSyle && selectedSyle != '' && field != 'symbol')
                         classList.push('ag-cell-focus-bg');
@@ -74,7 +83,7 @@ angular
                             */
                             if (value != '') {
                                 if ((params.data.signal1 != '' || params.data.signal2 != '')) {
-                                    if (params.data.Canslim != '') {
+                                    if (params.data.Canslim != '' && is_strong_stock(params.data)) {
                                         classList.push('ag-cell-purple-color');
                                     } else {
                                         classList.push('grid-cell-green');
@@ -168,7 +177,7 @@ angular
                                     Only make strong symbol purple
                                     By Hung's request: 2017-06-12
                                     */
-                                    if (params.data.Canslim != '' && params.data.EPS >= 3000 && params.data.newPoint >= 6) {
+                                    if (params.data.Canslim != '' && is_strong_stock(params.data)) {
                                         classList.push('ag-cell-purple-color');
                                     } else {
                                         classList.push('grid-cell-green');
@@ -192,7 +201,7 @@ angular
                                 Only make strong symbol purple
                                 By Hung's request: 2017-06-12
                                 */
-                                if (params.data.EPS >= 3000 && params.data.newPoint >= 6) {
+                                if (is_strong_stock(params.data)) {
                                     classList.push('ag-cell-purple-color');
                                 }
                                 else{
