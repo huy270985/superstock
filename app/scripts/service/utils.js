@@ -54,6 +54,7 @@ angular
                      */
                     var field = params.colDef.field;
                     var value = params.value;
+                    console.log('Cell Class Summary', params, params.colDef.field);
                     var classList = ['ag-cell-orange-bg'];
                     if (selectedSyle && selectedSyle != '' && field != 'symbol')
                         classList.push('ag-cell-focus-bg');
@@ -152,6 +153,7 @@ angular
                             }
                             classList.push('text-center');
                             break;
+
                         case 'symbol2':
                             /**
                             * When this field has value
@@ -162,7 +164,11 @@ angular
                             */
                             if (value != '') {
                                 if ((params.data.signal1 != '' || params.data.signal2 != '')) {
-                                    if (params.data.Canslim != '') {
+                                    /**
+                                    Only make strong symbol purple
+                                    By Hung's request: 2017-06-12
+                                    */
+                                    if (params.data.Canslim != '' && params.data.EPS >= 3000 && params.data.newPoint >= 6) {
                                         classList.push('ag-cell-purple-color');
                                     } else {
                                         classList.push('grid-cell-green');
@@ -173,6 +179,7 @@ angular
                             classList.push('ag-cell-green-bg');
                             classList.push('text-center');
                             break;
+
                         case 'signal1':
                         case 'signal2':
                             /**
@@ -181,12 +188,22 @@ angular
                             * and otherwise background is green
                             */
                             if (value != '') {
+                                /**
+                                Only make strong symbol purple
+                                By Hung's request: 2017-06-12
+                                */
+                                if (params.data.EPS >= 3000 && params.data.newPoint >= 6) {
+                                    classList.push('ag-cell-purple-color');
+                                }
+                                else{
+                                    classList.push('grid-cell-green');
+                                }
                                 classList.push('ag-cell-fill-bg');
-                                classList.push('ag-cell-purple-color');
                             }
                             classList.push('ag-cell-green-bg');
                             classList.push('text-center');
                             break;
+
                         case 'sellSignal':
                             /**
                              * Fill red background for cell which is sell signal
