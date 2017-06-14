@@ -138,8 +138,10 @@ angular
                             if (value >= 7) {
                                 classList.push('ag-cell-purple-color');
                                 classList.push('ag-cell-fill-bg');
-                            } else if (value >= 5) {
+                            } else if (value > 5) {
                                 classList.push('grid-cell-green');
+                            } else if (value == 5) {
+                                classList.push('grid-cell-black');
                             } else if (value <= 4) {
                                 classList.push('grid-cell-red');
                             }
