@@ -233,7 +233,7 @@ angular.module('superstockApp')
                                     )
                                 }
                             };
-                            if(def.field === 'newPoint') { // default sort on point
+                            if(def.field === 'EPS') { // default #sort column in summary table
                                 def.sort = 'desc';
                             }
                             count++;
