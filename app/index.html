@@ -168,14 +168,16 @@
 							</li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<!-- Remove #Excel download capability to prevent data lost -->
+							<!-- Remove Excel download capability to prevent data lost #excel #Excel -->
 							<li ng-show="$root.link == 'full' && false" ng-click="$root.exportDatasheet($event)" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href=""><i class="glyphicon glyphicon-download-alt"></i> <span class="menu-item-text item-to-hide">Excel</span></a>
 							</li>
+
+							<!-- Add link to new blog guide #guide #tutorial #knowledge -->
 							<li>
-								<a href="" class="super-stock-guide" ng-click="openGuideModal($event)">
+								<a href="http://hungcanslim.com/chiase/" target="_blank" class="super-stock-guide">
 									<i class="glyphicon glyphicon-question-sign"></i>
-									<span class="menu-item-text">Hướng dẫn</span>
+									<span class="menu-item-text">Kiến thức</span>
 								</a>
 							</li>
 
