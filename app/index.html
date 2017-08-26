@@ -168,8 +168,10 @@
 							</li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<!-- Remove Excel download capability to prevent data lost #excel #Excel -->
-							<li ng-show="$root.link == 'full' && false" ng-click="$root.exportDatasheet($event)" ng-if="$root.user && $root.user.account && $root.user.account.active">
+							<!-- Remove Excel download capability to prevent data lost #excel #Excel
+							add $root.link == 'full' && false below	
+							 -->
+							<li ng-show="$root.link == 'full'" ng-click="$root.exportDatasheet($event)" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href=""><i class="glyphicon glyphicon-download-alt"></i> <span class="menu-item-text item-to-hide">Excel</span></a>
 							</li>
 
