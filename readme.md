@@ -68,3 +68,13 @@ Data is stored in pipe delimiter format, e.g.: [field1]|[field2]|[field3]etc
 ## Detect errors and potential problems in code.
 ```grunt jshint```
 
+## Deploy with firebase
+Simply run
+```
+firebase deploy
+```
+
+If the project is clone the first time, firebase initialization is required:
+```
+firebase init
+```
