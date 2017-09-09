@@ -287,7 +287,6 @@ angular.module('superstockApp')
                                 /*
                                 Hide data for unpaid user
                                 */
-                                console.log('data', data)
                                 if(!$rootScope.user.account.active) {
                                     for(var i = 0; i < data.length; i++) {
                                         var txt = "Bản thu phí";
