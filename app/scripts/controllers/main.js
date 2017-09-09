@@ -10,9 +10,10 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
-        'gridDataSource',
+        'tableSettings',
         function ($rootScope, $scope, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout, gridDataSource) {
+            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout, 
+            tableSettings) {
             $rootScope.link = 'main';
             $window.ga('send', 'pageview', "Tổng hợp");
             //Setup ag-grid
@@ -233,7 +234,7 @@ angular.module('superstockApp')
                                     )
                                 }
                             };
-                            if(def.field === 'EPS') { // default #sort column in summary table
+                            if(def.field === tableSettings.defaultSort) { // default #sort column in summary table
                                 def.sort = 'desc';
                             }
                             count++;
@@ -280,7 +281,7 @@ angular.module('superstockApp')
                             var gridDiv = document.querySelector('#grid-market-options');
                             new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
 
-                            draw.drawGrid(Ref.child(gridDataSource), config, function (data) {
+                            draw.drawGrid(Ref.child(tableSettings.gridDataSource), config, function (data) {
                                 //loading data
                                 $scope.gridMainOptions.api.showLoadingOverlay()
                             }, function (data) {

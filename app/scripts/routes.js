@@ -71,8 +71,11 @@ angular.module('superstockApp')
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();
                     }],
-                    "gridDataSource": function() {
-                        return "summary_data";
+                    "tableSettings": function() {
+                        return {
+                            "gridDataSource": "summary_data",
+                            "defaultSort": "EPS",
+                        }
                     }
                 }
             })
@@ -84,8 +87,11 @@ angular.module('superstockApp')
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();
                     }],
-                    "gridDataSource": function() {
-                        return "investment_data";
+                    "tableSettings": function() {
+                        return {
+                            "gridDataSource": "investment_data",
+                            "defaultSort": "priceChange",
+                        }
                     }
                 }
             })
