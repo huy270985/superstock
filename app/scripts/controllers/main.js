@@ -10,11 +10,11 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
+        'gridDataSource',
         function ($rootScope, $scope, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout) {
+            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout, gridDataSource) {
             $rootScope.link = 'main';
             $window.ga('send', 'pageview', "Tổng hợp");
-
             //Setup ag-grid
             $scope.gridMainOptions = {
                 enableSorting: true,
@@ -280,7 +280,7 @@ angular.module('superstockApp')
                             var gridDiv = document.querySelector('#grid-market-options');
                             new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
 
-                            draw.drawGrid(Ref.child('summary_data'), config, function (data) {
+                            draw.drawGrid(Ref.child(gridDataSource), config, function (data) {
                                 //loading data
                                 $scope.gridMainOptions.api.showLoadingOverlay()
                             }, function (data) {

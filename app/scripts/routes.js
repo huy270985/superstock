@@ -70,9 +70,26 @@ angular.module('superstockApp')
                 resolve: {
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();
-                    }]
+                    }],
+                    "gridDataSource": function() {
+                        return "summary_data";
+                    }
                 }
             })
+
+            .when('/investment', {
+                templateUrl: 'views/main.html',
+                controller: 'MainCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }],
+                    "gridDataSource": function() {
+                        return "investment_data";
+                    }
+                }
+            })
+
             .when('/full', {
                 templateUrl: 'views/full-stock.html',
                 controller: 'FullStockCtrl',
