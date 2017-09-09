@@ -76,7 +76,10 @@ angular.module('superstockApp')
                             "gridDataSource": "summary_data",
                             "defaultSort": "EPS",
                         }
-                    }
+                    },
+                    "link": function() {
+                        return 'main';
+                    },
                 }
             })
 
@@ -92,7 +95,10 @@ angular.module('superstockApp')
                             "gridDataSource": "investment_data",
                             "defaultSort": "priceChange",
                         }
-                    }
+                    },
+                    "link": function() {
+                        return 'investment';
+                    },
                 }
             })
 
@@ -105,6 +111,7 @@ angular.module('superstockApp')
                     }]
                 }
             })
+
             .when('/about', {
                 templateUrl: 'views/about.html',
                 controller: 'AboutCtrl',

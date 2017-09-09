@@ -10,11 +10,11 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
-        'tableSettings',
+        'tableSettings', 'link',
         function ($rootScope, $scope, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout, 
-            tableSettings) {
-            $rootScope.link = 'main';
+            tableSettings, link) {
+            $rootScope.link = link;
             $window.ga('send', 'pageview', "Tổng hợp");
             //Setup ag-grid
             $scope.gridMainOptions = {
