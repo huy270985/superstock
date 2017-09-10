@@ -112,6 +112,16 @@ angular.module('superstockApp')
                 }
             })
 
+            .when('/personal', {
+                templateUrl: 'views/personal-portfolio.html',
+                controller: 'FullStockCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }]
+                }
+            })
+            
             .when('/about', {
                 templateUrl: 'views/about.html',
                 controller: 'AboutCtrl',

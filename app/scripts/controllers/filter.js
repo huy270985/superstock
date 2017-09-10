@@ -58,7 +58,13 @@ angular.module('superstockApp')
                     "priceChange": { term: 1, condition: 'greaterThanOrEqual' },
                     "shorttermSignal": { term: "xMua nếu cơ bản tốt", condition: 'contains' },
                     "filterName": "Điểm mua ngắn hạn"
-                }];
+                }, {
+                    "id": 9,
+                    "symbol": ["AAA", "VND"],
+                    "filterName": "Danh mục cá nhân",
+                },
+
+                ];
 
             $scope.individualFilter = false;
             $scope.publicFilter = true;

@@ -22,6 +22,22 @@ angular.module('superstockApp')
             var filterMode = false;
             $rootScope.filterList = {};
 
+            $rootScope.refreshData = function($root) {
+                console.log('data refreshing', $root);
+                var data = []
+                if($scope.fullData) {
+                    for(var i = 0; i < $scope.fullData.length; i++) {
+                        var stock = $scope.fullData[i];
+                        if($scope.personalStockList.indexOf(stock['symbol']) !== -1) {
+                            data.push(stock);
+                        }
+                    }
+                    if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                        $scope.gridOptions.api.setRowData(data);
+                    }
+                }
+            }
+
             //check user login
             if (currentAuth) {
                 var filter = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/filter'));
@@ -36,7 +52,28 @@ angular.module('superstockApp')
                         }
                     }
                 });
+
+                /**
+                User personal portfolio 
+                */
+                var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/portfolio'));
+                portfolio.$loaded(
+                    function(data) {
+                        console.log('User portfolio loaded', data);
+                    },
+                    function(error) {
+                        console.error('Error encounter while loading user portfolio', error);
+                    }
+                );
             }
+
+            var personalStocks = [];
+            $scope.$watch('personalStocks', function() {
+                console.log('Personal stocks updated', $scope.personalStocks);
+                if(typeof $scope.personalStocks === 'string') {
+                    $scope.personalStockList = $scope.personalStocks.split(',');
+                }
+            });
 
             //setup ag-grid
             $scope.gridOptions = {
@@ -821,13 +858,20 @@ angular.module('superstockApp')
                                         if (isNaN(data.disruptQtty)) {
                                             data.disruptQtty = 0;
                                         }
+                                        /**
+                                        We don't have a way to trigger data filtering yet
+                                        */
                                         $gridData.push(data);
+                                        // if(personalStocks.indexOf(data['symbol']) !== -1) {
+                                        //     $gridData.push(data);
+                                        // }
                                         if ($eventTimeout) {
                                             //
                                         } else {
                                             $eventTimeout = $timeout(function () {
                                                 if ($scope.gridOptions.api && $scope.gridOptions.api != null)
                                                     $scope.gridOptions.api.setRowData($gridData);
+                                                    $scope.fullData = $gridData;
                                                 filterChange(false);
                                                 $gridData = [];
                                                 $eventTimeout = undefined;
