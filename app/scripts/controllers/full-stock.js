@@ -10,9 +10,12 @@
 angular.module('superstockApp')
     .controller('FullStockCtrl', ['$rootScope', '$scope', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
+        'link',
         function ($rootScope, $scope, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout) {
-            $rootScope.link = 'full'; //set this page is full-page
+            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
+            link
+            ) {
+            $rootScope.link = link;
             $window.ga('send', 'pageview', "Đầy đủ");
             var userFilters = null;
             var user = null;
@@ -22,19 +25,27 @@ angular.module('superstockApp')
             var filterMode = false;
             $rootScope.filterList = {};
 
-            $rootScope.refreshData = function($root) {
-                console.log('data refreshing', $root);
+            // firebase integration for personalStocks
+            var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/portfolio'));
+            portfolio.$loaded(function(data) {
+                $scope.personalStocks = data.$value;
+            });
+
+            $rootScope.refreshData = function() {
                 var data = []
-                if($scope.fullData) {
+                if($scope.fullData && $scope.personalStocks) {
+                    var stockList = $scope.personalStocks.split(',');
                     for(var i = 0; i < $scope.fullData.length; i++) {
                         var stock = $scope.fullData[i];
-                        if($scope.personalStockList.indexOf(stock['symbol']) !== -1) {
+                        if(stockList.indexOf(stock['symbol']) !== -1) {
                             data.push(stock);
                         }
                     }
                     if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
                         $scope.gridOptions.api.setRowData(data);
                     }
+                    portfolio.$value = $scope.personalStocks;
+                    portfolio.$save();
                 }
             }
 
@@ -66,14 +77,6 @@ angular.module('superstockApp')
                     }
                 );
             }
-
-            var personalStocks = [];
-            $scope.$watch('personalStocks', function() {
-                console.log('Personal stocks updated', $scope.personalStocks);
-                if(typeof $scope.personalStocks === 'string') {
-                    $scope.personalStockList = $scope.personalStocks.split(',');
-                }
-            });
 
             //setup ag-grid
             $scope.gridOptions = {
@@ -870,8 +873,13 @@ angular.module('superstockApp')
                                         } else {
                                             $eventTimeout = $timeout(function () {
                                                 if ($scope.gridOptions.api && $scope.gridOptions.api != null)
-                                                    $scope.gridOptions.api.setRowData($gridData);
-                                                    $scope.fullData = $gridData;
+                                                    if($rootScope.link === 'full') {
+                                                        $scope.gridOptions.api.setRowData($gridData);
+                                                    }
+                                                    else if($rootScope.link === 'personal') {
+                                                        $scope.fullData = $gridData;
+                                                        $scope.refreshData();
+                                                    }
                                                 filterChange(false);
                                                 $gridData = [];
                                                 $eventTimeout = undefined;

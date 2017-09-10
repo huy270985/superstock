@@ -108,7 +108,10 @@ angular.module('superstockApp')
                 resolve: {
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();
-                    }]
+                    }],
+                    "link": function() {
+                        return "full";
+                    }
                 }
             })
 
@@ -118,10 +121,13 @@ angular.module('superstockApp')
                 resolve: {
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();
-                    }]
+                    }],
+                    "link": function() {
+                        return "personal";
+                    }
                 }
             })
-            
+
             .when('/about', {
                 templateUrl: 'views/about.html',
                 controller: 'AboutCtrl',
