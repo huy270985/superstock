@@ -31,10 +31,15 @@ angular.module('superstockApp')
                 $scope.personalStocks = data.$value;
             });
 
-            $rootScope.refreshData = function() {
-                var data = []
-                if($scope.fullData && $scope.personalStocks) {
-                    var stockList = $scope.personalStocks.split(',');
+            $rootScope.filterPersonalStocks = function() {
+                var data = [];
+                var stockList;
+                if(!$scope.personalStocks) {
+                    $scope.personalStocks = "MWG,PNJ,FPT";  // sample list
+                }
+                if($scope.fullData) {
+                    stockList = $scope.personalStocks.split(',');
+                    stockList = stockList.map(function(x) {return x.toUpperCase().trim()});
                     for(var i = 0; i < $scope.fullData.length; i++) {
                         var stock = $scope.fullData[i];
                         if(stockList.indexOf(stock['symbol']) !== -1) {
@@ -46,6 +51,9 @@ angular.module('superstockApp')
                     }
                     portfolio.$value = $scope.personalStocks;
                     portfolio.$save();
+                }
+                else{
+                    console.error('Data is not loaded fully yet, please try again');
                 }
             }
 
@@ -878,7 +886,7 @@ angular.module('superstockApp')
                                                     }
                                                     else if($rootScope.link === 'personal') {
                                                         $scope.fullData = $gridData;
-                                                        $scope.refreshData();
+                                                        $scope.filterPersonalStocks();
                                                     }
                                                 filterChange(false);
                                                 $gridData = [];
