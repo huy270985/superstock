@@ -1,12 +1,14 @@
-<div class="header-title" style="border-bottom: solid 1px #000000; background: {{headerTitle.color}};">
-    <h4 ng-bind-html="headerTitle.content"></h4>
-    <textarea ng-model="personalStocks"></textarea>
-    <button ng-click="refreshData()">Refresh</button>
-</div>
 <div class="header-title">
-    <h4 style="font-size: 18px;">Danh mục cá nhân</h4>
+    <div class="personal-stock">
+        <button ng-click="refreshData()">Cập nhật</button>
+    </div>
+    <div class="personal-stock">
+        <textarea ng-model="personalStocks"></textarea>
+    </div>
+    <div class="personal-stock-title">
+        <h4>Danh mục</h4>
+    </div>
 </div>
-
 
 <div ng-grid="gridOptions" ag-grid="gridOptions" class="ag-fresh" style="height: 100%;"></div>
 <!--<div id="full-stock" ui-grid="gridOptions" class="grid" ui-grid-auto-resize ui-grid-pinning style="height:100%"></div>-->
@@ -56,4 +58,25 @@
     .ui-grid-header-cell input {
         color: black !important;
     }
+
+    .personal-stock {
+        display: block;
+        float: left;
+    }
+
+    .personal-stock button {
+        height: 30px;
+    }
+
+    .personal-stock textarea {
+        resize: horizontal;
+        width: 500px;
+        height: 30px;
+    }
+
+    .personal-stock-title {
+        text-align: center;
+        clear: both;
+    }
+
 </style>
