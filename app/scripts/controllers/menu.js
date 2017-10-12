@@ -376,6 +376,7 @@ angular.module('superstockApp')
                             fullName: user.displayName,
                             email: user.email,
                             startDate: (new Date(firebase.database.ServerValue.TIMESTAMP)).toISOString(),
+                            duration: 0,
                         },
                         account: {
                             registerdDate: firebase.database.ServerValue.TIMESTAMP,

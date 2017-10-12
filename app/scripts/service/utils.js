@@ -105,7 +105,7 @@ angular
                         case 'totalValue':
                             /**
                             * When this field has value and greater than 5.000.000.000
-                            * background and forceground(purple) will be filled and 
+                            * background and forceground(purple) will be filled and
                             */
                             if (value >= 5e9) {
                                 classList.push('ag-cell-purple-color');
@@ -147,8 +147,19 @@ angular
                             }
                             classList.push('text-center');
                             break;
+                        case 'power':
+                            if (value >= 9) {
+                                classList.push('ag-cell-purple-color');
+                                classList.push('ag-cell-fill-bg');
+                            } else if (value >= 7) {
+                                classList.push('grid-cell-green');
+                            } else {
+                                classList.push('grid-cell-black');
+                            }
+                            classList.push('text-center');
+                            break;
                         case 'Canslim':
-                        case 'pricePeak':
+                        // case 'pricePeak':
                             /**
                             * When this field has value
                             * background and forceground(purple) will be filled
@@ -393,7 +404,7 @@ angular
                     /**
                      * Generate EXCEL file
                      */
-                    // Config generate file 
+                    // Config generate file
                     var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary', cellStyles: true };
 
                     // Write data to file
