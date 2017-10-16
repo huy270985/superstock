@@ -74,7 +74,7 @@ angular.module('superstockApp')
                     "tableSettings": function() {
                         return {
                             "gridDataSource": "summary_data",
-                            "defaultSort": "EPS",
+                            "defaultSort": "power",
                         }
                     },
                     "link": function() {
@@ -93,7 +93,7 @@ angular.module('superstockApp')
                     "tableSettings": function() {
                         return {
                             "gridDataSource": "investment_data",
-                            "defaultSort": "priceChange",
+                            "defaultSort": "power",
                         }
                     },
                     "link": function() {
