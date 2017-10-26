@@ -12,7 +12,7 @@ angular.module('superstockApp')
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
         'tableSettings', 'link',
         function ($rootScope, $scope, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout, 
+            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
             tableSettings, link) {
             $rootScope.link = link;
             $window.ga('send', 'pageview', "Tổng hợp");
@@ -295,6 +295,7 @@ angular.module('superstockApp')
                                         data[i].signal2 = txt;
                                         data[i].symbol2 = txt;
                                         data[i].Canslim = txt;
+                                        data[i].power = txt;
                                     }
                                 }
                                 //loaded data
@@ -345,6 +346,7 @@ angular.module('superstockApp')
                                             data.signal2 = txt;
                                             data.symbol2 = txt;
                                             data.Canslim = txt;
+                                            data.power = txt;
                                         }
 
                                         $gridData.push(data);
