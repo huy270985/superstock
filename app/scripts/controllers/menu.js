@@ -281,7 +281,7 @@ angular.module('superstockApp')
         };
 
         /**
-         * 
+         *
          */
         $scope.changeProfileForm = function () {
             $('#changeProfileModal').modal('show');
@@ -324,28 +324,30 @@ angular.module('superstockApp')
             }
 
             if ($rootScope.user) {
-                var userProfile = $rootScope.user.profile;
-                userProfile.fullName = $scope.userProfile.fullName;
-                userProfile.phoneNumber = $scope.userProfile.phoneNumber;
-
                 $scope.loading = true;
                 $scope.disabledButton = true;
                 var $user = Ref.child('users/' + $rootScope.user.uid);
-                $user.child('profile').set(userProfile, function (err) {
-                    $scope.$apply(function () {
-                        if (err) {
-                            $scope.checkChangeProfile = false;
-                        } else {
-                            $scope.checkChangeProfile = true;
-                            $rootScope.user.displayName = $scope.userProfile.fullName;
-                            $rootScope.user.phoneNumber = $scope.userProfile.phoneNumber;
-                        }
-                        $('#changeProfileModal').modal('hide');
-                        $scope.disabledButton = false;
-                        $scope.loading = false;
+                $user.update({
+                    'profile/fullName': $scope.userProfile.fullName,
+                    'profile/phoneNumber': $scope.userProfile.phoneNumber,
+                })
+                .then(function() {
+                    $scope.$apply(function() {
+                        $scope.checkChangeProfile = true;
+                        $rootScope.user.displayName = $scope.userProfile.fullName;
+                        $rootScope.user.phoneNumber = $scope.userProfile.phoneNumber;
                     });
-
-                });
+                    $('#changeProfileModal').modal('hide');
+                    $scope.disabledButton = false;
+                    $scope.loading = false;
+                })
+                .catch(function(err) {
+                    console.error('Error while updating profile for user', $scope.userProfile, err);
+                    $scope.checkChangeProfile = false;
+                    $('#changeProfileModal').modal('hide');
+                    $scope.disabledButton = false;
+                    $scope.loading = false;
+                })
             }
         }
 
@@ -369,43 +371,41 @@ angular.module('superstockApp')
                 if (!user)
                     user = userData.toJSON();
                 return new Promise(function (resolve, reject) {
-                    var $user = Ref.child('users/');
-                    var child = user.uid;
-                    var userProfile = {
-                        profile: {
+                    if(!user.uid) {
+                        console.error('There is no uid, user created failed', user);
+                        reject();
+                    }
+                    function getProfile() {
+                        var profile = {
                             fullName: user.displayName,
                             email: user.email,
-                            startDate: (new Date(firebase.database.ServerValue.TIMESTAMP)).toISOString(),
-                            duration: 0,
-                        },
-                        account: {
-                            registerdDate: firebase.database.ServerValue.TIMESTAMP,
-                            active: $rootScope.globalActive //For new user trial
+                        };
+                        if (type == 'password') {
+                            profile.fullName = $scope.userSignup.fullName;
+                            profile.phoneNumber = $scope.userSignup.phoneNumber;
                         }
-                    };
-                    if (type == 'password') {
-                        userProfile.profile.fullName = $scope.userSignup.fullName;
-                        userProfile.profile.phoneNumber = $scope.userSignup.phoneNumber;
-                    }
-                    if (user.providerData && user.providerData[0]) {
-                        userProfile.profile.email = user.providerData[0].email;
-                    }
-                    if (user) {
-                        if (user.account) {
-                            $user = Ref.child('users/' + user.uid);
-                            child = 'profile';
-                            userProfile = userProfile.profile;
+                        if (user.providerData && user.providerData[0]) {
+                            profile.email = user.providerData[0].email;
                         }
+                        return profile;
                     }
 
-                    $user.child(child).set(userProfile, function (err) {
-                        if (err) {
-                            reject();
-                        } else {
-                            $rootScope.fullName = $scope.userSignup.fullName;
-                            resolve(userProfile)
-                        }
-                    });
+                    var profile = getProfile();
+                    var $user = Ref.child('users/');
+                    $user.child(user.uid).update({
+                        'profile/fullName': profile.fullName,
+                        'profile/email': profile.email,
+                    })
+                    .then(function(err) {
+                        console.log('Saving user fullName and email success', err);
+                        $rootScope.fullName = $scope.userSignup.fullName;
+                        resolve(profile);
+                    })
+                    .catch(function(err) {
+                        console.error('Error while setting userProfile', profile, err);
+                        reject();
+                    })
+
                 })
             });
         }
