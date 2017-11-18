@@ -128,6 +128,19 @@ angular.module('superstockApp')
                 }
             })
 
+            .when('/market-stats', {
+                templateUrl: 'views/market-stats.html',
+                controller: 'MarketStatsCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }],
+                    "link": function() {
+                        return "market-stats";
+                    }
+                }
+            })
+
             .when('/about', {
                 templateUrl: 'views/about.html',
                 controller: 'AboutCtrl',

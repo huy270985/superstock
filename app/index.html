@@ -152,8 +152,11 @@
 							<li id="full-stock" ng-class="{active:($root.link == 'full')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href="#/full"><i class="glyphicon glyphicon-list-alt"></i> <span class="menu-item-text item-to-hide">Đầy đủ</span> </a>
 							</li>
-							<li id="personal-portoflio" ng-class="{active:($root.link == 'personal')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
+							<li id="personal-portfolio" ng-class="{active:($root.link == 'personal')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href="#/personal"><i class="glyphicon glyphicon-list-alt"></i> <span class="menu-item-text item-to-hide">Cá nhân</span> </a>
+							</li>
+							<li id="market-stats" ng-class="{active:($root.link == 'market-stats')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
+								<a href="#/market-stats"><i class="glyphicon glyphicon-stats"></i> <span class="menu-item-text item-to-hide">Thống kê</span> </a>
 							</li>
 							<li id="filter-control" ng-show="$root.link == 'full'" ng-click="filterShow($event)" id="filter" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href=""><i class="glyphicon glyphicon-filter"></i> <span class="menu-item-text">Bộ lọc</span></a>
@@ -175,7 +178,7 @@
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<!-- Remove Excel download capability to prevent data lost #excel #Excel
-							add $root.link == 'full' && false below	
+							add $root.link == 'full' && false below
 							 -->
 							<li ng-show="$root.link == 'full'" ng-click="$root.exportDatasheet($event)" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href=""><i class="glyphicon glyphicon-download-alt"></i> <span class="menu-item-text item-to-hide">Excel</span></a>
@@ -666,6 +669,7 @@
 	<script src="scripts/controllers/account.js"></script>
 	<script src="scripts/controllers/main.js"></script>
 	<script src="scripts/controllers/full-stock.js"></script>
+	<script src="scripts/controllers/market-stats.js"></script>
 	<script src="scripts/controllers/menu.js"></script>
 	<script src="scripts/controllers/filter.js"></script>
 	<script src="scripts/directives/ngShowAuth.js"></script>
