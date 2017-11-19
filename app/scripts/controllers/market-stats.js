@@ -33,45 +33,26 @@ angular.module('superstockApp')
         $stats.$loaded()
             .then(function(){
                 $rootScope.stats = {
-                    bullSide: [
+                    data: [
                         {
-                            title: 'Lên bảng',
-                            count: $stats.summary_count
+                            title: 'Báo mua/lên bảng',
+                            value: $stats.disrupt_count + '/' + $stats.summary_count,
                         },
                         {
-                            title: 'Báo mua',
-                            count: $stats.disrupt_count
+                            title: 'Giao dịch >= 1 tỷ (tăng giá/giảm giá)',
+                            value: $stats.up_with_big_value + '/' + $stats.down_with_big_value,
                         },
                         {
-                            title: 'Giao dịch >= 1 tỷ và tăng giá',
-                            count: $stats.up_with_big_value,
+                            title: 'Giao dịch >= 1 tỷ (uptrend/downtrend)',
+                            value: $stats.uptrend_with_big_value + '/' + $stats.downtrend_with_big_value,
                         },
                         {
-                            title: 'Giao dịch >= 1 tỷ và uptrend',
-                            count: $stats.uptrend_with_big_value,
+                            title: 'Vốn hoá >= 10,000 tỷ (tăng giá/giảm giá)',
+                            value: $stats.up_with_big_capital + '/' + $stats.down_with_big_capital,
                         },
                         {
-                            title: 'Vốn hoá > 10,000 tỷ và tăng giá',
-                            count: $stats.up_with_big_capital,
-                        },
-                        {
-                            title: 'Giao dịch >= 1 tỷ và power >= 8',
-                            count: $stats.big_power_and_value,
-                        },
-                    ],
-
-                    bearSide: [
-                        {
-                            title: 'Giao dịch >= 1 tỷ và giảm giá',
-                            count: $stats.down_with_big_value,
-                        },
-                        {
-                            title: 'Giao dịch >= 1 tỷ và downtrend',
-                            count: $stats.downtrend_with_big_value,
-                        },
-                        {
-                            title: 'Vốn hoá > 10,000 tỷ và giảm giá',
-                            count: $stats.down_with_big_capital,
+                            title: 'Giao dịch >= 1 tỷ, power >= 8',
+                            value: $stats.big_power_and_value,
                         },
                     ],
                 };
