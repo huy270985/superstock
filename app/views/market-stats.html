@@ -1,15 +1,42 @@
-<div class="header-title">
-    <div class="personal-stock">
-        <p>Điền danh mục bạn quan tâm vào đây</p>
+<!-- Bull Side -->
+    <div class="col-md-6">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Phân loại</th>
+              <th scope="col">Số mã</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in stats.bullSide">
+              <th scope="row">{{$index + 1}}</th>
+              <td>{{item.title}}</td>
+              <td>{{item.count}}</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
-    <div class="personal-stock">
-        <button ng-click="filterPersonalStocks()">Cập nhật</button>
+
+<!-- Bear Side -->
+    <div class="col-md-6">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Phân loại</th>
+              <th scope="col">Số mã</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in stats.bearSide">
+              <th scope="row">{{$index + 1}}</th>
+              <td>{{item.title}}</td>
+              <td>{{item.count}}</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
-    <div class="personal-stock">
-        <textarea ng-model="personalStocks"></textarea>
-    </div>
-    <div class="personal-stock-title">
-        <h4>Danh mục</h4>
-    </div>
+
 </div>
 
