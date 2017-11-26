@@ -54,6 +54,10 @@ angular.module('superstockApp')
                             title: 'Giao dịch >= 1 tỷ, power >= 8',
                             value: $stats.big_power_and_value,
                         },
+                        {
+                            title: 'Giao dịch >= 1 tỷ, lãi sau T+3',
+                            value: $stats.big_value_and_c4_profit,
+                        },
                     ],
                 };
             })
