@@ -73,7 +73,7 @@ angular.module('superstockApp')
                 });
 
                 /**
-                User personal portfolio 
+                User personal portfolio
                 */
                 var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/portfolio'));
                 portfolio.$loaded(
@@ -294,7 +294,11 @@ angular.module('superstockApp')
                             }
                         });
                     }
+
+
                     // Config to map data of field with template cell
+                    // data: {'key': 'value'}
+                    // config: {'key': {cell: 'XY', format: format}}
                     var fieldsArr = fields.data.split('|');
                     var formatArr = format.data.split('|');
                     var config = {};
@@ -309,27 +313,33 @@ angular.module('superstockApp')
                         'AS', 'AT', 'AU', 'AV', 'AW', 'AX',
                         'AY', 'AZ'
                     ];
-                    var forSymbol2 = 0;
-                    var count = 3;
-                    for (var i in fieldsArr) {
-                        var key = i;
-                        if (fieldsArr[i] != 'symbol') {
-                            key = count.toString();
-                        }
-                        var field = {
-                            cell: characters[key],
-                            format: formatArr[i]
-                        }
-                        if (fieldsArr[i] == 'symbol2') {
-                            config[fieldsArr[i] + forSymbol2] = field;
-                            forSymbol2++;
-                        } else {
-                            config[fieldsArr[i]] = field;
-                        }
-                        if (fieldsArr[i] != 'symbol') {
-                            count++;
+                    for(var i in fieldsArr) {
+                        config[fieldsArr[i]] = {
+                            cell: characters[i],
+                            format: fieldsArr[i]
                         }
                     }
+                    // var forSymbol2 = 0;
+                    // var count = 3;
+                    // for (var i in fieldsArr) {
+                    //     var key = i;
+                    //     if (fieldsArr[i] != 'symbol') {
+                    //         key = count.toString();
+                    //     }
+                    //     var field = {
+                    //         cell: characters[key],
+                    //         format: formatArr[i]
+                    //     }
+                    //     if (fieldsArr[i] == 'symbol2') {
+                    //         config[fieldsArr[i] + forSymbol2] = field;
+                    //         forSymbol2++;
+                    //     } else {
+                    //         config[fieldsArr[i]] = field;
+                    //     }
+                    //     if (fieldsArr[i] != 'symbol') {
+                    //         count++;
+                    //     }
+                    // }
 
                     /**
                     config['basicCustom'] = {
