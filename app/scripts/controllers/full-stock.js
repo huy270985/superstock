@@ -556,7 +556,7 @@ angular.module('superstockApp')
                                     }
                                 }
                             }
-                            if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
+                            if (fieldsArr[i] == 'Mã') { //cell template for 'symbol' column
                                 def.filter = 'text';
                                 def.pinned = 'left'; //pin column to left
                                 def.cellRenderer = function (params) { // render 'symbol' cell template
