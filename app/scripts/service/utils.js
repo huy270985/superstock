@@ -83,11 +83,13 @@ angular
                             */
                             if (value != '') {
                                 if ((params.data.signal1 != '' || params.data.signal2 != '')) {
-                                    if (params.data.Canslim != '' && is_strong_stock(params.data)) {
-                                        classList.push('ag-cell-purple-color');
-                                    } else {
-                                        classList.push('grid-cell-green');
-                                    }
+                                    // In case we want to be purple again
+                                    // if (params.data.Canslim != '' && is_strong_stock(params.data)) {
+                                    //     classList.push('ag-cell-purple-color');
+                                    // } else {
+                                    //     classList.push('grid-cell-green');
+                                    // }
+                                    classList.push('grid-cell-green');
                                     classList.push('ag-cell-fill-bg');
                                 }
                             }
@@ -189,12 +191,15 @@ angular
                                     /**
                                     Only make strong symbol purple
                                     By Hung's request: 2017-06-12
+
+                                    Keeping in case we want purple again
                                     */
-                                    if (params.data.Canslim != '' && is_strong_stock(params.data)) {
-                                        classList.push('ag-cell-purple-color');
-                                    } else {
-                                        classList.push('grid-cell-green');
-                                    }
+                                    // if (params.data.Canslim != '' && is_strong_stock(params.data)) {
+                                    //     classList.push('ag-cell-purple-color');
+                                    // } else {
+                                    //     classList.push('grid-cell-green');
+                                    // }
+                                    classList.push('grid-cell-green')
                                     classList.push('ag-cell-fill-bg');
                                 }
                             }
@@ -213,13 +218,17 @@ angular
                                 /**
                                 Only make strong symbol purple
                                 By Hung's request: 2017-06-12
+
+                                Turn off purple
+                                By Hung's request: 2017-01-11
                                 */
-                                if (is_strong_stock(params.data)) {
-                                    classList.push('ag-cell-purple-color');
-                                }
-                                else{
-                                    classList.push('grid-cell-green');
-                                }
+                                // if (is_strong_stock(params.data)) {
+                                //     classList.push('ag-cell-purple-color');
+                                // }
+                                // else{
+                                //     classList.push('grid-cell-green');
+                                // }
+                                classList.push('grid-cell-green');
                                 classList.push('ag-cell-fill-bg');
                             }
                             classList.push('ag-cell-green-bg');
