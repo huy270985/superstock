@@ -267,7 +267,8 @@ angular
                             var rs = data.data;
                             var result = {
                                 color: rs.color,
-                                content: data.data.data ? data.data.data : ''
+                                content: data.data.data ? data.data.data : '',
+                                timestamp: data.data.timestamp,
                             }
                             result.content = result.content.replace('\n', '<br />');
                             deferred.resolve(result);

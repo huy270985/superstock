@@ -550,10 +550,10 @@ img.information-icon {
 }
 
 .header-title {
-    max-width: 1262px; 
-    width: 100%; 
-    margin: 0 auto; 
-    padding: 5px 40px; 
+    max-width: 1262px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 5px 40px;
     background: #6AA84F; font-weight: bold;
 }
 
@@ -564,6 +564,10 @@ img.information-icon {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.header-timestamp {
+    float: left
 }
 
 .bullet-style {
@@ -598,7 +602,7 @@ img.information-icon {
 	right: 0;
 	bottom: 0;
 	overflow-y: scroll;
-	
+
 	-webkit-box-flex: 1;
 }
 
@@ -643,15 +647,15 @@ img.information-icon {
 /*::-webkit-scrollbar {
     width: 12px;
 }
- 
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3); 
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
     border-radius: 0;
 }
- 
+
 ::-webkit-scrollbar-thumb {
     border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.5); 
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
 }*/
 
 ::-webkit-scrollbar {
