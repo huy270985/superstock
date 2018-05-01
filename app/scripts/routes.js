@@ -102,6 +102,25 @@ angular.module('superstockApp')
                 }
             })
 
+            .when('/market_low', {
+                templateUrl: 'views/main.html',
+                controller: 'MainCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }],
+                    "tableSettings": function() {
+                        return {
+                            "gridDataSource": "market_low_data",
+                            "defaultSort": "power",
+                        }
+                    },
+                    "link": function() {
+                        return 'market_low';
+                    },
+                }
+            })
+
             .when('/full', {
                 templateUrl: 'views/full-stock.html',
                 controller: 'FullStockCtrl',
