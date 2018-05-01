@@ -244,7 +244,7 @@ angular.module('superstockApp')
                                 }
                             };
                             if(def.field === tableSettings.defaultSort) { // default #sort column in summary table
-                                def.sort = 'desc';
+                                def.sort = tableSettings.direction;
                             }
                             count++;
 

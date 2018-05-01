@@ -75,6 +75,7 @@ angular.module('superstockApp')
                         return {
                             "gridDataSource": "summary_data",
                             "defaultSort": "power",
+                            "direction": "desc",
                         }
                     },
                     "link": function() {
@@ -94,6 +95,7 @@ angular.module('superstockApp')
                         return {
                             "gridDataSource": "investment_data",
                             "defaultSort": "power",
+                            "direction": "desc",
                         }
                     },
                     "link": function() {
@@ -113,6 +115,7 @@ angular.module('superstockApp')
                         return {
                             "gridDataSource": "market_low_data",
                             "defaultSort": "power",
+                            "direction": "asc",
                         }
                     },
                     "link": function() {
