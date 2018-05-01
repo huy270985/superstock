@@ -255,6 +255,7 @@ angular
                     }
                     return classList;
                 },
+
                 getMarketSummary: function () {
                     /*
                     * Get sell signals data
@@ -268,7 +269,7 @@ angular
                             var result = {
                                 color: rs.color,
                                 content: data.data.data ? data.data.data : '',
-                                timestamp: data.data.timestamp,
+                                timestamp: data.data,
                             }
                             result.content = result.content.replace('\n', '<br />');
                             deferred.resolve(result);
@@ -278,6 +279,19 @@ angular
                     });
                     return deferred.promise;
                 },
+
+                getTradingDate: function () {
+                    var deferred = $q.defer();
+                    $http.get('https://superstock.firebaseio.com/trading_date/data.json', {}).then(function (data) {
+                        if (data && data.data) {
+                            deferred.resolve(data.data);
+                        }
+                    }, function (err) {
+                        deferred.reject(err);
+                    });
+                    return deferred.promise;
+                },
+
                 getSellSignals: function () {
                     /*
                     * Get market summary data

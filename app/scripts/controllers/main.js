@@ -85,7 +85,16 @@ angular.module('superstockApp')
             utils.getMarketSummary().then(function (data) {
                 $scope.headerTitle = data;
             }).catch(function (ex) {
+                console.error('Exception when getMarketSummary')
+            });
 
+            /*
+            * Update trading date
+            */
+            utils.getTradingDate().then(function (data) {
+                $scope.tradingDate = data;
+            }).catch(function (ex) {
+                console.error('Exception when getTradingDate')
             });
 
             /*
