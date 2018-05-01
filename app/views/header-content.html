@@ -2,17 +2,26 @@
     <img class="header-bg" src="./images/header-bg.png" />
     <img class="s-logo" src="./images/s-logo.png" />
     <div class="s-header-content">
-        <h4 class="pull-left s-header-hotline">HOTLINE: 0979.555.689/ SKYPE: CANSLIM_VN</h4>
-        <button class="s-header-btn s-hidden-xs" style="width: 162px;" ng-click="signInForm()">
+        <a href="http://hungcanslim.com/gioithieu" class="s-header-btn s-hidden-xs pull-left" >
+            <i class="glyphicon glyphicon-question-sign"></i>
+            Giới thiệu</a>
+        <a href="http://hungcanslim.com/chiase" class="s-header-btn s-hidden-xs pull-left" >
+            <i class="glyphicon glyphicon-question-sign"></i>
+            Kiến thức</a>
+        <a href="http://hungcanslim.com/khachhang" class="s-header-btn s-hidden-xs pull-left" >
+            <i class="glyphicon glyphicon-question-sign"></i>
+            Chính sách khách hàng</a>
+        <button class="s-header-btn s-hidden-xs pull-left" style="width: 162px;" ng-click="signInForm()">
             <i class="glyphicon glyphicon-user"></i>
             Đăng nhập</button>
-        <button class="s-header-btn s-hidden-xs" style="width: 162px;" ng-click="signUpForm()">
+        <button class="s-header-btn s-hidden-xs pull-left" style="width: 162px;" ng-click="signUpForm()">
             <i class="glyphicon glyphicon-edit"></i>
             Đăng ký</button>
-        <button class="s-header-btn s-hidden-xs pull-right" ng-click="openGuideModal($event)">
+        <a href="http://hungcanslim.com/huongdan" class="s-header-btn s-hidden-xs pull-left" >
             <i class="glyphicon glyphicon-question-sign"></i>
-            Hướng dẫn</button>
+            Hướng dẫn</a>
 
+        <h4 class="pull-left s-header-hotline">HOTLINE: 0979.555.689/ SKYPE: CANSLIM_VN</h4>
         <div class="dropdown s-dropdown pull-right">
             <button class="s-header-btn s-header-btn-icon s-visible-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <i class="glyphicon glyphicon-th-large"></i>
@@ -36,7 +45,7 @@
 
 <style type="text/css">
     .s-header {
-        height: 62px;
+        height: 82px;
         width: 100%;
         position: relative;
     }
@@ -79,7 +88,7 @@
         border-radius: 10px;
         padding: 5px 15px;
         margin: 0 5px;
-        font-size: 17px;
+        font-size: 12px;
         font-weight: 500;
         box-shadow: none;
         outline: none;
