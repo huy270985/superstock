@@ -114,8 +114,8 @@ angular.module('superstockApp')
                     "tableSettings": function() {
                         return {
                             "gridDataSource": "market_low_data",
-                            "defaultSort": "power",
-                            "direction": "asc",
+                            "defaultSort": "priceChange",
+                            "direction": "desc",
                         }
                     },
                     "link": function() {
