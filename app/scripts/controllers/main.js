@@ -305,6 +305,9 @@ angular.module('superstockApp')
                                         data[i].symbol2 = txt;
                                         data[i].Canslim = txt;
                                         data[i].power = txt;
+                                        if(tableSettings.hideSymbol) {
+                                            data[i].symbol = txt;
+                                        }
                                     }
                                 }
                                 //loaded data
@@ -356,6 +359,9 @@ angular.module('superstockApp')
                                             data.symbol2 = txt;
                                             data.Canslim = txt;
                                             data.power = txt;
+                                            if(tableSettings.hideSymbol) {
+                                                data.symbol = txt;
+                                            }
                                         }
 
                                         $gridData.push(data);

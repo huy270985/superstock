@@ -96,6 +96,7 @@ angular.module('superstockApp')
                             "gridDataSource": "investment_data",
                             "defaultSort": "power",
                             "direction": "desc",
+                            "hideSymbol": true,
                         }
                     },
                     "link": function() {
@@ -116,6 +117,7 @@ angular.module('superstockApp')
                             "gridDataSource": "market_low_data",
                             "defaultSort": "priceChange",
                             "direction": "desc",
+                            "hideSymbol": true,
                         }
                     },
                     "link": function() {
