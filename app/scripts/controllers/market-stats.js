@@ -29,6 +29,8 @@ angular.module('superstockApp')
         */
 
 
+        /**
+         * @deprecated by Hungcanslim request
         var $stats = $firebaseObject(ref.child('market_stats'));
         $stats.$loaded()
             .then(function(){
@@ -70,4 +72,5 @@ angular.module('superstockApp')
                 }
                 $('#sysModal').modal('show')
             });
+        */
     }]);
