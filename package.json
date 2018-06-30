@@ -2,8 +2,9 @@
   "name": "superstock",
   "version": "0.0.0",
   "dependencies": {
+    "ag-grid": "*",
     "agGridEnterprice": "https://github.com/ceolter/ag-grid-enterprise.git",
-    "ag-grid": "*"
+    "redux-devtools-extension": "^2.13.2"
   },
   "repository": {},
   "devDependencies": {

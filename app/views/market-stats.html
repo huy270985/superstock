@@ -1,3 +1,26 @@
+
+<!-- global market stats section -->
+<div class="col-md-3 col-md-offset-1">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Index</th>
+        <th scope="col">Thay đổi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in stats.data">
+        <th scope="row">{{item.name}}</th>
+        <td>{{item.value}}</td>
+        <td>{{item.change}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- iFrame market stats section -->
 <div class="col-md-10 col-md-offset-1">
     <div style="height: 400px">
       <iframe src="https://marketwatch.vndirect.com.vn/topmostindex.htm?lang=vi"
@@ -11,25 +34,7 @@
       <iframe src="https://marketwatch.vndirect.com.vn/foreignmap.htm?lang=vi"
       width="80%" title="Marketwatch" height="100%" frameborder="0"></iframe>
     </div>
-    <!--
-    @deperated by Hungcanslim request
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Phân loại</th>
-          <th scope="col">Số mã</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="item in stats.data">
-          <th scope="row">{{$index + 1}}</th>
-          <td>{{item.title}}</td>
-          <td>{{item.value}}</td>
-        </tr>
-      </tbody>
-    </table>
-    -->
+
 </div>
 
 
