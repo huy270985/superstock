@@ -15,6 +15,18 @@ angular.module('superstockApp')
         // so tab can highlight correctly
         $rootScope.link = link;
 
+        function change_color(value) {
+            if (+value > 0) {
+                return '#1ee908';
+            }
+            if (+value == 0) {
+                return '#fc0';
+            }
+            if (+value < 0) {
+                return '#fb0000';
+            }
+        }
+
         var $stats = $firebaseObject(ref.child('global_stats'));
         $stats.$loaded()
             .then(function(){
@@ -23,6 +35,7 @@ angular.module('superstockApp')
                         name: key,
                         value: $stats.data[key].value,
                         change: $stats.data[key].change,
+                        color: change_color($stats.data[key].change_value)
                     }
                 });
                 $rootScope.stats = {

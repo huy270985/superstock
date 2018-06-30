@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="item in stats.data">
+      <tr ng-repeat="item in stats.data" style="color: {{item.color}}">
         <th scope="row">{{item.name}}</th>
         <td>{{item.value}}</td>
         <td>{{item.change}}</td>
