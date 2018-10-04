@@ -178,7 +178,8 @@
 							<li id="full-stock" ng-class="{active:($root.link == 'full')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
 								<a href="#/full"><i class="glyphicon glyphicon-list-alt"></i> <span class="menu-item-text item-to-hide">Đầy đủ</span> </a>
 							</li>
-							<li id="personal-portfolio" ng-class="{active:($root.link == 'personal')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
+							<!-- temp disable per Hung request -->
+							<li id="personal-portfolio" ng-class="{active:($root.link == 'personal')}" ng-if="$root.user && $root.user.account && $root.user.account.active && false">
 								<a href="#/personal"><i class="glyphicon glyphicon-list-alt"></i> <span class="menu-item-text item-to-hide">Cá nhân</span> </a>
 							</li>
 							<li id="market-stats" ng-class="{active:($root.link == 'market-stats')}" ng-if="$root.user && $root.user.account && $root.user.account.active">
