@@ -316,7 +316,7 @@ angular.module('superstockApp')
                     for(var i in fieldsArr) {
                         config[fieldsArr[i]] = {
                             cell: characters[i],
-                            format: fieldsArr[i]
+                            format: formatArr[i]
                         }
                     }
                     // var forSymbol2 = 0;
