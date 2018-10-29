@@ -1,5 +1,10 @@
 <div class="header-title" style="border-bottom: solid 1px #000000; background: {{headerTitle.color}};">
-    <div class="header-timestamp"><h4 ng-bind="tradingDate"></h4></div>
+    <div class="header-timestamp">
+        <h4 ng-bind="tradingDate"></h4>
+        <h4 class="ag-cell-red-color" ng-show="user.account.shouldRenew">
+            <div>Bạn còn {{user.account.daysTilExpiration}} ngày nữa để gia hạn !!</div>
+        </h4>
+    </div>
     <h4 class="ag-cell-purple-color" ng-bind-html="headerTitle.content"></h4>
 </div>
 <div class="header-title">

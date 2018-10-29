@@ -455,6 +455,10 @@ img.information-icon {
     color: #90F;
 }
 
+.ag-cell-red-color {
+    color:red;
+}
+
 .ag-cell-red-bg {
     background: #F4CCCC;
 }

@@ -239,6 +239,9 @@ angular.module('superstockApp')
 
 
                             $rootScope.user.account.expiredDate = new Date(user.account.expiredAt);
+                            $rootScope.user.account.shouldRenew = user.account.shouldRenew;
+                            $rootScope.user.account.daysTilExpiration = user.account.daysTilExpiration;
+
 
                             if ($rootScope.user.account.active != true)
                                 $rootScope.user.account.active = false;
