@@ -2,8 +2,8 @@
     <div class="header-timestamp">
         <h4 ng-bind="tradingDate"></h4>
         <h4 class="ag-cell-red-color" ng-show="user.account.shouldRenew">
-            <div>Bạn còn {{user.account.daysTilExpiration}} ngày nữa để gia hạn !!</div>
-        </h4>
+            <div>Ngày hết hạn của TK là {{user.account.expiredDate.toLocaleDateString()}}, <a href="http://hungcanslim.com/gia">để gia hạn bấm vào đây</a></div>
+        </h5>
     </div>
     <h4 class="ag-cell-purple-color" ng-bind-html="headerTitle.content"></h4>
 </div>
