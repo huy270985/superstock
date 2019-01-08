@@ -26,6 +26,8 @@ Mở thư mục gốc của source code và execute command sau:
 
 ```grunt build```
 
+Working with node 8.9.4
+
 Sau khi build thành công grunt sẽ tạo ra thư mục ```dist```
 
 Sử dụng webserver (like Apache, IIS, nginx,..) để serve thư mục (```dist```)
