@@ -163,121 +163,112 @@ angular.module('superstockApp')
                             });
                         }
 
-                        columnDefs = colSettings.map(function(colSetting){
-                            var cellClass = null;
-                            if (colSetting.isNumber) {
-                                cellClass = 'ui-cell-align-right'
-                            } else {
-                                cellClass = 'ui-cell-align-left'
+                        function cellRenderer(colSetting, params) {
+                            var field = params.colDef.field;
+                            switch(field) {
+                                case 'symbol2':
+                                    /*
+                                    * For "symbol2" column
+                                    * - signal1 & signal2 is empty, show empty value
+                                    */
+                                    if (params.data.signal1 == '' && params.data.signal2 == '') {
+                                        return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
+                                    } else {
+                                        return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
+                                    }
+                                case 'newPoint':
+                                case 'EPS':
+                                    /*
+                                    * For "newPoint" and "EPS" column
+                                    * - Show number with format which has 2 points
+                                    */
+                                    var value = '';
+                                    if (isNaN(parseFloat(params.value))) {
+                                        value = $filter('number')(0, 0);
+                                    } else {
+                                        value = $filter('number')(parseFloat(params.value), 0);
+                                    }
+                                    return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
+                                case 'symbol':
+                                    var id = params.value;
+                                    return '<div><span>' + params.value + '</span>' +
+                                        '<img class="chart-icon" data-symbol="' + id +
+                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
+                                        '<img class="information-icon" data-symbol="' + id +
+                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
+                                default:
+                                    var value = '';
+                                    if (colSetting.isNumber) {
+                                        value = $filter('number')(params.value);
+                                        if (colSetting.isType('percent')) {
+                                            if (isNaN(parseFloat(params.value))) {
+                                                value = '';
+                                            } else {
+                                                value = $filter('number')(params.value, 2);
+                                                value = value + '%';
+                                            }
+                                        }
+                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
+                                    }
+                                    return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                             }
+                        }
 
+                        function headerCellTemplate(params) {
+                            /*
+                            * Header cell template, this will be render for all header cell of grid
+                            */
+                            var column = params.column;
+                            var colId = column.colId;
+                            var colorClass = '';
+                            if (colId == 'signal1' || colId == 'symbol2' || colId == 'signal2')
+                                colorClass = 'ag-header-cell-green';
+                            var agMenu = '<td width="20px" style="vertical-align:top">' +
+                                '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
+                                '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
+                                '</span>' +
+                                '</td>';
+                            var agSort = '<td width="20px">' +
+                                '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
+                                '</td>';
+                            if (colId == 'sellSignal') {
+                                agSort = '';
+                                agMenu = '';
+                                colorClass = 'ag-header-cell-red';
+                            }
+                            return (
+                                '<div class="ag-header-cell ' + colorClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
+                                '<table style="width:100%;height:100%">' +
+                                '<tr>' +
+                                agMenu +
+                                '<td>' +
+                                '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
+                                '<span id="agText" class="ag-header-cell-text"></span>' +
+                                '</div>' +
+                                '</td>' +
+                                agSort +
+                                '</tr>' +
+                                '</table>' +
+                                '</div>'
+                            )
+                        }
+
+                        columnDefs = colSettings.map(function(colSetting){
                             //Setup column data
                             var def = {
                                 field: colSetting.field, //field name
                                 width: colSetting.width, //column width
                                 headerName: colSetting.title, //column title
-                                cellClass: cellClass, //css class of cell in column
+                                cellClass: colSetting.isNumber ? 'ui-cell-align-right' : 'ui-cell-align-left',
                                 enableTooltip: true,
                                 tooltipField: colSetting.field, //show tolltip
-                                cellRenderer: function (params) { //cell render event
-                                    var field = params.colDef.field;
-                                    switch(field) {
-                                        case 'symbol2':
-                                            /*
-                                            * For "symbol2" column
-                                            * - signal1 & signal2 is empty, show empty value
-                                            */
-                                            if (params.data.signal1 == '' && params.data.signal2 == '') {
-                                                return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
-                                            } else {
-                                                return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
-                                            }
-                                        case 'newPoint':
-                                        case 'EPS':
-                                            /*
-                                            * For "newPoint" and "EPS" column
-                                            * - Show number with format which has 2 points
-                                            */
-                                            var value = '';
-                                            if (isNaN(parseFloat(params.value))) {
-                                                value = $filter('number')(0, 0);
-                                            } else {
-                                                value = $filter('number')(parseFloat(params.value), 0);
-                                            }
-                                            return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                        case 'symbol':
-                                            var id = params.value;
-                                            return '<div><span>' + params.value + '</span>' +
-                                                '<img class="chart-icon" data-symbol="' + id +
-                                                '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
-                                                '<img class="information-icon" data-symbol="' + id +
-                                                '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
-                                        default:
-                                            var value = '';
-                                            if (colSetting.isNumber) {
-                                                value = $filter('number')(params.value);
-                                                if (colSetting.isType('percent')) {
-                                                    if (isNaN(parseFloat(params.value))) {
-                                                        value = '';
-                                                    } else {
-                                                        value = $filter('number')(params.value, 2);
-                                                        value = value + '%';
-                                                    }
-                                                }
-                                                return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                            }
-                                            return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
-                                    }
-                                },
-                                headerCellTemplate: function (params) {
-                                    /*
-                                    * Header cell template, this will be render for all header cell of grid
-                                    */
-                                    var column = params.column;
-                                    var colId = column.colId;
-                                    var colorClass = '';
-                                    if (colId == 'signal1' || colId == 'symbol2' || colId == 'signal2')
-                                        colorClass = 'ag-header-cell-green';
-                                    var agMenu = '<td width="20px" style="vertical-align:top">' +
-                                        '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
-                                        '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
-                                        '</span>' +
-                                        '</td>';
-                                    var agSort = '<td width="20px">' +
-                                        '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
-                                        '</td>';
-                                    if (colId == 'sellSignal') {
-                                        agSort = '';
-                                        agMenu = '';
-                                        colorClass = 'ag-header-cell-red';
-                                    }
-                                    return (
-                                        '<div class="ag-header-cell ' + colorClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
-                                        '<table style="width:100%;height:100%">' +
-                                        '<tr>' +
-                                        agMenu +
-                                        '<td>' +
-                                        '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
-                                        '<span id="agText" class="ag-header-cell-text"></span>' +
-                                        '</div>' +
-                                        '</td>' +
-                                        agSort +
-                                        '</tr>' +
-                                        '</table>' +
-                                        '</div>'
-                                    )
-                                }
+                                cellRenderer: function(params) {return cellRenderer(colSetting, params)},
+                                headerCellTemplate: headerCellTemplate,
+                                sort: colSetting.field == tableSettings.defaultSort ? tableSettings.direction : undefined,
+                                cellFilter: colSetting.isNumber ? 'number' : 'string',
+                                pinned: colSetting.field == 'symbol' ? 'left' : undefined,
+                                suppressSorting: colSetting.field == 'sellSignal',
                             };
-                            if(def.field === tableSettings.defaultSort) { // default #sort column in summary table
-                                def.sort = tableSettings.direction;
-                            }
-
-                            def.cellFilter = colSetting.isNumber ? 'number' : 'string';
-                            if (colSetting.field == 'symbol') { //cell template for 'symbol' column
-                                def.pinned = 'left'; //pin column to left
-                            } else if (colSetting.field == 'sellSignal') {
-                                def.suppressSorting = true;
-                            }
 
                             def.cellClass = function (params) {
                                 // Get cell style
