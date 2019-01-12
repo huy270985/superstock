@@ -108,7 +108,7 @@ angular.module('superstockApp')
                 fields.$loaded(function () {
                     format.$loaded(function () {
                         if (!titles.data || !fields.data || !format.data) {
-                            throw error("One or all format data could not be loaded from server, check your firebase realtime database");
+                            throw new Error("One or all format data could not be loaded from server, check your firebase realtime database");
                         }
                         var titlesArr = titles.data.split('|');
                         var fieldsArr = fields.data.split('|');
