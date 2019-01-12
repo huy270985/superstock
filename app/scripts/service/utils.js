@@ -48,7 +48,7 @@ angular
                     }
                     return classList;
                 },
-                getCellClassSummary: function (params, format, colSetting, selectedSyle) {
+                getCellClassSummary: function (params, colSetting, selectedSyle) {
                     /**
                      * Define cell style for grid by column
                      */
@@ -68,9 +68,9 @@ angular
                     if (selectedSyle && selectedSyle != '' && field != 'symbol')
                         classList.push('ag-cell-focus-bg');
 
-                    if (format[field].indexOf('number') > -1 || format[field].indexOf('percent') > -1 || format[field].indexOf('bigNum') > -1)
+                    if (colSetting.isNumber)
                         classList.push('ui-cell-align-right');
-                    if (params.value && format[field].indexOf('percent') > -1)
+                    if (params.value && colSetting.isType('percent'))
                         classList.push('percent');
                     switch (field) {
                         case 'symbol':

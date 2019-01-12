@@ -107,10 +107,12 @@ angular.module('superstockApp')
             titles.$loaded(function () {
                 fields.$loaded(function () {
                     format.$loaded(function () {
+                        if (!titles.data || !fields.data || !format.data) {
+                            throw error("One or all format data could not be loaded from server, check your firebase realtime database");
+                        }
                         var titlesArr = titles.data.split('|');
                         var fieldsArr = fields.data.split('|');
                         var formatArr = format.data.split('|');
-                        var formatList = {};
 
                         // Define size of field in client
                         //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
@@ -136,7 +138,13 @@ angular.module('superstockApp')
 
                         var colSettings = []
                         for (var i in titlesArr) {
-                            function isType(type) {return formatArr[i].indexOf(type) > -1}
+                            // crazy closure handling
+                            var isType = (function(format) {
+                                    return function(type) {
+                                        return format.indexOf(type) > -1
+                                    }
+                                })(formatArr[i]);
+
                             colSettings[i] = {
                                 isType: isType,
                                 field: fieldsArr[i],
@@ -153,12 +161,11 @@ angular.module('superstockApp')
                                 fieldName: fieldsArr[i],
                                 format: formatArr[i]
                             });
-                            formatList[fieldsArr[i]] = formatArr[i]
                         }
 
-                        columnDefs = colSettings.map(function(setting){
+                        columnDefs = colSettings.map(function(colSetting){
                             var cellClass = null;
-                            if (setting.isNumber) {
+                            if (colSetting.isNumber) {
                                 cellClass = 'ui-cell-align-right'
                             } else {
                                 cellClass = 'ui-cell-align-left'
@@ -166,52 +173,61 @@ angular.module('superstockApp')
 
                             //Setup column data
                             var def = {
-                                field: setting.field, //field name
-                                width: setting.width, //column width
-                                headerName: setting.title, //column title
+                                field: colSetting.field, //field name
+                                width: colSetting.width, //column width
+                                headerName: colSetting.title, //column title
                                 cellClass: cellClass, //css class of cell in column
                                 enableTooltip: true,
-                                tooltipField: setting.field, //show tolltip
+                                tooltipField: colSetting.field, //show tolltip
                                 cellRenderer: function (params) { //cell render event
-                                    if (params.colDef.field == 'symbol2') {
-                                        /*
-                                        * For "symbol2" column
-                                        * - signal1 & signal2 is empty, show empty value
-                                        */
-                                        if (params.data.signal1 == '' && params.data.signal2 == '') {
-                                            return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
-                                        } else {
-                                            return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
-                                        }
-                                    } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS') {
-                                        /*
-                                        * For "newPoint" and "EPS" column
-                                        * - Show number with format which has 2 points
-                                        */
-                                        var value = '';
-                                        if (isNaN(parseFloat(params.value))) {
-                                            value = $filter('number')(0, 0);
-                                        } else {
-                                            value = $filter('number')(parseFloat(params.value), 0);
-                                        }
-                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                    }
-                                    else {
-                                        var value = '';
-                                        if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1) {
-                                            value = $filter('number')(params.value);
-                                            if (formatList[params.colDef.field].indexOf('percent') > -1) {
-                                                if (isNaN(parseFloat(params.value))) {
-                                                    value = '';
-                                                } else {
-                                                    value = $filter('number')(params.value, 2);
-                                                    value = value + '%';
-                                                }
+                                    var field = params.colDef.field;
+                                    switch(field) {
+                                        case 'symbol2':
+                                            /*
+                                            * For "symbol2" column
+                                            * - signal1 & signal2 is empty, show empty value
+                                            */
+                                            if (params.data.signal1 == '' && params.data.signal2 == '') {
+                                                return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
+                                            } else {
+                                                return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
+                                            }
+                                        case 'newPoint':
+                                        case 'EPS':
+                                            /*
+                                            * For "newPoint" and "EPS" column
+                                            * - Show number with format which has 2 points
+                                            */
+                                            var value = '';
+                                            if (isNaN(parseFloat(params.value))) {
+                                                value = $filter('number')(0, 0);
+                                            } else {
+                                                value = $filter('number')(parseFloat(params.value), 0);
                                             }
                                             return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                        }
+                                        case 'symbol':
+                                            var id = params.value;
+                                            return '<div><span>' + params.value + '</span>' +
+                                                '<img class="chart-icon" data-symbol="' + id +
+                                                '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
+                                                '<img class="information-icon" data-symbol="' + id +
+                                                '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
+                                        default:
+                                            var value = '';
+                                            if (colSetting.isNumber) {
+                                                value = $filter('number')(params.value);
+                                                if (colSetting.isType('percent')) {
+                                                    if (isNaN(parseFloat(params.value))) {
+                                                        value = '';
+                                                    } else {
+                                                        value = $filter('number')(params.value, 2);
+                                                        value = value + '%';
+                                                    }
+                                                }
+                                                return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
+                                            }
+                                            return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                     }
-                                    return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                 },
                                 headerCellTemplate: function (params) {
                                     /*
@@ -256,19 +272,10 @@ angular.module('superstockApp')
                                 def.sort = tableSettings.direction;
                             }
 
-                            def.cellFilter = setting.isNumber ? 'number' : 'string';
-                            if (setting.field == 'symbol') { //cell template for 'symbol' column
-                                def.filter = 'text';
+                            def.cellFilter = colSetting.isNumber ? 'number' : 'string';
+                            if (colSetting.field == 'symbol') { //cell template for 'symbol' column
                                 def.pinned = 'left'; //pin column to left
-                                def.cellRenderer = function (params) { // render 'symbol' cell template
-                                    var id = params.value;
-                                    return '<div><span>' + params.value + '</span>' +
-                                        '<img class="chart-icon" data-symbol="' + id +
-                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
-                                        '<img class="information-icon" data-symbol="' + id +
-                                        '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
-                                }
-                            } else if (setting.field == 'sellSignal') {
+                            } else if (colSetting.field == 'sellSignal') {
                                 def.suppressSorting = true;
                             }
 
@@ -277,7 +284,7 @@ angular.module('superstockApp')
                                 var selectedSyle = '';
                                 if (params.data.symbol == $rootScope.mainSelected)
                                     selectedSyle = $rootScope.mainSelected;
-                                return utils.getCellClassSummary(params, formatList, setting, selectedSyle);
+                                return utils.getCellClassSummary(params, colSetting, selectedSyle);
                             }
                             return def;
                         })
