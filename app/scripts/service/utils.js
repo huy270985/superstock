@@ -48,7 +48,7 @@ angular
                     }
                     return classList;
                 },
-                getCellClassSummary: function (params, format, selectedSyle) {
+                getCellClassSummary: function (params, format, colSetting, selectedSyle) {
                     /**
                      * Define cell style for grid by column
                      */

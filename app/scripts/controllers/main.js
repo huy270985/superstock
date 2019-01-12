@@ -134,22 +134,31 @@ angular.module('superstockApp')
                             labelList: []
                         }
 
-                        /**
-                         * Innitial column Def
-                         */
-                        var count = 0;
+                        var colSettings = []
                         for (var i in titlesArr) {
-                            formatList[fieldsArr[i]] = formatArr[i];
+                            function isType(type) {return formatArr[i].indexOf(type) > -1}
+                            colSettings[i] = {
+                                isType: isType,
+                                field: fieldsArr[i],
+                                title: titlesArr[i],
+                                format: formatArr[i],
+                                isNumber: isType('bigNum') || isType('number') || isType('percent'),
+                                width: sizes[fieldsArr[i]] || 90,
+                            }
+                        }
+
+
+                        for (var i in fieldsArr) {
                             config.labelList.push({
                                 fieldName: fieldsArr[i],
                                 format: formatArr[i]
                             });
-                            var formatType = null;
+                            formatList[fieldsArr[i]] = formatArr[i]
+                        }
+
+                        columnDefs = colSettings.map(function(setting){
                             var cellClass = null;
-                            if (formatArr[i].indexOf('bigNum') > -1 || formatArr[i].indexOf('number') > -1) {
-                                formatType = 'number';
-                                cellClass = 'ui-cell-align-right'
-                            } else if (formatArr[i].indexOf('percent') > -1) {
+                            if (setting.isNumber) {
                                 cellClass = 'ui-cell-align-right'
                             } else {
                                 cellClass = 'ui-cell-align-left'
@@ -157,12 +166,12 @@ angular.module('superstockApp')
 
                             //Setup column data
                             var def = {
-                                field: fieldsArr[i], //field name
-                                width: sizes[fieldsArr[i]] || 90, //column width
-                                headerName: titlesArr[i], //column title
+                                field: setting.field, //field name
+                                width: setting.width, //column width
+                                headerName: setting.title, //column title
                                 cellClass: cellClass, //css class of cell in column
                                 enableTooltip: true,
-                                tooltipField: fieldsArr[i], //show tolltip
+                                tooltipField: setting.field, //show tolltip
                                 cellRenderer: function (params) { //cell render event
                                     if (params.colDef.field == 'symbol2') {
                                         /*
@@ -246,10 +255,9 @@ angular.module('superstockApp')
                             if(def.field === tableSettings.defaultSort) { // default #sort column in summary table
                                 def.sort = tableSettings.direction;
                             }
-                            count++;
 
-                            if (formatType) def.cellFilter = formatType; // add cell format (number or string)
-                            if (fieldsArr[i] == 'symbol') { //cell template for 'symbol' column
+                            def.cellFilter = setting.isNumber ? 'number' : 'string';
+                            if (setting.field == 'symbol') { //cell template for 'symbol' column
                                 def.filter = 'text';
                                 def.pinned = 'left'; //pin column to left
                                 def.cellRenderer = function (params) { // render 'symbol' cell template
@@ -260,7 +268,7 @@ angular.module('superstockApp')
                                         '<img class="information-icon" data-symbol="' + id +
                                         '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
                                 }
-                            } else if (fieldsArr[i] == 'sellSignal') {
+                            } else if (setting.field == 'sellSignal') {
                                 def.suppressSorting = true;
                             }
 
@@ -269,11 +277,10 @@ angular.module('superstockApp')
                                 var selectedSyle = '';
                                 if (params.data.symbol == $rootScope.mainSelected)
                                     selectedSyle = $rootScope.mainSelected;
-                                return utils.getCellClassSummary(params, formatList, selectedSyle);
+                                return utils.getCellClassSummary(params, formatList, setting, selectedSyle);
                             }
-
-                            columnDefs.push(def);
-                        }
+                            return def;
+                        })
 
                         $rootScope.filters = columnDefs;
 
