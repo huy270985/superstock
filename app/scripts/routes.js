@@ -79,9 +79,6 @@ angular.module('superstockApp')
                             "name": "main",
                         }
                     },
-                    "link": function() {
-                        return 'main';
-                    },
                 }
             })
 
@@ -98,10 +95,8 @@ angular.module('superstockApp')
                             "defaultSort": "power",
                             "direction": "desc",
                             "hideSymbol": true,
+                            "name": "investment",
                         }
-                    },
-                    "link": function() {
-                        return 'investment';
                     },
                 }
             })
@@ -119,10 +114,8 @@ angular.module('superstockApp')
                             "defaultSort": "priceChange",
                             "direction": "desc",
                             "hideSymbol": true,
+                            "name": "market_low",
                         }
-                    },
-                    "link": function() {
-                        return 'market_low';
                     },
                 }
             })

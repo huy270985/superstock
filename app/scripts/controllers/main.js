@@ -10,11 +10,11 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', '$q', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
-        'tableSettings', 'link',
+        'tableSettings',
         function ($rootScope, $scope, $q, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
-            tableSettings, link) {
-            $rootScope.link = link;
+            tableSettings) {
+            $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "Tổng hợp");
             var uid = auth.$getAuth().uid;
             //Setup ag-grid
@@ -124,24 +124,19 @@ angular.module('superstockApp')
 
                 // Define size of field in client
                 //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
-                var sizes = {
-                    symbol: 90,
-                    matchPrice: 100,
-                    priceChange: 100,
-                    totalValue: 125,
-                    volumeChange: 95,
-                    EPS: 65,
-                    newPoint: 75,
-                    Canslim: 105,
-                    pricePeak: 100,
-                    signal1: 130,
-                    symbol2: 75,
-                    signal2: 130
-                }
-                var columnDefs = [];
-                var config = {
-                    idLabel: 'Mã',
-                    labelList: []
+                var defaultTableSettings = {
+                    symbol: { width: 90},
+                    matchPrice: { width: 100},
+                    priceChange: { width: 100},
+                    totalValue: { width: 125},
+                    volumeChange: { width: 95},
+                    EPS: { width: 65},
+                    newPoint: { width: 75},
+                    Canslim: { width: 105},
+                    pricePeak: { width: 100},
+                    signal1: { width: 130},
+                    symbol2: { width: 75},
+                    signal2: { width: 130},
                 }
 
                 var colSettings = []
@@ -159,17 +154,9 @@ angular.module('superstockApp')
                         title: titlesArr[i],
                         format: formatArr[i],
                         isNumber: isType('bigNum') || isType('number') || isType('percent'),
-                        width: sizes[fieldsArr[i]] || 90,
+                        width: defaultTableSettings[fieldsArr[i]] && defaultTableSettings[fieldsArr[i]].width || 90,
                         pinned: userTableSettings[fieldsArr[i]] && userTableSettings[fieldsArr[i]].pinned,
                     }
-                }
-
-
-                for (var i in fieldsArr) {
-                    config.labelList.push({
-                        fieldName: fieldsArr[i],
-                        format: formatArr[i]
-                    });
                 }
 
                 function cellRenderer(colSetting, params) {
@@ -262,7 +249,7 @@ angular.module('superstockApp')
                     )
                 }
 
-                columnDefs = colSettings.map(function(colSetting){
+                var columnDefs = colSettings.map(function(colSetting){
                     //Setup column data
                     var def = {
                         field: colSetting.field, //field name
@@ -296,6 +283,19 @@ angular.module('superstockApp')
                 */
                 var $eventTimeout;
                 var $gridData = [];
+
+                var config = {
+                    idLabel: 'Mã',
+                    labelList: []
+                }
+
+                for (var i in fieldsArr) {
+                    config.labelList.push({
+                        fieldName: fieldsArr[i],
+                        format: formatArr[i]
+                    });
+                }
+
 
                 var sellSignalDatas = [];
                 if ($scope.gridMainOptions.api) {
