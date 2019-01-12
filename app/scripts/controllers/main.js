@@ -32,7 +32,6 @@ angular.module('superstockApp')
                 //filter changed event
                 // see: https://www.ag-grid.com/javascript-grid-events/
                 onColumnPinned: function(event) {
-                    console.log('Columned Pinned, Saving...', event, auth);
                     var column = event.column;
                     var field = column.colDef.field;
                     var pinned = event.pinned;
@@ -139,24 +138,36 @@ angular.module('superstockApp')
                     signal2: { width: 130},
                 }
 
+                // merge defaultTableSettings & userTableSettings
+                for (var i in titlesArr) {
+                    var userSetting = userTableSettings[fieldsArr[i]] || {};
+                    var defaultSetting = defaultTableSettings[fieldsArr[i]] || {width: 90};
+                    userTableSettings[fieldsArr[i]] = Object.assign(
+                        userSetting,
+                        defaultSetting,
+                        {
+                            field: fieldsArr[i],
+                            title: titlesArr[i],
+                            format: formatArr[i],
+                        }
+                    );
+                }
+
                 var colSettings = []
                 for (var i in titlesArr) {
+                    var field = fieldsArr[i];
+                    var setting = userTableSettings[field];
                     // crazy closure handling
                     var isType = (function(format) {
                             return function(type) {
                                 return format.indexOf(type) > -1
                             }
-                        })(formatArr[i]);
+                        })(setting.format);
 
-                    colSettings[i] = {
+                    colSettings[i] = Object.assign({
                         isType: isType,
-                        field: fieldsArr[i],
-                        title: titlesArr[i],
-                        format: formatArr[i],
                         isNumber: isType('bigNum') || isType('number') || isType('percent'),
-                        width: defaultTableSettings[fieldsArr[i]] && defaultTableSettings[fieldsArr[i]].width || 90,
-                        pinned: userTableSettings[fieldsArr[i]] && userTableSettings[fieldsArr[i]].pinned,
-                    }
+                    }, setting);
                 }
 
                 function cellRenderer(colSetting, params) {
