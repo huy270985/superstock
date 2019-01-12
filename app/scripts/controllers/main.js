@@ -10,10 +10,10 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', '$q', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
-        'tableSettings',
+        'tableSettings', '$tableRepository',
         function ($rootScope, $scope, $q, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
-            tableSettings) {
+            tableSettings, $tableRepository) {
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "Tổng hợp");
             var uid = auth.$getAuth().uid;
@@ -35,9 +35,9 @@ angular.module('superstockApp')
                     var column = event.column;
                     var field = column.colDef.field;
                     var pinned = event.pinned;
-                    var userTableSettings = $firebaseObject(Ref.child('users/' + uid + '/tableSettings/' + tableSettings.name + '/' + field))
-                    userTableSettings.pinned = pinned;
-                    userTableSettings.$save();
+                    $tableRepository.saveColSetting(uid, tableSettings.name, field, {
+                        pinned: pinned
+                    })
                 },
             };
             var columnDefs = [
@@ -105,70 +105,8 @@ angular.module('superstockApp')
                 console.error('Exception when getTradingDate')
             });
 
-            /*
-            * Load title, header and format of field form server
-            */
-            var titles = $firebaseObject(Ref.child('summary_titles'));
-            var fields = $firebaseObject(Ref.child('summary_headers'));
-            var format = $firebaseObject(Ref.child('summary_format'));
-            var userTableSettings = $firebaseObject(Ref.child('users/' + uid + '/tableSettings/' + tableSettings.name));
-
-            $q.all([titles.$loaded(), fields.$loaded(), format.$loaded(), userTableSettings.$loaded()]).then(function(){
-                if (!titles.data || !fields.data || !format.data) {
-                    throw new Error("One or all format data could not be loaded from server, check your firebase realtime database");
-                }
-                var titlesArr = titles.data.split('|');
-                var fieldsArr = fields.data.split('|');
-                var formatArr = format.data.split('|');
-
-                // Define size of field in client
-                //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
-                var defaultTableSettings = {
-                    symbol: { width: 90},
-                    matchPrice: { width: 100},
-                    priceChange: { width: 100},
-                    totalValue: { width: 125},
-                    volumeChange: { width: 95},
-                    EPS: { width: 65},
-                    newPoint: { width: 75},
-                    Canslim: { width: 105},
-                    pricePeak: { width: 100},
-                    signal1: { width: 130},
-                    symbol2: { width: 75},
-                    signal2: { width: 130},
-                }
-
-                // merge defaultTableSettings & userTableSettings
-                for (var i in titlesArr) {
-                    var userSetting = userTableSettings[fieldsArr[i]] || {};
-                    var defaultSetting = defaultTableSettings[fieldsArr[i]] || {width: 90};
-                    userTableSettings[fieldsArr[i]] = Object.assign(
-                        userSetting,
-                        defaultSetting,
-                        {
-                            field: fieldsArr[i],
-                            title: titlesArr[i],
-                            format: formatArr[i],
-                        }
-                    );
-                }
-
-                var colSettings = []
-                for (var i in titlesArr) {
-                    var field = fieldsArr[i];
-                    var setting = userTableSettings[field];
-                    // crazy closure handling
-                    var isType = (function(format) {
-                            return function(type) {
-                                return format.indexOf(type) > -1
-                            }
-                        })(setting.format);
-
-                    colSettings[i] = Object.assign({
-                        isType: isType,
-                        isNumber: isType('bigNum') || isType('number') || isType('percent'),
-                    }, setting);
-                }
+            $tableRepository.loadColSettings(uid, tableSettings.name)
+                .then(function(colSettings){
 
                 function cellRenderer(colSetting, params) {
                     var field = params.colDef.field;
@@ -297,16 +235,13 @@ angular.module('superstockApp')
 
                 var config = {
                     idLabel: 'Mã',
-                    labelList: []
+                    labelList: colSettings.map(function(setting) {
+                        return {
+                            fieldName: setting.field,
+                            format: setting.format,
+                        }
+                    })
                 }
-
-                for (var i in fieldsArr) {
-                    config.labelList.push({
-                        fieldName: fieldsArr[i],
-                        format: formatArr[i]
-                    });
-                }
-
 
                 var sellSignalDatas = [];
                 if ($scope.gridMainOptions.api) {
