@@ -16,6 +16,7 @@ angular.module('superstockApp')
             tableSettings, link) {
             $rootScope.link = link;
             $window.ga('send', 'pageview', "Tổng hợp");
+            var uid = auth.$getAuth().uid;
             //Setup ag-grid
             $scope.gridMainOptions = {
                 enableSorting: true,
@@ -29,8 +30,16 @@ angular.module('superstockApp')
                 overlayLoadingTemplate: '<span class="ag-overlay-loading-center">Đang xử lý dữ liệu...</span>',
                 sortingOrder: ['desc', 'asc'],
                 //filter changed event
-                onAfterFilterChanged: function () { },
-                onCellClicked: function (params) { }
+                // see: https://www.ag-grid.com/javascript-grid-events/
+                onColumnPinned: function(event) {
+                    console.log('Columned Pinned, Saving...', event, auth);
+                    var column = event.column;
+                    var field = column.colDef.field;
+                    var pinned = event.pinned;
+                    var userTableSettings = $firebaseObject(Ref.child('users/' + uid + '/tableSettings/' + tableSettings.name + '/' + field))
+                    userTableSettings.pinned = pinned;
+                    userTableSettings.$save();
+                },
             };
             var columnDefs = [
                 {
@@ -104,9 +113,12 @@ angular.module('superstockApp')
             var titles = $firebaseObject(Ref.child('summary_titles'));
             var fields = $firebaseObject(Ref.child('summary_headers'));
             var format = $firebaseObject(Ref.child('summary_format'));
+            var userTableSettings = $firebaseObject(Ref.child('users/' + uid + '/tableSettings/' + tableSettings.name));
             titles.$loaded(function () {
                 fields.$loaded(function () {
                     format.$loaded(function () {
+                        userTableSettings.$loaded(function() {
+
                         if (!titles.data || !fields.data || !format.data) {
                             throw new Error("One or all format data could not be loaded from server, check your firebase realtime database");
                         }
@@ -152,6 +164,7 @@ angular.module('superstockApp')
                                 format: formatArr[i],
                                 isNumber: isType('bigNum') || isType('number') || isType('percent'),
                                 width: sizes[fieldsArr[i]] || 90,
+                                pinned: userTableSettings[fieldsArr[i]] && userTableSettings[fieldsArr[i]].pinned,
                             }
                         }
 
@@ -266,7 +279,7 @@ angular.module('superstockApp')
                                 headerCellTemplate: headerCellTemplate,
                                 sort: colSetting.field == tableSettings.defaultSort ? tableSettings.direction : undefined,
                                 cellFilter: colSetting.isNumber ? 'number' : 'string',
-                                pinned: colSetting.field == 'symbol' ? 'left' : undefined,
+                                pinned: colSetting.field == 'symbol' ? 'left' : colSetting.pinned,
                                 suppressSorting: colSetting.field == 'sellSignal',
                             };
 
@@ -442,6 +455,7 @@ angular.module('superstockApp')
 
                         });
                     })
+                })
                 })
             })
         }]);

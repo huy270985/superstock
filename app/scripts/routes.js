@@ -76,6 +76,7 @@ angular.module('superstockApp')
                             "gridDataSource": "summary_data",
                             "defaultSort": "power",
                             "direction": "desc",
+                            "name": "main",
                         }
                     },
                     "link": function() {
