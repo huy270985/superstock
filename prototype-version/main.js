@@ -82,7 +82,7 @@ Depends on jQuery
 
   }
 
-  var ref = new Firebase("https://superstock.firebaseio.com");
+  var ref = new Firebase("https://price-sync-224302.firebaseio.com");
 
   var auth = Auth();
   auth.bind('#login',

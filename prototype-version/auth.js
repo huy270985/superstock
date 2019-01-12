@@ -6,7 +6,7 @@ Depends on jQuery
 
 function Auth() {
     var is_logged_in = false;
-    var ref = new Firebase("https://superstock.firebaseio.com");
+    var ref = new Firebase("https://price-sync-227313.firebaseio.com");
 
     function is_login(success_callback, not_yet_callback) {
         ref.onAuth(function(authData) {

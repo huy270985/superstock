@@ -80,3 +80,9 @@ If the project is clone the first time, firebase initialization is required:
 ```
 firebase init
 ```
+
+## To deploy a new site:
+1. Setup new firebase hosting
+2. Setup facebook dev settings to allow login
+  1. https://developers.facebook.com/apps/1289020207793787/fb-login/settings/
+  2. https://console.firebase.google.com/project/price-sync-227313/authentication/providers
