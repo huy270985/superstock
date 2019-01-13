@@ -1,6 +1,6 @@
 
 <!-- global market stats section -->
-<div class="col-md-4" ng-if="false">
+<div class="col-md-4" ng-if="true">
   <table class="table">
     <thead>
       <tr>
@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="item in stats.data" style="color: {{item.color}}">
+      <tr ng-repeat="item in stats.indices.data" style="color: {{item.color}}">
         <th scope="row">{{item.name}}</th>
         <td>{{item.value}}</td>
         <td>{{item.change}}</td>
@@ -18,6 +18,26 @@
     </tbody>
   </table>
 </div>
+
+<div class="col-md-4" ng-if="true">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Thế giới</th>
+        <th scope="col">Index</th>
+        <th scope="col">Thay đổi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in stats.commodities.data" style="color: {{item.color}}">
+        <th scope="row">{{item.name}}</th>
+        <td>{{item.value}}</td>
+        <td>{{item.change}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 
 <!-- iFrame market stats section -->
 <div class="col-md-8">
