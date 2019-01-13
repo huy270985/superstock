@@ -39,6 +39,9 @@ angular.module('superstockApp')
                         pinned: pinned
                     })
                 },
+                onSortChanged: function(event, a) {
+                    console.log('Sort Changed', event, $scope.gridMainOptions.api.getSortModel());
+                }
             };
             var columnDefs = [
                 {

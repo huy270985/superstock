@@ -368,7 +368,7 @@ angular.module('superstockApp')
             //Begin get data for ag-grid
             var bigNum = 1000000000;
             var titles = $firebaseObject(Ref.child('superstock_titles'));
-            var fields = $firebaseObject(Ref.child('superstock_fields'));
+            var fields = $firebaseObject(Ref.child('superstock_headers'));
             var format = $firebaseObject(Ref.child('superstock_format'));
             fields.$loaded(function () { //load superstock_fields
                 titles.$loaded(function () { //load superstock_titles
