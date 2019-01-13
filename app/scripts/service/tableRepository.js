@@ -25,12 +25,13 @@ angular
                         //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
                         var defaultTableSettings = {
                             symbol: { width: 90},
-                            matchPrice: { width: 100},
-                            priceChange: { width: 100},
+                            matchPrice: { width: 75},
+                            priceChange: { width: 75},
                             totalValue: { width: 125},
-                            volumeChange: { width: 95},
-                            EPS: { width: 65},
+                            volumeChange: { width: 75},
+                            EPS: { width: 75},
                             newPoint: { width: 75},
+                            power: { width: 75},
                             Canslim: { width: 105},
                             pricePeak: { width: 100},
                             signal1: { width: 130},
