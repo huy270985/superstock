@@ -10,10 +10,10 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', '$q', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
-        'tableSettings', '$tableRepository', '$sellSymbols',
+        'tableSettings', '$tableRepository', '$gridSettings',
         function ($rootScope, $scope, $q, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
-            tableSettings, $tableRepository, $sellSymbols) {
+            tableSettings, $tableRepository, $gridSettings) {
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "Tổng hợp");
             var uid = auth.$getAuth().uid;
@@ -60,7 +60,7 @@ angular.module('superstockApp')
                     }
                 }
             };
-            $scope.gridMarketOptions = $sellSymbols.getGridMarketOptions();
+            $scope.gridMarketOptions = $gridSettings.getGridMarketOptions();
             var gridDiv = document.querySelector('#grid-market-options');
             new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
             utils.watchSellSymbols(function(arr) {
@@ -156,42 +156,6 @@ angular.module('superstockApp')
                     }
                 }
 
-                function getHeaderColorClass(field) {
-                    if (field == 'signal1' || field == 'symbol2' || field == 'signal2')
-                        return 'ag-header-cell-green';
-                    if (field == 'sellSignal') {
-                        return 'ag-header-cell-red';
-                    }
-                    return '';
-                }
-
-                function headerCellTemplate(params) {
-                    /*
-                    * Header cell template, this will be render for all header cell of grid
-                    */
-                    var field = params.column.colDef.field;
-                    var colorClass = getHeaderColorClass(field);
-                    return (
-                        '<div class="ag-header-cell ag-header-cell-sortable ag-header-cell-sorted-none ' + colorClass + '">' +
-                        '<table style="width:100%;height:100%">' +
-                        '<tr>' +
-                        '<td>' +
-                        '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
-                        '<span id="agText" class="ag-header-cell-text"></span>' +
-                        '</div>' +
-                        '</td>' +
-                        '<td width="20px" style="vertical-align:top">' +
-                        '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
-                        '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
-                        '</span>' +
-                        '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
-                        '</td>' +
-                        '</tr>' +
-                        '</table>' +
-                        '</div>'
-                    )
-                }
-
                 var columnDefs = colSettings.map(function(colSetting){
                     //Setup column data
                     var def = {
@@ -202,7 +166,7 @@ angular.module('superstockApp')
                         enableTooltip: true,
                         tooltipField: colSetting.field, //show tolltip
                         cellRenderer: function(params) {return cellRenderer(colSetting, params)},
-                        headerCellTemplate: headerCellTemplate,
+                        headerCellTemplate: $gridSettings.headerCellTemplate,
                         sort: colSetting.field == tableSettings.defaultSort ? tableSettings.direction : undefined,
                         cellFilter: colSetting.isNumber ? 'number' : 'string',
                         pinned: colSetting.field == 'symbol' ? 'left' : colSetting.pinned,
