@@ -13,8 +13,7 @@ angular.module('superstockApp')
         'link', '$gridSettings',
         function ($rootScope, $scope, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
-            link, $gridSettings,
-            ) {
+            link, $gridSettings) {
             $rootScope.link = link;
             $window.ga('send', 'pageview', "Đầy đủ");
             var userFilters = null;
