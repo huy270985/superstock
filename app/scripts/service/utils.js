@@ -2,9 +2,23 @@
 
 angular
     .module('superstockApp')
-    .factory('utils', ['$http', '$q', '$rootScope',
-        function ($http, $q, $rootScope) {
+    .factory('utils', ['$http', '$q', '$rootScope', '$timeout',
+        function ($http, $q, $rootScope, $timeout) {
+
+            var timeoutPromise;
+
             return {
+
+                debounce: function(func, time) {
+                    if (timeoutPromise != undefined) {
+                        $timeout.cancel(timeoutPromise);
+                    }
+                    timeoutPromise = $timeout(function() {
+                        func();
+                        timeoutPromise = undefined;
+                    }, time)
+                },
+
                 getCellClass: function (params, format, selectedSyle) {
                     var field = params.colDef.field;
                     var value = params.value;
@@ -448,6 +462,6 @@ angular
                     saveAs(new Blob([s2ab(wbout)], { type: "" }), fileName);
                     if (callback)
                         callback();
-                }
+                },
             }
         }]);

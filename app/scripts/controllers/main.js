@@ -128,6 +128,8 @@ angular.module('superstockApp')
 
                 function cellRenderer(colSetting, params) {
                     var field = params.colDef.field;
+                    if (field == 'symbol')
+                        console.debug('Render cell', field, params.data);
                     switch(field) {
                         case 'symbol2':
                             /*
@@ -268,27 +270,17 @@ angular.module('superstockApp')
 
                     var gridDiv = document.querySelector('#grid-market-options');
                     new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
+                    var $gridData = {};
 
-                    draw.drawGrid(Ref.child(tableSettings.gridDataSource), config, function (data) {
-                        //loading data
+                    draw.drawGrid($rootScope.user.account.active,
+                        Ref.child(tableSettings.gridDataSource), config,
+
+                    function loading() {
                         $scope.gridMainOptions.api.showLoadingOverlay()
-                    }, function (data) {
-                        /*
-                        Hide data for unpaid user
-                        */
-                        if(!$rootScope.user.account.active) {
-                            for(var i = 0; i < data.length; i++) {
-                                var txt = "Bản thu phí";
-                                data[i].signal1 = txt;
-                                data[i].signal2 = txt;
-                                data[i].symbol2 = txt;
-                                data[i].Canslim = txt;
-                                data[i].power = txt;
-                                if(tableSettings.hideSymbol) {
-                                    data[i].symbol = txt;
-                                }
-                            }
-                        }
+                    },
+
+                    function loaded(data) {
+                        console.log('Firebase loaded', data);
                         //loaded data
                         $scope.gridMainOptions.api.setRowData(data);
                         // add the handler function
@@ -326,46 +318,38 @@ angular.module('superstockApp')
                         });
                         },
                     {
-                            added: function (data, childSnapshot, id) {
-                                /*
-                                * Update data in grid when server update data
-                                * Here we hide signal for inactive user, only paid user see the details.
-                                TODO: duplicate with first load process
-                                */
-                                if(!$rootScope.user.account.active) {
-                                    var txt = "Bản thu phí";
-                                    data.signal1 = txt;
-                                    data.signal2 = txt;
-                                    data.symbol2 = txt;
-                                    data.Canslim = txt;
-                                    data.power = txt;
-                                    if(tableSettings.hideSymbol) {
-                                        data.symbol = txt;
-                                    }
-                                }
 
-                                $gridData.push(data);
-                                if ($eventTimeout) {
-                                    //
-                                } else {
-                                    $eventTimeout = $timeout(function () {
-                                        if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
-                                            $scope.gridMainOptions.api.setRowData($gridData);
-                                        }
-                                        $gridData = [];
-                                        $eventTimeout = undefined;
-                                    }, 1000);
-                                }
+                            added: function (data, childSnapshot, id) {
+                                console.log('Record added', childSnapshot.key, data);
+                                $gridData[childSnapshot.key] = data;
+                                utils.debounce(function() {
+                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                    $scope.gridMainOptions.api.setRowData(rowData);
+                                }, 100);
                             },
+
                             changed: function (data, childSnapshot, id) {
                                 /*
                                 * Data Changed Event
                                 */
+                                console.log('Record changed', childSnapshot.key, data);
+                                $gridData[childSnapshot.key] = data;
+                                utils.debounce(function() {
+                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                    $scope.gridMainOptions.api.setRowData(rowData);
+                                }, 100);
                             },
+
                             removed: function (oldChildSnapshot) {
                                 /*
                                 * Data Removed Event
                                 */
+                                console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
+                                delete $gridData[oldChildSnapshot.key];
+                                utils.debounce(function() {
+                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                    $scope.gridMainOptions.api.setRowData(rowData);
+                                }, 100);
                             }
                         })
                 }

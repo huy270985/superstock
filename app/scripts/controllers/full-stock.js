@@ -663,7 +663,8 @@ angular.module('superstockApp')
                         if ($scope.gridOptions.api) {
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
                             $scope.gridOptions.api.showLoadingOverlay();
-                            draw.drawGrid(Ref.child('superstock'), config, function (data) {
+                            draw.drawGrid($rootScope.user.account.active,
+                                Ref.child('superstock'), config, function (data) {
                                 //loading data
                             }, function (data) {
                                 if (!$scope.gridOptions.api)
