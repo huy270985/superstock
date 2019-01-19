@@ -69,7 +69,7 @@ angular
                 //update object event
                 Ref.on('child_changed', function (childSnapshot, prevChildKey) {
                     var obj = convertSnapshot(config, childSnapshot.key, childSnapshot.val())
-                    if (isActive) {
+                    if (!isActive) {
                         obj = hidePaidUserData(obj);
                     }
                     event.changed(obj, childSnapshot, prevChildKey);

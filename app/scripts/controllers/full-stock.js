@@ -419,6 +419,9 @@ angular.module('superstockApp')
                                 enableTooltip: true,
                                 tooltipField: fieldsArr[i], //show tolltip
                                 cellRenderer: function (params) { //cell render data
+                                    if (params.colDef.field == 'symbol') {
+                                        console.debug('Cell renderer for ', params.data.symbol)
+                                    }
                                     if (params.colDef.field == 'symbol2') {
                                         /*
                                         * For "symbol2" column
@@ -658,7 +661,7 @@ angular.module('superstockApp')
                             filterMode = $rootScope.userFilter.filterMode;
                         }
                         var $eventTimeout;
-                        var $gridData = [];
+                        var $gridData = {};
 
                         if ($scope.gridOptions.api) {
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
@@ -877,40 +880,41 @@ angular.module('superstockApp')
                                         /*
                                         * Update data in grid when server update data
                                         */
-                                        if (isNaN(data.disruptQtty)) {
-                                            data.disruptQtty = 0;
-                                        }
-                                        /**
-                                        We don't have a way to trigger data filtering yet
-                                        */
-                                        $gridData.push(data);
-                                        // if(personalStocks.indexOf(data['symbol']) !== -1) {
-                                        //     $gridData.push(data);
-                                        // }
-                                        if ($eventTimeout) {
-                                            //
-                                        } else {
-                                            $eventTimeout = $timeout(function () {
-                                                if ($scope.gridOptions.api && $scope.gridOptions.api != null)
-                                                    if($rootScope.link === 'full') {
-                                                        $scope.gridOptions.api.setRowData($gridData);
-                                                    }
-                                                    else if($rootScope.link === 'personal') {
-                                                        $scope.fullData = $gridData;
-                                                        $scope.filterPersonalStocks();
-                                                    }
-                                                filterChange(false);
-                                                $gridData = [];
-                                                $eventTimeout = undefined;
-                                            }, 1000);
-                                        }
+                                        console.log('Record added', childSnapshot.key, data);
+                                        $gridData[childSnapshot.key] = data;
+                                        utils.debounce(function() {
+                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                                if ($rootScope.link === 'full') {
+                                                    $scope.gridOptions.api.setRowData(rowData);
+                                                }
+                                                else if ($rootScope.link === 'personal') {
+                                                    $scope.fullData = rowData;
+                                                    $scope.filterPersonalStocks();
+                                                }
+                                            }
+                                            filterChange(false);
+                                        }, 100);
                                     },
                                     changed: function (data, childSnapshot, id) {
-                                        /*
-                                        * Data Changed Event
-                                        */
+                                        console.log('Record changed', childSnapshot.key, data);
+                                        $gridData[childSnapshot.key] = data;
+                                        utils.debounce(function() {
+                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                                if ($rootScope.link === 'full') {
+                                                    $scope.gridOptions.api.setRowData(rowData);
+                                                }
+                                                else if ($rootScope.link === 'personal') {
+                                                    $scope.fullData = rowData;
+                                                    $scope.filterPersonalStocks();
+                                                }
+                                            }
+                                            filterChange(false);
+                                        }, 100);
                                     },
                                     removed: function (oldChildSnapshot) {
+                                       console.log('Child removed', oldChildSnapshot);
                                         /*
                                         * Data Removed Event
                                         */
