@@ -313,32 +313,6 @@ angular
                     });
                 },
 
-                getSellSignals: function () {
-                    /*
-                    * Get market summary data
-                    * From link: https://superstock.firebaseio.com/market_summary.json
-                    */
-                    var deferred = $q.defer();
-                    var result = [];
-                    $http.get('https://superstock.firebaseio.com/sell_symbols.json', {}).then(function (data) {
-                        if (data && data.data && data.data.data) {
-                            if (data && data.data && data.data.data) {
-                                var rs = data.data.data;
-                                var arr = rs.split('|');
-                                for (var i in arr) {
-                                    var market = {
-                                        sellSignal: arr[i]
-                                    };
-                                    result.push(market);
-                                }
-                            }
-                        }
-                        deferred.resolve(result);
-                    }, function (err) {
-                        deferred.reject(err);
-                    });
-                    return deferred.promise;
-                },
                 getCompanyInformation: function (id) {
                     /*
                     * Get market summary data
