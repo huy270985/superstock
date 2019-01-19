@@ -389,6 +389,44 @@ angular.module('superstockApp')
                             110, 110, 130, 120, 120, 110, 100, 95,
                             130, 125, 80, 125
                         ];
+
+                        function getHeaderColorClass(field) {
+                            if (field == 'signal1' || field == 'symbol2' || field == 'signal2')
+                                return 'ag-header-cell-green';
+                            if (field == 'sellSignal') {
+                                return 'ag-header-cell-red';
+                            }
+                            return '';
+                        }
+
+                        function headerCellTemplate(params) {
+                            /*
+                            * Header cell template, this will be render for all header cell of grid
+                            */
+                            var field = params.column.colDef.field;
+                            var colorClass = getHeaderColorClass(field);
+                            return (
+                                '<div class="ag-header-cell ag-header-cell-sortable ag-header-cell-sorted-none ' + colorClass + '">' +
+                                '<table style="width:100%;height:100%">' +
+                                '<tr>' +
+                                '<td>' +
+                                '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
+                                '<span id="agText" class="ag-header-cell-text"></span>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td width="20px" style="vertical-align:top">' +
+                                '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
+                                '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
+                                '</span>' +
+                                '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
+                                '</td>' +
+                                '</tr>' +
+                                '</table>' +
+                                '</div>'
+                            )
+                        }
+
+
                         var columnDefs = [];
                         var config = {
                             idLabel: 'Mã',
@@ -490,26 +528,9 @@ angular.module('superstockApp')
                                     }
                                     return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
                                 },
-                                headerCellTemplate: function () {
-                                    return (
-                                        '<div class="ag-header-cell ag-header-cell-sortable ag-header-cell-sorted-none">' +
-                                        '<table style="width:100%;height:100%">' +
-                                        '<tr>' +
-                                        '<td>' +
-                                        '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
-                                        '<span id="agText" class="ag-header-cell-text"></span>' +
-                                        '</div>' +
-                                        '</td>' +
-                                        '<td width="20px" style="vertical-align:top">' +
-                                        '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
-                                        '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
-                                        '</span>' +
-                                        '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
-                                        '</td>' +
-                                        '</tr>' +
-                                        '</table>' +
-                                        '</div>'
-                                    )
+
+                                headerCellTemplate: function (params) {
+                                    return headerCellTemplate(params);
                                 }
                             }
 
@@ -614,36 +635,21 @@ angular.module('superstockApp')
                                 //loading data
                             },
 
-                            function (data) {
+                            function loaeded(data) {
                                 if (!$scope.gridOptions.api)
                                     return;
                                 $scope.gridOptions.api.hideOverlay();
                                 //Add event after sort changed
                                 $scope.gridOptions.api.addEventListener('afterSortChanged', function (params) {
-
                                     var setting = $rootScope.userSetting;
                                     if (!setting) {
                                         setting = {
-                                            sort: {
-                                                full: {
-
-                                                }
-                                            },
-                                            pinColumns: {
-
-                                            }
+                                            sort: { full: {} },
+                                            pinColumns: {},
                                         };
                                     }
-                                    if (!setting.sort) {
-                                        setting.sort = {
-                                            full: {
-
-                                            }
-                                        }
-                                    }
-
-                                    if (!setting.sort.full)
-                                        setting.sort.full = {};
+                                    setting.sort = setting.sort ? setting.sort : {full: {}};
+                                    setting.sort.full = setting.sort.full ? setting.sort.full : {};
                                     var sortModel = $scope.gridOptions.api.getSortModel();
                                     if (sortModel && sortModel[0])
                                         setting.sort.full = sortModel[0];
@@ -653,7 +659,7 @@ angular.module('superstockApp')
                                         if (err) {
                                             console.log(err);
                                         } else {
-                                            console.log('Saved user setting');
+                                            console.log('Saved user setting', setting);
                                         }
                                     })
 
