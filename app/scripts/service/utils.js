@@ -2,8 +2,8 @@
 
 angular
     .module('superstockApp')
-    .factory('utils', ['$http', '$q', '$rootScope', '$timeout',
-        function ($http, $q, $rootScope, $timeout) {
+    .factory('utils', ['$http', '$q', '$rootScope', '$timeout', '$firebaseObject', 'Ref',
+        function ($http, $q, $rootScope, $timeout, $firebaseObject, Ref) {
 
             var timeoutPromise;
 
@@ -304,6 +304,13 @@ angular
                         deferred.reject(err);
                     });
                     return deferred.promise;
+                },
+
+                watchSellSymbols: function(func) {
+                    var sellSymbols = $firebaseObject(Ref.child('sell_symbols'));
+                    sellSymbols.$watch(function() {
+                        func(sellSymbols.data.split("|"));
+                    });
                 },
 
                 getSellSignals: function () {

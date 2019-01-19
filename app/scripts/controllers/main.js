@@ -41,6 +41,23 @@ angular.module('superstockApp')
                 },
                 onSortChanged: function(event, a) {
                     console.log('Sort Changed', event, $scope.gridMainOptions.api.getSortModel());
+                    /**
+                     * Send data to google analytics
+                     */
+                    var sortModel = $scope.gridMainOptions.api.getSortModel();
+                    if (sortModel) {
+                        for (var i in sortModel) {
+                            var colId = sortModel[i].colId;
+                            var sort = sortModel[i].sort;
+                            var column = $scope.gridMainOptions.columnApi.getColumn(colId);
+                            $window.ga('send', {
+                                hitType: 'event',
+                                eventCategory: 'table:' + tableSettings.name,
+                                eventAction: 'sort',
+                                eventLabel: 'sort ' + sort + ' ' + column.colDef.field,
+                            });
+                        }
+                    }
                 }
             };
             var columnDefs = [
@@ -108,8 +125,16 @@ angular.module('superstockApp')
                 console.error('Exception when getTradingDate')
             });
 
-            utils.getSellSignals().then(function (data) {
-                $scope.gridMarketOptions.api.setRowData(data);
+            var gridDiv = document.querySelector('#grid-market-options');
+            new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
+            utils.watchSellSymbols(function(arr) {
+                console.log('Sell symbols updated', arr);
+                var data = arr.map(function(item){
+                    return {sellSignal: item}
+                });
+                if($scope.gridMarketOptions.api) {
+                    $scope.gridMarketOptions.api.setRowData(data);
+                }
                 /**
                  * Set height for sellSignal
                  * Old code using pinLeft height,
@@ -119,8 +144,6 @@ angular.module('superstockApp')
                 var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
                 $gridMarket.height($agBody.height());
                 $gridMarket.css('background', '#F4CCCC');
-            }).catch(function (ex) {
-                console.error('There is problem getting sell symbols', ex);
             });
 
             $tableRepository.loadColSettings(uid, tableSettings.name)
@@ -264,12 +287,9 @@ angular.module('superstockApp')
                     })
                 }
 
-                var sellSignalDatas = [];
                 if ($scope.gridMainOptions.api) {
                     $scope.gridMainOptions.api.setColumnDefs(columnDefs);
 
-                    var gridDiv = document.querySelector('#grid-market-options');
-                    new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
                     var $gridData = {};
 
                     draw.drawGrid($rootScope.user.account.active,
@@ -283,44 +303,11 @@ angular.module('superstockApp')
                         console.log('Firebase loaded', data);
                         //loaded data
                         $scope.gridMainOptions.api.setRowData(data);
-                        // add the handler function
-                        $scope.gridMainOptions.api.addEventListener('afterSortChanged', function (params) {
-                            var updatedNodes = [];
-                            if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
-                                $scope.gridMainOptions.api.forEachNode(function (node) {
-                                    var value = '';
-                                    if (sellSignalDatas[node.childIndex])
-                                        value = sellSignalDatas[node.childIndex];
-                                    node.data.sellSignal = value;
-                                    updatedNodes.push(node);
-                                });
-                                $scope.gridMainOptions.api.refreshCells(updatedNodes, ['sellSignal']);
-
-                                /**
-                                 * Send data to google analytics
-                                 */
-                                var sortModel = $scope.gridMainOptions.api.getSortModel();
-                                if (sortModel) {
-                                    for (var i in sortModel) {
-                                        var colId = sortModel[i].colId;
-                                        var sort = sortModel[i].sort;
-                                        var column = $scope.gridMainOptions.columnApi.getColumn(colId);
-                                        var headerName = column.colDef.headerName;
-                                        $window.ga('send', {
-                                            hitType: 'event',
-                                            eventCategory: 'Tổng hợp - Sắp xếp dữ liệu',
-                                            eventAction: 'Xắp xếp',
-                                            eventLabel: 'Xắp xếp ' + (sort == 'desc' ? 'giảm dần' : 'tăng dần') + ' theo ' + headerName
-                                        });
-                                    }
-                                }
-                            }
-                        });
                         },
                     {
 
                             added: function (data, childSnapshot, id) {
-                                console.log('Record added', childSnapshot.key, data);
+                                console.debug('Record added', childSnapshot.key, data);
                                 $gridData[childSnapshot.key] = data;
                                 utils.debounce(function() {
                                     var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
