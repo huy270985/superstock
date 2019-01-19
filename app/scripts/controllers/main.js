@@ -10,10 +10,10 @@
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', '$q', 'auth', '$firebaseArray',
         '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
-        'tableSettings', '$tableRepository',
+        'tableSettings', '$tableRepository', '$sellSymbols',
         function ($rootScope, $scope, $q, auth, $firebaseArray,
             $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
-            tableSettings, $tableRepository) {
+            tableSettings, $tableRepository, $sellSymbols) {
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "Tổng hợp");
             var uid = auth.$getAuth().uid;
@@ -60,71 +60,7 @@ angular.module('superstockApp')
                     }
                 }
             };
-            var columnDefs = [
-                {
-                    headerName: "Báo bán",
-                    field: "sellSignal",
-                    width: 70,
-                    headerCellTemplate: function (params) {
-                        /*
-                        * Header cell template, this will be render for all header cell of grid
-                        */
-                        var colorClass = 'ag-header-cell-red';
-
-                        return (
-                            '<div class="ag-header-cell ' + colorClass + ' ag-header-cell-sortable ag-header-cell-sorted-none">' +
-                            '<table style="width:100%;height:100%">' +
-                            '<tr>' +
-                            '<td>' +
-                            '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
-                            '<span id="agText" class="ag-header-cell-text"></span>' +
-                            '</div>' +
-                            '</td>' +
-                            '</tr>' +
-                            '</table>' +
-                            '</div>'
-                        )
-                    },
-                    cellClass: function (params) {
-                        // Get cell style
-                        var selectedSyle = '';
-                        if (params.data.symbol == $rootScope.mainSelected)
-                            selectedSyle = $rootScope.mainSelected;
-                        return utils.getCellClassSummary(params, { sellSignal: '' }, selectedSyle);
-                    }
-                }
-            ];
-
-
-            $scope.gridMarketOptions = {
-                enableSorting: false,
-                enableFilter: false,
-                rowData: [],
-                data: [],
-                headerHeight: 50,
-                enableColResize: false,
-                suppressNoRowsOverlay: true,
-                columnDefs: columnDefs
-            }
-
-            /*
-            * Get market summary data
-            */
-            utils.getMarketSummary().then(function (data) {
-                $scope.headerTitle = data;
-            }).catch(function (ex) {
-                console.error('Exception when getMarketSummary')
-            });
-
-            /*
-            * Update trading date
-            */
-            utils.getTradingDate().then(function (data) {
-                $scope.tradingDate = data;
-            }).catch(function (ex) {
-                console.error('Exception when getTradingDate')
-            });
-
+            $scope.gridMarketOptions = $sellSymbols.getGridMarketOptions();
             var gridDiv = document.querySelector('#grid-market-options');
             new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
             utils.watchSellSymbols(function(arr) {
@@ -144,6 +80,24 @@ angular.module('superstockApp')
                 var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
                 $gridMarket.height($agBody.height());
                 $gridMarket.css('background', '#F4CCCC');
+            });
+
+            /*
+            * Get market summary data
+            */
+            utils.getMarketSummary().then(function (data) {
+                $scope.headerTitle = data;
+            }).catch(function (ex) {
+                console.error('Exception when getMarketSummary')
+            });
+
+            /*
+            * Update trading date
+            */
+            utils.getTradingDate().then(function (data) {
+                $scope.tradingDate = data;
+            }).catch(function (ex) {
+                console.error('Exception when getTradingDate')
             });
 
             $tableRepository.loadColSettings(uid, tableSettings.name)
