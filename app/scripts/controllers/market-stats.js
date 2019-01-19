@@ -33,6 +33,7 @@ angular.module('superstockApp')
                     name: obj[key].id,
                     value: obj[key].value,
                     change: obj[key].change,
+                    percent: obj[key].percent,
                     color: change_color(obj[key].change)
                 }
             });
@@ -43,9 +44,11 @@ angular.module('superstockApp')
         $q.all([$indices.$loaded(), $commodities.$loaded()]).then(function() {
             $rootScope.stats = {
                 indices: {
+                    name: "Index thế giới",
                     data: toArray($indices.data),
                 },
                 commodities: {
+                    name: "Index hàng hoá",
                     data: toArray($commodities.data),
                 },
             }
