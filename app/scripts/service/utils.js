@@ -70,7 +70,7 @@ angular
 
                     if (colSetting.isNumber)
                         classList.push('ui-cell-align-right');
-                    if (params.value && colSetting.isType('percent'))
+                    if (params.value && colSetting.isType && colSetting.isType('percent'))
                         classList.push('percent');
                     switch (field) {
                         case 'symbol':

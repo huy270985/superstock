@@ -108,6 +108,21 @@ angular.module('superstockApp')
                 console.error('Exception when getTradingDate')
             });
 
+            utils.getSellSignals().then(function (data) {
+                $scope.gridMarketOptions.api.setRowData(data);
+                /**
+                 * Set height for sellSignal
+                 * Old code using pinLeft height,
+                 * which will result in 0 height when there is no data for the name table
+                 */
+                var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
+                var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
+                $gridMarket.height($agBody.height());
+                $gridMarket.css('background', '#F4CCCC');
+            }).catch(function (ex) {
+                console.error('There is problem getting sell symbols', ex);
+            });
+
             $tableRepository.loadColSettings(uid, tableSettings.name)
                 .then(function(colSettings){
 
@@ -309,7 +324,8 @@ angular.module('superstockApp')
                                 }
                             }
                         });
-                    }, {
+                        },
+                    {
                             added: function (data, childSnapshot, id) {
                                 /*
                                 * Update data in grid when server update data
@@ -335,24 +351,6 @@ angular.module('superstockApp')
                                     $eventTimeout = $timeout(function () {
                                         if ($scope.gridMainOptions.api && $scope.gridMainOptions.api != null) {
                                             $scope.gridMainOptions.api.setRowData($gridData);
-                                            /**
-                                             * Fill data for sell signal column
-                                             */
-                                            utils.getSellSignals().then(function (data) {
-                                                $scope.gridMarketOptions.api.setRowData(data);
-                                                /**
-                                                 * Set height for sellSignal
-                                                 */
-                                                var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
-                                                var $pinLeft = $('div[ng-grid="gridMainOptions"]').find('.ag-pinned-left-cols-container');
-                                                var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
-                                                var height = $pinLeft.height();
-                                                if (height >= $agBody.height())
-                                                    height = $agBody.height();
-                                                $gridMarket.height(height);
-                                                $gridMarket.css('background', '#F4CCCC');
-                                            }).catch(function (ex) {
-                                            });
                                         }
                                         $gridData = [];
                                         $eventTimeout = undefined;
