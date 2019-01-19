@@ -382,8 +382,8 @@ angular.module('superstockApp')
                         // console.log(fieldsArr);
                         //set up column size
                         var sizeArr = [
-                            90, 220, 130, 95, 100, 140, 140, 120,
-                            90, 135, 145, 135, 75, 155, 90, 110,
+                            90, 220, 85, 85, 85, 140, 120, 85,
+                            90, 135, 145, 135, 75, 75, 75, 110,
                             125, 120, 120, 100, 80, 120, 90, 125,
                             125, 125, 155, 100, 150, 100, 100, 90,
                             110, 110, 130, 120, 120, 110, 100, 95,
@@ -495,17 +495,15 @@ angular.module('superstockApp')
                                         '<div class="ag-header-cell ag-header-cell-sortable ag-header-cell-sorted-none">' +
                                         '<table style="width:100%;height:100%">' +
                                         '<tr>' +
-                                        '<td width="20px" style="vertical-align:top">' +
-                                        '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
-                                        '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
-                                        '</span>' +
-                                        '</td>' +
                                         '<td>' +
                                         '<div id="agHeaderCellLabel" class="ag-header-cell-label">' +
                                         '<span id="agText" class="ag-header-cell-text"></span>' +
                                         '</div>' +
                                         '</td>' +
-                                        '<td width="20px">' +
+                                        '<td width="20px" style="vertical-align:top">' +
+                                        '<span id="agMenu" class="ag-header-icon ag-header-cell-menu-button" style="opacity: 0; transition: opacity 0.2s, border 0.2s;">' +
+                                        '<svg width="12" height="12"><rect y="0" width="12" height="2" class="ag-header-icon"></rect><rect y="5" width="12" height="2" class="ag-header-icon"></rect><rect y="10" width="12" height="2" class="ag-header-icon"></rect></svg>' +
+                                        '</span>' +
                                         '<div id="" class="ag-header-cell-label"><span id="agSortAsc" class="ag-header-icon ag-sort-ascending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,10 5,0 10,10"></polygon></svg></span>    <span id="agSortDesc" class="ag-header-icon ag-sort-descending-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 5,10 10,0"></polygon></svg></span><span id="agNoSort" class="ag-header-icon ag-sort-none-icon ag-hidden"><svg width="10" height="10"><polygon points="0,4 5,0 10,4"></polygon><polygon points="0,6 5,10 10,6"></polygon></svg></span><span id="agFilter" class="ag-header-icon ag-filter-icon ag-hidden"><svg width="10" height="10"><polygon points="0,0 4,4 4,10 6,10 6,4 10,0" class="ag-header-icon"></polygon></svg></span></div>' +
                                         '</td>' +
                                         '</tr>' +
@@ -663,13 +661,31 @@ angular.module('superstockApp')
                         var $eventTimeout;
                         var $gridData = {};
 
+                        function updateGridDataDebounce($gridData) {
+                            utils.debounce(function() {
+                                if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
+                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                    if ($rootScope.link === 'full') {
+                                        $scope.gridOptions.api.setRowData(rowData);
+                                    }
+                                    else if ($rootScope.link === 'personal') {
+                                        $scope.fullData = rowData;
+                                        $scope.filterPersonalStocks();
+                                    }
+                                }
+                                filterChange(false);
+                            }, 100);
+                        }
+
                         if ($scope.gridOptions.api) {
                             $scope.gridOptions.api.setColumnDefs(columnDefs);
                             $scope.gridOptions.api.showLoadingOverlay();
                             draw.drawGrid($rootScope.user.account.active,
                                 Ref.child('superstock'), config, function (data) {
                                 //loading data
-                            }, function (data) {
+                            },
+
+                            function (data) {
                                 if (!$scope.gridOptions.api)
                                     return;
                                 $scope.gridOptions.api.hideOverlay();
@@ -875,43 +891,18 @@ angular.module('superstockApp')
                                 setTimeout(function () {
                                     align();
                                 }, 1000);
-                            }, {
+                            },
+
+                            {
                                     added: function (data, childSnapshot, id) {
-                                        /*
-                                        * Update data in grid when server update data
-                                        */
                                         console.log('Record added', childSnapshot.key, data);
                                         $gridData[childSnapshot.key] = data;
-                                        utils.debounce(function() {
-                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
-                                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
-                                                if ($rootScope.link === 'full') {
-                                                    $scope.gridOptions.api.setRowData(rowData);
-                                                }
-                                                else if ($rootScope.link === 'personal') {
-                                                    $scope.fullData = rowData;
-                                                    $scope.filterPersonalStocks();
-                                                }
-                                            }
-                                            filterChange(false);
-                                        }, 100);
+                                        updateGridDataDebounce($gridData);
                                     },
                                     changed: function (data, childSnapshot, id) {
                                         console.log('Record changed', childSnapshot.key, data);
                                         $gridData[childSnapshot.key] = data;
-                                        utils.debounce(function() {
-                                            if ($scope.gridOptions.api && $scope.gridOptions.api != null) {
-                                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
-                                                if ($rootScope.link === 'full') {
-                                                    $scope.gridOptions.api.setRowData(rowData);
-                                                }
-                                                else if ($rootScope.link === 'personal') {
-                                                    $scope.fullData = rowData;
-                                                    $scope.filterPersonalStocks();
-                                                }
-                                            }
-                                            filterChange(false);
-                                        }, 100);
+                                        updateGridDataDebounce($gridData);
                                     },
                                     removed: function (oldChildSnapshot) {
                                        console.log('Child removed', oldChildSnapshot);
