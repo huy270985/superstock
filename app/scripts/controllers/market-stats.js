@@ -33,7 +33,7 @@ angular.module('superstockApp')
                     name: obj[key].id,
                     value: obj[key].value,
                     change: obj[key].change,
-                    color: change_color(obj[key].change_value)
+                    color: change_color(obj[key].change)
                 }
             });
         }
