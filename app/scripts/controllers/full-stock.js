@@ -395,6 +395,14 @@ angular.module('superstockApp')
                             labelList: []
                         }
                         for (var i in titlesArr) {
+                            var colSetting = {
+                                field: fieldsArr[i],
+                                format: formatArr[i],
+                                title: titlesArr[i],
+                            }
+                            var type = colSetting.format.split(':')[0];
+                            colSetting.type = type
+                            colSetting.isNumber = type === 'bigNum' || type === 'number' || type === 'percent';
                             formatList[fieldsArr[i]] = formatArr[i];
                             config.labelList.push({
                                 fieldName: fieldsArr[i],
@@ -403,94 +411,24 @@ angular.module('superstockApp')
                             var formatType = null;
                             var cellClass = null;
                             var filter = 'text';
-
-                            if (formatArr[i].indexOf('bigNum') > -1 || formatArr[i].indexOf('number') > -1) {
-                                formatType = 'number';
-                                filter = 'number';
-                            } else if (formatArr[i].indexOf('percent') > -1) {
+                            if (colSetting.isNumber) {
                                 filter = 'number';
                             }
+                            var cellRenderer = (function(colSetting) {
+                                return function(params) {
+                                    return $gridSettings.cellRenderer(colSetting, params);
+                                }
+                            })(colSetting);
+
                             //setup column data
                             var def = {
-                                field: fieldsArr[i], //field name
+                                field: colSetting.field, //field name
                                 width: sizeArr[i], //column width
-                                headerName: titlesArr[i], //column title
+                                headerName: colSetting.title, //column title
                                 cellClass: cellClass, //css class of cell in column
                                 enableTooltip: true,
-                                tooltipField: fieldsArr[i], //show tolltip
-                                cellRenderer: function (params) { //cell render data
-                                    if (params.colDef.field == 'symbol') {
-                                        console.debug('Cell renderer for ', params.data.symbol)
-                                    }
-                                    if (params.colDef.field == 'symbol2') {
-                                        /*
-                                        * For "symbol2" column
-                                        * - signal1 & signal2 is empty, show empty value
-                                        */
-                                        if (!params.data.buySignal1)
-                                            params.data.buySignal1 = '';
-                                        else {
-                                            // console.log('');
-                                        }
-                                        if (!params.data.buySignal2)
-                                            params.data.buySignal2 = '';
-                                        else {
-                                            // console.log('');
-                                        }
-                                        if (params.data.buySignal1 == '' && params.data.buySignal2 == '')
-                                            return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
-                                        else
-                                            return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '" data-industry = "' + params.node.data.industry + '">' + params.value + '</div>';
-                                    } else if (params.colDef.field == 'newPoint' || params.colDef.field == 'EPS'
-                                        || params.colDef.field == 'fxEffect' || params.colDef.field == 'cashFlow') {
-                                        /*
-                                        * For "newPoint" and "EPS" column
-                                        * - Show number with format which has 2 points
-                                        */
-                                        var value = '';
-                                        if (isNaN(parseFloat(params.value))) {
-                                            value = $filter('number')(0, 2);
-                                        } else {
-                                            value = $filter('number')(parseFloat(params.value), 2);
-                                        }
-                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                    } else if (params.colDef.field == 'buyDate') {
-                                        // if (params.value && params.value != null && params.value != '')
-                                        //     return $filter('date')(params.value, 'dd/MM/yyyy');
-                                    } else {
-                                        var value = '';
-                                        if (formatList[params.colDef.field].indexOf('number') > -1 || formatList[params.colDef.field].indexOf('bigNum') > -1 || formatList[params.colDef.field].indexOf('percent') > -1) {
-                                            value = $filter('number')(params.value);
-                                            if (formatList[params.colDef.field].indexOf('percent') > -1) {
-                                                if (isNaN(parseFloat(params.value))) {
-                                                    value = '';
-                                                } else {
-                                                    value = $filter('number')(params.value, 2);
-                                                    value = value + '%';
-                                                }
-                                            }
-
-                                            if (params.colDef.field == 'maVol30') {
-                                                value = $filter('number')(params.value, 0);
-                                                if (value < 0)
-                                                    value = '';
-                                            } else if (params.colDef.field == 'pe') {
-                                                value = $filter('number')(params.value, 2);
-                                            }
-                                            return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                        }
-                                    }
-
-                                    if (params.colDef.field == 'pe') {
-                                        var value = parseFloat(params.value);
-                                        if (isNaN(value))
-                                            value = 0;
-                                        value = $filter('number')(value, 2);
-                                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                                    }
-                                    return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
-                                },
-
+                                tooltipField: colSetting.field, //show tolltip
+                                cellRenderer: cellRenderer,
                                 headerCellTemplate: $gridSettings.headerCellTemplate,
                             }
 
@@ -595,7 +533,7 @@ angular.module('superstockApp')
                                 //loading data
                             },
 
-                            function loaeded(data) {
+                            function loaded(data) {
                                 if (!$scope.gridOptions.api)
                                     return;
                                 $scope.gridOptions.api.hideOverlay();

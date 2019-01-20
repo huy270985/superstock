@@ -102,60 +102,6 @@ angular.module('superstockApp')
 
             $tableRepository.loadColSettings(uid, tableSettings.name)
                 .then(function(colSettings){
-
-                function cellRenderer(colSetting, params) {
-                    var field = params.colDef.field;
-                    if (field == 'symbol')
-                        console.debug('Render cell', field, params.data);
-                    switch(field) {
-                        case 'symbol2':
-                            /*
-                            * For "symbol2" column
-                            * - signal1 & signal2 is empty, show empty value
-                            */
-                            if (params.data.signal1 == '' && params.data.signal2 == '') {
-                                return '<div data-symbol="' + params.data.symbol + '" title=""></div>';
-                            } else {
-                                return '<div class="chart-icon" data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
-                            }
-                        case 'newPoint':
-                        case 'EPS':
-                            /*
-                            * For "newPoint" and "EPS" column
-                            * - Show number with format which has 2 points
-                            */
-                            var value = '';
-                            if (isNaN(parseFloat(params.value))) {
-                                value = $filter('number')(0, 0);
-                            } else {
-                                value = $filter('number')(parseFloat(params.value), 0);
-                            }
-                            return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                        case 'symbol':
-                            var id = params.value;
-                            return '<div><span>' + params.value + '</span>' +
-                                '<img class="chart-icon" data-symbol="' + id +
-                                '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
-                                '<img class="information-icon" data-symbol="' + id +
-                                '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
-                        default:
-                            var value = '';
-                            if (colSetting.isNumber) {
-                                value = $filter('number')(params.value);
-                                if (colSetting.isType('percent')) {
-                                    if (isNaN(parseFloat(params.value))) {
-                                        value = '';
-                                    } else {
-                                        value = $filter('number')(params.value, 2);
-                                        value = value + '%';
-                                    }
-                                }
-                                return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
-                            }
-                            return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
-                    }
-                }
-
                 var columnDefs = colSettings.map(function(colSetting){
                     //Setup column data
                     var def = {
@@ -165,7 +111,7 @@ angular.module('superstockApp')
                         cellClass: colSetting.isNumber ? 'ui-cell-align-right' : 'ui-cell-align-left',
                         enableTooltip: true,
                         tooltipField: colSetting.field, //show tolltip
-                        cellRenderer: function(params) {return cellRenderer(colSetting, params)},
+                        cellRenderer: function(params) {return $gridSettings.cellRenderer(colSetting, params)},
                         headerCellTemplate: $gridSettings.headerCellTemplate,
                         sort: colSetting.field == tableSettings.defaultSort ? tableSettings.direction : undefined,
                         cellFilter: colSetting.isNumber ? 'number' : 'string',

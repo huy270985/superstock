@@ -58,16 +58,10 @@ angular
                         for (var i in titlesArr) {
                             var field = fieldsArr[i];
                             var setting = userTableSettings[field];
-                            // crazy closure handling
-                            var isType = (function(format) {
-                                    return function(type) {
-                                        return format.indexOf(type) > -1
-                                    }
-                                })(setting.format);
-
+                            var type = setting.format.split(":")[0];
                             colSettings[i] = Object.assign({
-                                isType: isType,
-                                isNumber: isType('bigNum') || isType('number') || isType('percent'),
+                                isNumber: type === 'bigNum' || type === 'number' || type === 'percent',
+                                type: type,
                             }, setting);
                         }
 
