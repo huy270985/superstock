@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "canslimvn-new",
     "public": "dist",
     "ignore": [
       "firebase.json",
