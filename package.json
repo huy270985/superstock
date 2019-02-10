@@ -38,6 +38,7 @@
   },
   "scripts": {
     "start": "grunt serve",
+    "deploy": "grunt build && firebase deploy --only hosting:canslimvn-new",
     "postinstall": "bower install"
   }
 }
