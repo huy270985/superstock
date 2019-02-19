@@ -97,18 +97,19 @@ angular
 
                         // Define size of field in client
                         //"symbol|matchPrice|priceChange|totalValue|volumeChange|EPS|newPoint|Canslim|pricePeak|signal1|symbol2"
+                        var defaultWidth = 100;
                         var defaultTableSettings = {
-                            symbol: { width: 90},
+                            symbol: { width: 120},
                             matchPrice: { width: 100},
                             priceChange: { width: 100},
-                            totalValue: { width: 125},
-                            volumeChange: { width: 95},
-                            EPS: { width: 65},
+                            totalValue: { width: 120},
+                            volumeChange: { width: 100},
+                            EPS: { width: 75},
                             newPoint: { width: 75},
                             power: { width: 75},
-                            Canslim: { width: 105},
+                            Canslim: { width: 100},
                             pricePeak: { width: 100},
-                            signal1: { width: 130},
+                            signal1: { width: 120},
                             symbol2: { width: 75},
                             signal2: { width: 130},
                         }
@@ -116,7 +117,7 @@ angular
                         // merge defaultTableSettings & userTableSettings
                         for (var i in titlesArr) {
                             var userSetting = userTableSettings[fieldsArr[i]] || {};
-                            var defaultSetting = defaultTableSettings[fieldsArr[i]] || {width: 90};
+                            var defaultSetting = defaultTableSettings[fieldsArr[i]] || {width: defaultWidth};
                             userTableSettings[fieldsArr[i]] = Object.assign(
                                 userSetting,
                                 defaultSetting,
