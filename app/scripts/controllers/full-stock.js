@@ -260,81 +260,10 @@ angular.module('superstockApp')
                 $scope.gridOptions.api.onFilterChanged();
             }
 
-            /**
-             * Export data sheet
-             */
-            $scope.rowAfterFilter = [];
-            $rootScope.exportDatasheet = function ($event) {
-                $event.preventDefault();
-                // Show loading
-                $('#exportProccessing').modal('show');
-
-                $timeout(function () {
-                    var data = {};
-                    if ($scope.rowAfterFilter && $scope.rowAfterFilter.length > 0) {
-                        for (var i in $scope.rowAfterFilter) {
-                            var node = $scope.rowAfterFilter[i];
-                            var value = node.data;
-                            data[node.childIndex] = value;
-                            if (data[node.childIndex]) {
-                                data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
-                                data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
-                            }
-                        }
-                    } else {
-                        if (!$scope.gridOptions.api)
-                            return;
-                        $scope.gridOptions.api.forEachNode(function (node) {
-                            var value = node.data;
-                            data[node.childIndex] = value;
-                            if (data[node.childIndex]) {
-                                data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
-                                data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
-                            }
-                        });
-                    }
-
-
-                    // Config to map data of field with template cell
-                    // data: {'key': 'value'}
-                    // config: {'key': {cell: 'XY', format: format}}
-                    var fieldsArr = fields.data.split('|');
-                    var formatArr = format.data.split('|');
-                    var config = {};
-                    var characters = ['A', 'B', 'C', 'D', 'E', 'F',
-                        'G', 'H', 'I', 'J', 'K', 'L',
-                        'M', 'N', 'O', 'P', 'Q', 'R',
-                        'S', 'T', 'U', 'V', 'W', 'X',
-                        'Y', 'Z',
-                        'AA', 'AB', 'AC', 'AD', 'AE', 'AF',
-                        'AG', 'AH', 'AI', 'AJ', 'AK', 'AL',
-                        'AM', 'AN', 'AO', 'AP', 'AQ', 'AR',
-                        'AS', 'AT', 'AU', 'AV', 'AW', 'AX',
-                        'AY', 'AZ'
-                    ];
-                    for(var i in fieldsArr) {
-                        config[fieldsArr[i]] = {
-                            cell: characters[i],
-                            format: formatArr[i]
-                        }
-                    }
-                    // Call write funtction
-                    utils.writeData2Worksheet(data, config).then(function (workBook) {
-                        // Disabled loadding
-                        utils.generateWorksheetFile(workBook, function () {
-                            $('#exportProccessing').modal('hide');
-                        });
-                    });
-
-                }, 500);
-
-            };
-
             //Begin get data for ag-grid
             // var bigNum = 1000000000;
             $tableRepository.loadFullColSettings()
             .then(function(colSettings) {
-                console.log(colSettings);
                 var columnDefs = [];
                 var config = {
                     idLabel: 'Mã',
@@ -696,8 +625,72 @@ angular.module('superstockApp')
                             }
                         })
                 }
+                return colSettings;
+            })
+            .then(function(colSettings) {
+                console.log("after loaded colSettings", colSettings);
+                /**
+                 * Export data sheet
+                 */
+                $scope.rowAfterFilter = [];
+                $rootScope.exportDatasheet = function ($event) {
+                    $event.preventDefault();
+                    // Show loading
+                    $('#exportProccessing').modal('show');
 
-            });
+                    $timeout(function () {
+                        var data = {};
+                        if ($scope.rowAfterFilter && $scope.rowAfterFilter.length > 0) {
+                            for (var i in $scope.rowAfterFilter) {
+                                var node = $scope.rowAfterFilter[i];
+                                var value = node.data;
+                                data[node.childIndex] = value;
+                                if (data[node.childIndex]) {
+                                    data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
+                                    data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
+                                }
+                            }
+                        } else {
+                            if (!$scope.gridOptions.api)
+                                return;
+                            $scope.gridOptions.api.forEachNode(function (node) {
+                                var value = node.data;
+                                data[node.childIndex] = value;
+                                if (data[node.childIndex]) {
+                                    data[node.childIndex].basicCustom = 'http://ivt.ssi.com.vn/CorporateProfile.aspx?Ticket=' + data[node.childIndex]['symbol'];
+                                    data[node.childIndex].chartCustom = 'https://banggia.vndirect.com.vn/chart/?symbol=' + data[node.childIndex]['symbol'];
+                                }
+                            });
+                        }
+
+                        var config = {};
+                        var characters = ['A', 'B', 'C', 'D', 'E', 'F',
+                            'G', 'H', 'I', 'J', 'K', 'L',
+                            'M', 'N', 'O', 'P', 'Q', 'R',
+                            'S', 'T', 'U', 'V', 'W', 'X',
+                            'Y', 'Z',
+                            'AA', 'AB', 'AC', 'AD', 'AE', 'AF',
+                            'AG', 'AH', 'AI', 'AJ', 'AK', 'AL',
+                            'AM', 'AN', 'AO', 'AP', 'AQ', 'AR',
+                            'AS', 'AT', 'AU', 'AV', 'AW', 'AX',
+                            'AY', 'AZ'
+                        ];
+                        for (var i in colSettings) {
+                            config[colSettings[i].field] = {
+                                cell: characters[i],
+                                format: colSettings[i].format
+                            }
+                        }
+                        // Call write funtction
+                        utils.writeData2Worksheet(data, config).then(function (workBook) {
+                            // Disabled loadding
+                            utils.generateWorksheetFile(workBook, function () {
+                                $('#exportProccessing').modal('hide');
+                            });
+                        });
+                    }, 500);
+            };
+            })
 
             /**
              * Format UI
