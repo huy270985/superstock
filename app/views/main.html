@@ -1,8 +1,8 @@
 <div class="header-title" style="border-bottom: solid 1px #000000; background: {{headerTitle.color}};">
     <div class="header-timestamp">
-        <h4 ng-bind="tradingDate"></h4>
+        <h4>Hôm nay: {{tradingDate}}</h4>
         <h6 class="ag-cell-red-color" ng-show="true">
-            <div>HẾT HẠN: {{user.account.expiredDate.toLocaleDateString()}}, <a href="http://hungcanslim.com/gia">GIA HẠN</a></div>
+            <div>NGÀY HẾT HẠN: {{user.account.expiredDate.toLocaleDateString()}}, <a href="http://hungcanslim.com/gia">GIA HẠN</a></div>
         </h6>
     </div>
     <h4 class="ag-cell-purple-color" style="padding-right: 200px" ng-bind-html="headerTitle.content"></h4>
