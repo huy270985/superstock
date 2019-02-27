@@ -43,7 +43,7 @@ angular.module('superstockApp')
         var $commodities = $firebaseObject(ref.child('stats/commodities'));
         $q.all([$indices.$loaded(), $commodities.$loaded()]).then(function() {
             $rootScope.stats = {
-                // indices: {
+                // indices: { // replaced by widget
                 //     name: "Index thế giới",
                 //     data: toArray($indices.data),
                 // },
