@@ -5,6 +5,8 @@ angular
     .factory('utils', ['$http', '$q', '$rootScope', '$timeout', '$firebaseObject', 'Ref',
         function ($http, $q, $rootScope, $timeout, $firebaseObject, Ref) {
 
+            const URL = 'https://price-sync-227313.firebaseio.com';
+
             var timeoutPromise;
 
             return {
@@ -296,7 +298,7 @@ angular
 
                 getTradingDate: function () {
                     var deferred = $q.defer();
-                    $http.get('https://superstock.firebaseio.com/trading_date/data.json', {}).then(function (data) {
+                    $http.get(URL + '/trading_date/data.json', {}).then(function (data) {
                         if (data && data.data) {
                             deferred.resolve(data.data);
                         }
