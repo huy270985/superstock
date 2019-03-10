@@ -17,6 +17,25 @@ angular.module('superstockApp')
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "Tổng hợp");
             var uid = auth.$getAuth().uid;
+
+            /*
+            * Get market summary data
+            */
+            utils.getMarketSummary().then(function (data) {
+                $scope.headerTitle = data;
+            }).catch(function (ex) {
+                console.error('Exception when getMarketSummary')
+            });
+
+            /*
+            * Update trading date
+            */
+            utils.getTradingDate().then(function (data) {
+                $scope.tradingDate = data;
+            }).catch(function (ex) {
+                console.error('Exception when getTradingDate')
+            });
+
             //Setup ag-grid
             $scope.gridMainOptions = {
                 enableSorting: true,
@@ -60,48 +79,33 @@ angular.module('superstockApp')
                     }
                 }
             };
-            $scope.gridMarketOptions = $gridSettings.getGridMarketOptions();
+
             var gridDiv = document.querySelector('#grid-market-options');
-            new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
-            utils.watchSellSymbols(function(arr) {
-                console.log('Sell symbols updated', arr);
-                var data = arr.map(function(item){
-                    return {sellSignal: item}
+            if (gridDiv) {
+                $scope.gridMarketOptions = $gridSettings.getGridMarketOptions();
+                new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
+                utils.watchSellSymbols(function(arr) {
+                    console.log('Sell symbols updated', arr);
+                    var data = arr.map(function(item){
+                        return {sellSignal: item}
+                    });
+                    if($scope.gridMarketOptions.api) {
+                        $scope.gridMarketOptions.api.setRowData(data);
+                    }
+                    /**
+                     * Set height for sellSignal
+                     * Old code using pinLeft height,
+                     * which will result in 0 height when there is no data for the name table
+                     */
+                    var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
+                    var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
+                    $gridMarket.height($agBody.height());
+                    $gridMarket.css('background', '#F4CCCC');
                 });
-                if($scope.gridMarketOptions.api) {
-                    $scope.gridMarketOptions.api.setRowData(data);
-                }
-                /**
-                 * Set height for sellSignal
-                 * Old code using pinLeft height,
-                 * which will result in 0 height when there is no data for the name table
-                 */
-                var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
-                var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
-                $gridMarket.height($agBody.height());
-                $gridMarket.css('background', '#F4CCCC');
-            });
-
-            /*
-            * Get market summary data
-            */
-            utils.getMarketSummary().then(function (data) {
-                $scope.headerTitle = data;
-            }).catch(function (ex) {
-                console.error('Exception when getMarketSummary')
-            });
-
-            /*
-            * Update trading date
-            */
-            utils.getTradingDate().then(function (data) {
-                $scope.tradingDate = data;
-            }).catch(function (ex) {
-                console.error('Exception when getTradingDate')
-            });
+            }
 
             $tableRepository.loadColSettings(uid, tableSettings.name)
-                .then(function(colSettings){
+            .then(function(colSettings){
                 var columnDefs = colSettings.map(function(colSetting){
                     //Setup column data
                     var def = {
@@ -131,12 +135,16 @@ angular.module('superstockApp')
 
                 $rootScope.filters = columnDefs;
 
+                if ($scope.gridMainOptions.api) {
+                    $scope.gridMainOptions.api.setColumnDefs(columnDefs);
+                }
+
+                return colSettings;
+            })
+            .then(function (colSettings) {
                 /*
                 * Get data from server and render to Grid
                 */
-                var $eventTimeout;
-                var $gridData = [];
-
                 var config = {
                     idLabel: 'Mã',
                     labelList: colSettings.map(function(setting) {
@@ -146,15 +154,11 @@ angular.module('superstockApp')
                         }
                     })
                 }
-
-                if ($scope.gridMainOptions.api) {
-                    $scope.gridMainOptions.api.setColumnDefs(columnDefs);
-
-                    var $gridData = {};
-
-                    draw.drawGrid($rootScope.user.account.active,
-                        Ref.child(tableSettings.gridDataSource), config,
-
+                var $gridData = {};
+                draw.drawGrid(
+                    $rootScope.user.account.active,
+                    Ref.child(tableSettings.gridDataSource),
+                    config,
                     function loading() {
                         $scope.gridMainOptions.api.showLoadingOverlay()
                     },
@@ -163,70 +167,73 @@ angular.module('superstockApp')
                         console.log('Firebase loaded', data);
                         //loaded data
                         $scope.gridMainOptions.api.setRowData(data);
-                        },
+                    },
                     {
+                        added: function (data, childSnapshot, id) {
+                            console.debug('Record added', childSnapshot.key, data);
+                            $gridData[childSnapshot.key] = data;
+                            utils.debounce(function() {
+                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                $scope.gridMainOptions.api.setRowData(rowData);
+                            }, 100);
+                        },
 
-                            added: function (data, childSnapshot, id) {
-                                console.debug('Record added', childSnapshot.key, data);
-                                $gridData[childSnapshot.key] = data;
-                                utils.debounce(function() {
-                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
-                                    $scope.gridMainOptions.api.setRowData(rowData);
-                                }, 100);
-                            },
+                        changed: function (data, childSnapshot, id) {
+                            /*
+                            * Data Changed Event
+                            */
+                            console.log('Record changed', childSnapshot.key, data);
+                            $gridData[childSnapshot.key] = data;
+                            utils.debounce(function() {
+                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                $scope.gridMainOptions.api.setRowData(rowData);
+                            }, 100);
+                        },
 
-                            changed: function (data, childSnapshot, id) {
-                                /*
-                                * Data Changed Event
-                                */
-                                console.log('Record changed', childSnapshot.key, data);
-                                $gridData[childSnapshot.key] = data;
-                                utils.debounce(function() {
-                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
-                                    $scope.gridMainOptions.api.setRowData(rowData);
-                                }, 100);
-                            },
+                        removed: function (oldChildSnapshot) {
+                            /*
+                            * Data Removed Event
+                            */
+                            console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
+                            delete $gridData[oldChildSnapshot.key];
+                            utils.debounce(function() {
+                                var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
+                                $scope.gridMainOptions.api.setRowData(rowData);
+                            }, 100);
+                        }
+                    }
+                )
+            })
 
-                            removed: function (oldChildSnapshot) {
-                                /*
-                                * Data Removed Event
-                                */
-                                console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
-                                delete $gridData[oldChildSnapshot.key];
-                                utils.debounce(function() {
-                                    var rowData = Object.keys($gridData).map(function(key){return $gridData[key]});
-                                    $scope.gridMainOptions.api.setRowData(rowData);
-                                }, 100);
-                            }
-                        })
-                }
+            /**
+             * Binding onclick event for symbol, display company profile & technical chart
+             */
+            $(document).ready(function () {
+                /*
+                * Graph chart click event
+                */
+                $(document).on('click', '.chart-icon', function () {
+                    $('#myModal').modal('show');
+                    $scope.stockInfo = $(this).data('symbol');
+                    $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
+                    $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
+                });
 
-                $(document).ready(function () {
-                    /*
-                    * Graph chart click event
-                    */
-                    $(document).on('click', '.chart-icon', function () {
-                        $('#myModal').modal('show');
-                        $scope.stockInfo = $(this).data('symbol');
-                        $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
-                        $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
-                    });
-
-                    /*
-                    * Company information click event
-                    */
-                    $(document).on('click', '.information-icon', function () {
-                        $('#companyModal').modal('show');
-                        var symbolVal = $(this).data('symbol');
-                        var industryVal = $(this).data('industry');
-                        $scope.companyInfo = symbolVal;
-
-                        utils.getCompanyInformation(symbolVal).then(function (data) {
-                            $scope.companyDatas = data;
-                        }).catch(function (ex) {
-
-                        });
+                /*
+                * Company information click event
+                */
+                $(document).on('click', '.information-icon', function () {
+                    $('#companyModal').modal('show');
+                    var symbolVal = $(this).data('symbol');
+                    var industryVal = $(this).data('industry');
+                    $scope.companyInfo = symbolVal;
+                    utils.getCompanyInformation(symbolVal).then(function (data) {
+                        $scope.companyDatas = data;
+                    }).catch(function (ex) {
+                        console.error('Could not load company info', ex);
                     });
                 });
             });
+
+
         }]);

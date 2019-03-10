@@ -146,6 +146,25 @@ angular.module('superstockApp')
                 }
             })
 
+            .when('/recommendation', {
+                templateUrl: 'views/recommendation.html',
+                controller: 'MainCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }],
+                    "tableSettings": function() {
+                        return {
+                            "gridDataSource": "summary_data",
+                            "defaultSort": "priceChange",
+                            "direction": "desc",
+                            "hideSymbol": true,
+                            "name": "recommendation",
+                        }
+                    },
+                }
+            })
+
             .when('/market-stats', {
                 templateUrl: 'views/market-stats.html',
                 controller: 'MarketStatsCtrl',
