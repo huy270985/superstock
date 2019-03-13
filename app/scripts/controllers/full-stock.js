@@ -9,10 +9,10 @@
  */
 angular.module('superstockApp')
     .controller('FullStockCtrl', ['$rootScope', '$scope', 'auth', '$firebaseArray',
-        '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
+        '$firebaseObject', 'Ref', 'dataProvider', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
         'link', '$gridSettings', '$tableRepository',
         function ($rootScope, $scope, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
+            $firebaseObject, Ref, dataProvider, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
             link, $gridSettings, $tableRepository) {
             $rootScope.link = link;
             $window.ga('send', 'pageview', "Đầy đủ");
@@ -408,7 +408,7 @@ angular.module('superstockApp')
                 if ($scope.gridOptions.api) {
                     $scope.gridOptions.api.setColumnDefs(columnDefs);
                     $scope.gridOptions.api.showLoadingOverlay();
-                    draw.drawGrid($rootScope.user.account.active,
+                    dataProvider.load($rootScope.user.account.active,
                         Ref.child('superstock'), config, function (data) {
                         //loading data
                     },

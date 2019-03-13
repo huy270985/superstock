@@ -6,8 +6,8 @@
 
 angular
 .module('superstockApp')
-.factory('$table', ['$tableRepository', '$gridSettings', 'draw', 'Ref', 'utils',
-    function ($tableRepository, $gridSettings, draw, Ref, utils) {
+.factory('$table', ['$tableRepository', '$gridSettings', 'utils',
+    function ($tableRepository, $gridSettings, utils) {
         return {
             create: function ($rootScope, $scope, tableSettings, uid, provideData) {
 
@@ -55,6 +55,8 @@ angular
                     }
                 };
 
+                var $gridData = {};
+
                 var gridDiv = document.querySelector('#grid-market-options');
                 if (gridDiv) {
                     $scope.gridMarketOptions = $gridSettings.getGridMarketOptions();
@@ -79,8 +81,8 @@ angular
                     });
                 }
 
-                $tableRepository.loadColSettings(uid, tableSettings.name)
-                    .then(function (colSettings) {
+                return {
+                    setColSettings: function (colSettings) {
                         var columnDefs = colSettings.map(function (colSetting) {
                             //Setup column data
                             var def = {
@@ -113,14 +115,10 @@ angular
                         if ($scope.gridMainOptions.api) {
                             $scope.gridMainOptions.api.setColumnDefs(columnDefs);
                         }
+                    },
 
-                        return colSettings;
-                    })
-                    .then(function (colSettings) {
-                        /*
-                        * Get data from server and render to Grid
-                        */
-                        var config = {
+                    getHeaderConfig: function (colSettings) {
+                        return {
                             idLabel: 'Mã',
                             labelList: colSettings.map(function (setting) {
                                 return {
@@ -129,53 +127,150 @@ angular
                                 }
                             })
                         }
-                        var $gridData = {};
+                    },
 
-                        provideData(config, {
-                            loading: function () {
-                                $scope.gridMainOptions.api.showLoadingOverlay()
-                            },
-                            loaded: function (data) {
-                                console.log('Firebase loaded', data);
-                                //loaded data
-                                $scope.gridMainOptions.api.setRowData(data);
-                            },
-                            changes: {
-                                added: function (data, childSnapshot, id) {
-                                    console.debug('Record added', childSnapshot.key, data);
-                                    $gridData[childSnapshot.key] = data;
-                                    utils.debounce(function () {
-                                        var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
-                                        $scope.gridMainOptions.api.setRowData(rowData);
-                                    }, 100);
-                                },
+                    loaded: function (data) {
+                        console.log('Firebase loaded', data);
+                        //loaded data
+                        $scope.gridMainOptions.api.setRowData(data);
+                    },
 
-                                changed: function (data, childSnapshot, id) {
-                                    /*
-                                    * Data Changed Event
-                                    */
-                                    console.log('Record changed', childSnapshot.key, data);
-                                    $gridData[childSnapshot.key] = data;
-                                    utils.debounce(function () {
-                                        var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
-                                        $scope.gridMainOptions.api.setRowData(rowData);
-                                    }, 100);
-                                },
+                    loading: function () {
+                        $scope.gridMainOptions.api.showLoadingOverlay()
+                    },
 
-                                removed: function (oldChildSnapshot) {
-                                    /*
-                                    * Data Removed Event
-                                    */
-                                    console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
-                                    delete $gridData[oldChildSnapshot.key];
-                                    utils.debounce(function () {
-                                        var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
-                                        $scope.gridMainOptions.api.setRowData(rowData);
-                                    }, 100);
-                                }
-                            }
-                        });
-                    })
+                    added: function (data, childSnapshot, id) {
+                        console.debug('Record added', childSnapshot.key, data);
+                        $gridData[childSnapshot.key] = data;
+                        utils.debounce(function () {
+                            var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                            $scope.gridMainOptions.api.setRowData(rowData);
+                        }, 100);
+                    },
+
+                    changed: function (data, childSnapshot, id) {
+                        /*
+                        * Data Changed Event
+                        */
+                        console.log('Record changed', childSnapshot.key, data);
+                        $gridData[childSnapshot.key] = data;
+                        utils.debounce(function () {
+                            var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                            $scope.gridMainOptions.api.setRowData(rowData);
+                        }, 100);
+                    },
+
+                    removed: function (oldChildSnapshot) {
+                        /*
+                        * Data Removed Event
+                        */
+                        console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
+                        delete $gridData[oldChildSnapshot.key];
+                        utils.debounce(function () {
+                            var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                            $scope.gridMainOptions.api.setRowData(rowData);
+                        }, 100);
+                    },
+
+                }
+
+                // $tableRepository.loadColSettings(uid, tableSettings.name)
+                //     .then(function (colSettings) {
+                //         var columnDefs = colSettings.map(function (colSetting) {
+                //             //Setup column data
+                //             var def = {
+                //                 field: colSetting.field, //field name
+                //                 width: colSetting.width, //column width
+                //                 headerName: colSetting.title, //column title
+                //                 cellClass: colSetting.isNumber ? 'ui-cell-align-right' : 'ui-cell-align-left',
+                //                 enableTooltip: true,
+                //                 tooltipField: colSetting.field, //show tolltip
+                //                 cellRenderer: function (params) { return $gridSettings.cellRenderer(colSetting, params) },
+                //                 headerCellTemplate: $gridSettings.headerCellTemplate,
+                //                 sort: colSetting.field == tableSettings.defaultSort ? tableSettings.direction : undefined,
+                //                 cellFilter: colSetting.isNumber ? 'number' : 'string',
+                //                 pinned: colSetting.field == 'symbol' ? 'left' : colSetting.pinned,
+                //                 suppressSorting: colSetting.field == 'sellSignal',
+                //             };
+
+                //             def.cellClass = function (params) {
+                //                 // Get cell style
+                //                 var selectedSyle = '';
+                //                 if (params.data.symbol == $rootScope.mainSelected)
+                //                     selectedSyle = $rootScope.mainSelected;
+                //                 return utils.getCellClassSummary(params, colSetting, selectedSyle);
+                //             }
+                //             return def;
+                //         })
+
+                //         $rootScope.filters = columnDefs;
+
+                //         if ($scope.gridMainOptions.api) {
+                //             $scope.gridMainOptions.api.setColumnDefs(columnDefs);
+                //         }
+
+                //         return colSettings;
+                //     })
+                //     .then(function (colSettings) {
+                //         /*
+                //         * Get data from server and render to Grid
+                //         */
+                //         var config = {
+                //             idLabel: 'Mã',
+                //             labelList: colSettings.map(function (setting) {
+                //                 return {
+                //                     fieldName: setting.field,
+                //                     format: setting.format,
+                //                 }
+                //             })
+                //         }
+                //         var $gridData = {};
+
+                //         provideData(config, {
+                //             loading: function () {
+                //                 $scope.gridMainOptions.api.showLoadingOverlay()
+                //             },
+                //             loaded: function (data) {
+                //                 console.log('Firebase loaded', data);
+                //                 //loaded data
+                //                 $scope.gridMainOptions.api.setRowData(data);
+                //             },
+                //             changes: {
+                //                 added: function (data, childSnapshot, id) {
+                //                     console.debug('Record added', childSnapshot.key, data);
+                //                     $gridData[childSnapshot.key] = data;
+                //                     utils.debounce(function () {
+                //                         var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                //                         $scope.gridMainOptions.api.setRowData(rowData);
+                //                     }, 100);
+                //                 },
+
+                //                 changed: function (data, childSnapshot, id) {
+                //                     /*
+                //                     * Data Changed Event
+                //                     */
+                //                     console.log('Record changed', childSnapshot.key, data);
+                //                     $gridData[childSnapshot.key] = data;
+                //                     utils.debounce(function () {
+                //                         var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                //                         $scope.gridMainOptions.api.setRowData(rowData);
+                //                     }, 100);
+                //                 },
+
+                //                 removed: function (oldChildSnapshot) {
+                //                     /*
+                //                     * Data Removed Event
+                //                     */
+                //                     console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
+                //                     delete $gridData[oldChildSnapshot.key];
+                //                     utils.debounce(function () {
+                //                         var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                //                         $scope.gridMainOptions.api.setRowData(rowData);
+                //                     }, 100);
+                //                 }
+                //             }
+                //         });
+                //     })
             }
         }
     }]

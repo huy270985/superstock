@@ -9,10 +9,10 @@
  */
 angular.module('superstockApp')
     .controller('MainCtrl', ['$rootScope', '$scope', '$q', 'auth', '$firebaseArray',
-        '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
+        '$firebaseObject', 'Ref', 'dataProvider', 'uiGridConstants', '$sce', 'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
         'tableSettings', '$tableRepository', '$gridSettings', '$table',
         function ($rootScope, $scope, $q, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
+            $firebaseObject, Ref, dataProvider, uiGridConstants, $sce, utils, currentAuth, $window, $compile, $filter, $timeout,
             tableSettings, $tableRepository, $gridSettings, $table) {
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "Tổng hợp");
@@ -47,7 +47,36 @@ angular.module('superstockApp')
                 );
             }
 
-            $table.create($rootScope, $scope, tableSettings, uid, provideData);
+            const table = $table.create($rootScope, $scope, tableSettings, uid, provideData);
+
+            $tableRepository.loadColSettings(uid, tableSettings.name).then(function (colSettings) {
+                table.setColSettings(colSettings);
+                dataProvider.load(
+                    $rootScope.user.account.active,
+                    Ref.child(tableSettings.gridDataSource),
+                    table.getHeaderConfig(colSettings),
+                    function loading() {
+                        table.loading();
+                    },
+
+                    function loaded(data) {
+                        table.loaded(data);
+                    },
+
+                    {
+                        added: function (data, childSnapshot, id) {
+                            table.added(data, childSnapshot, id);
+                        },
+                        changed: function (data, childSnapshot, id) {
+                            table.changed(data, childSnapshot, id);
+                        },
+                        removed: function (oldSnapshot) {
+                            table.remove(oldSnapshot);
+                        }
+                    }
+                );
+
+            });
 
             /**
              * Binding onclick event for symbol, display company profile & technical chart

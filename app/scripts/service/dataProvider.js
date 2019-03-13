@@ -1,7 +1,7 @@
 'use strict';
 angular
     .module('superstockApp')
-    .factory('draw', function ($firebaseArray) {
+    .factory('dataProvider', function ($firebaseArray) {
 
         function convertSnapshot(config, key, value) {
             var dataConvert = {};
@@ -38,7 +38,7 @@ angular
             return obj;
         }
 
-        var drawGrid = function (isActive, Ref, config, loading, loaded, event) {
+        var load = function (isActive, Ref, config, loading, loaded, event) {
             var data = $firebaseArray(Ref);
             loading();
             data.$loaded(function () {
@@ -101,6 +101,6 @@ angular
         }
 
         return {
-            drawGrid: drawGrid
+            load: load
         }
     })
