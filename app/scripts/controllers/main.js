@@ -40,13 +40,13 @@ angular.module('superstockApp')
 
                     {
                         added: function (data, childSnapshot, id) {
-                            table.added(data, childSnapshot, id);
+                            table.added(childSnapshot.key, data);
                         },
                         changed: function (data, childSnapshot, id) {
-                            table.changed(data, childSnapshot, id);
+                            table.changed(childSnapshot.key, data);
                         },
                         removed: function (oldSnapshot) {
-                            table.remove(oldSnapshot);
+                            table.remove(oldSnapshot.key);
                         }
                     }
                 );

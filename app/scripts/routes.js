@@ -148,7 +148,7 @@ angular.module('superstockApp')
 
             .when('/recommendation', {
                 templateUrl: 'views/recommendation.html',
-                controller: 'MainCtrl',
+                controller: 'RecommendationCtrl',
                 resolve: {
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();

@@ -139,33 +139,33 @@ angular
                         $scope.gridMainOptions.api.showLoadingOverlay()
                     },
 
-                    added: function (data, childSnapshot, id) {
+                    added: function (key, data) {
                         console.debug('Record added', childSnapshot.key, data);
-                        $gridData[childSnapshot.key] = data;
+                        $gridData[key] = data;
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
                             $scope.gridMainOptions.api.setRowData(rowData);
                         }, 100);
                     },
 
-                    changed: function (data, childSnapshot, id) {
+                    changed: function (key, data) {
                         /*
                         * Data Changed Event
                         */
                         console.log('Record changed', childSnapshot.key, data);
-                        $gridData[childSnapshot.key] = data;
+                        $gridData[key] = data;
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
                             $scope.gridMainOptions.api.setRowData(rowData);
                         }, 100);
                     },
 
-                    removed: function (oldChildSnapshot) {
+                    removed: function (key) {
                         /*
                         * Data Removed Event
                         */
-                        console.log('Record removed', oldChildSnapshot.key, oldChildSnapshot);
-                        delete $gridData[oldChildSnapshot.key];
+                        console.log('Record removed', key, $griData[key]);
+                        delete $gridData[key];
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
                             $scope.gridMainOptions.api.setRowData(rowData);
