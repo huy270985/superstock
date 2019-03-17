@@ -26,6 +26,7 @@ angular.module('superstockApp')
 
             $tableRepository.loadColSettings(uid, tableSettings.name).then(function (colSettings) {
                 table.setColSettings(colSettings);
+                console.log('ColSettings', colSettings);
                 dataProvider.load(
                     $rootScope.user.account.active,
                     Ref.child(tableSettings.gridDataSource),

@@ -1,7 +1,11 @@
 /**
  * This is the main table factory
  *
- * It may be stupid but let's see if this works
+ * It may be stupid but let's see if this works.
+ *
+ * The main grid is initlized directly via directive, e.g.:
+*          <div ng-grid="gridMainOptions" ag-grid="gridMainOptions" class="ag-grid-custom ag-fresh" style="width: calc(100% - 70px);"></div>
+ * After this, the setting can be accessed via $scope.gridMainOptions
  */
 
 angular
@@ -9,6 +13,14 @@ angular
 .factory('$table', ['$tableRepository', '$gridSettings', 'utils',
     function ($tableRepository, $gridSettings, utils) {
         return {
+            /**
+             *
+             */
+            ready: function (handler) {
+                $scope.gridMainOptions.api.onGridReady(function () {
+                    handler();
+                })
+            },
             create: function ($rootScope, $scope, tableSettings, uid) {
 
                 //Setup ag-grid
@@ -140,7 +152,7 @@ angular
                     },
 
                     added: function (key, data) {
-                        console.debug('Record added', childSnapshot.key, data);
+                        console.debug('Record added', key, data);
                         $gridData[key] = data;
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
@@ -152,7 +164,7 @@ angular
                         /*
                         * Data Changed Event
                         */
-                        console.log('Record changed', childSnapshot.key, data);
+                        console.log('Record changed', key, data);
                         $gridData[key] = data;
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
