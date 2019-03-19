@@ -15,11 +15,12 @@ angular
                 * Get market summary data
                 */
                 syncMarketSummary: function($scope) {
-                    utils.getMarketSummary().then(function (data) {
-                        $scope.headerTitle = data;
-                    }).catch(function (ex) {
-                        console.error('Exception when getMarketSummary')
-                    });
+                    $scope.headerTitle = { content: "XEM CÁCH DÙNG BẢNG GIÁ TẠI: HTTP://HUNGCANSLIM.COM/BANGGIA <br>MỌI QUY TẮC ĐỀU LÀ VÔ NGHĨA, NẾU BẠN KHÔNG TUÂN THỦ!" }
+                    // utils.getMarketSummary().then(function (data) {
+                    //     $scope.headerTitle = data;
+                    // }).catch(function (ex) {
+                    //     console.error('Exception when getMarketSummary')
+                    // });
                 },
 
                 /*
