@@ -28,10 +28,59 @@ angular
                         // $firebaseObject(Ref.child('sell_signals/' + symbols[i])).$bindTo($scope, 'data.' + symbols[i]).then(function () {
                         //     console.log('Changed', $scope.data);
                         // });
-
                     }
+                },
+
+                colSettings: function () {
+                    /**
+                     * List of columns to display, we store it here so it's easier to migrate
+                     * No more dependency on Firebase
+                     */
+                    return [
+                        {
+                            field: "symbol",
+                            format: "",
+                            isNumber: false,
+                            title: "Mã",
+                            type: "",
+                            width: 120,
+                        },
+                        {
+                            field: "close",
+                            format: "number:3:3:280",
+                            isNumber: true,
+                            title: "Giá",
+                            type: "number",
+                            width: 100,
+                        },
+                        {
+                            field: "take_profit",
+                            format: "number:3:3:280",
+                            isNumber: true,
+                            title: "Bán \nchặn lãi",
+                            type: "number",
+                            width: 100,
+                        },
+                        {
+                            field: "two_down",
+                            format: "number:3:3:280",
+                            isNumber: true,
+                            title: "Giảm \nliên tục",
+                            type: "number",
+                            width: 100,
+                        },
+                        {
+                            field: "broken_trend",
+                            format: "number:3:3:280",
+                            isNumber: true,
+                            title: "Gãy trend",
+                            type: "number",
+                            width: 100,
+                        },
+                    ];
 
                 }
+
             }
         }
     ])

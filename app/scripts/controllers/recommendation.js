@@ -25,27 +25,8 @@ angular.module('superstockApp')
             common.clickSymbolPopupDetails($scope);
 
             const table = $table.create($rootScope, $scope, tableSettings, uid);
-
-            var colSettings = [
-                {
-                    field: "symbol",
-                    format: "",
-                    isNumber: false,
-                    title: "Mã",
-                    type: "",
-                    width: 120,
-                },
-                {
-                    field: "break_down",
-                    format: "number:3:3:280",
-                    isNumber: true,
-                    title: "Gãy trend",
-                    type: "number",
-                    width: 100,
-                }
-            ];
-
             setTimeout(function () {
+                var colSettings = sellDataProvider.colSettings();
                 table.setColSettings(colSettings);
                 sellDataProvider.load({
                     'changed': function (key, data) {
@@ -55,6 +36,6 @@ angular.module('superstockApp')
             // why we need a timeout? Because ag-grid is not ready right way.
             // there is a gridReady event to know when the grid finishes initilization
             // but I don't know how to yet
-            }, 1000);
+            }, 200);
 
         }]);
