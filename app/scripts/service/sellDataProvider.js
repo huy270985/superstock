@@ -4,30 +4,48 @@ angular
     .factory('sellDataProvider', [
         '$firebaseObject', 'Ref', '$q',
         function ($firebaseObject, Ref, $q) {
-            return {
-                load: function (handler) {
-                    var symbols = ['AAA', 'BBB']
-                    var sMap = {}
-                    for (var i in symbols) {
-                        // this helps us know when to update the table
-                        sMap[symbols[i]] = $firebaseObject(Ref.child('sell_signals/' + symbols[i]));
-                        sMap[symbols[i]].$watch(function (event) {
-                            // we must create a whole object data here
-                            console.log("Data changed", event, sMap[event.key]);
-                            if (sMap[event.key].data) {
-                                var snapshot = sMap[event.key].data
-                                snapshot.symbol = event.key
-                                handler['changed'] && handler['changed'](event.key, snapshot)
-                            }
-                            else { // this is the only way we know the node itself is destroyed
-                                console.log('The node it self is destroyed', event.key)
-                            }
-                        })
 
-                        // this provide binding, so updating $scope will push change to database
-                        // $firebaseObject(Ref.child('sell_signals/' + symbols[i])).$bindTo($scope, 'data.' + symbols[i]).then(function () {
-                        //     console.log('Changed', $scope.data);
-                        // });
+            /**
+             * Unwatch dict of $firebaseObject
+             */
+            var subscribed = {};
+            return {
+                /**
+                 * Watching list of symbol for changes of sell signal
+                 * Will unwatch previous call
+                 * @param {list of string} symbols
+                 * @param {{'changed': func()}} handler
+                 */
+                watch: function (handler, symbols) {
+                    // unsubscribe previous symbol
+                    for (var symbol in subscribed) {
+                        subscribed[symbol].unwatch();
+                        console.debug("Unsubscribed ", symbol);
+                        handler['removed'] && handler['removed'](symbol)
+                    }
+                    subscribed = {};
+                    for (var i in symbols) {
+                        var symbol = symbols[i];
+
+                        var unwatch = function watch(symbol) {
+                            subscribed[symbol] = {};
+                            var obj = $firebaseObject(Ref.child('sell_signals/' + symbol));
+                            return obj.$watch(function (event) {
+                                console.log("Data changed", event, obj, unwatch);
+                                if (obj.data) {
+                                    var snapshot = obj.data
+                                    snapshot.symbol = event.key
+                                    handler['changed'] && handler['changed'](event.key, snapshot)
+                                }
+                                else { // this is the only way we know the node itself is destroyed
+                                    console.log('The node it self is destroyed', event.key)
+                                }
+                            });
+                        }(symbol);
+
+                        if (unwatch != undefined) {
+                            subscribed[symbol].unwatch = unwatch;
+                        }
                     }
                 },
 

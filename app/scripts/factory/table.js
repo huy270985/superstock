@@ -176,7 +176,7 @@ angular
                         /*
                         * Data Removed Event
                         */
-                        console.log('Record removed', key, $griData[key]);
+                        console.log('Record removed', key, $gridData[key]);
                         delete $gridData[key];
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
