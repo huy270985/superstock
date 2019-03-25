@@ -10,8 +10,8 @@
 
 angular
 .module('superstockApp')
-.factory('$table', ['$tableRepository', '$gridSettings', 'utils',
-    function ($tableRepository, $gridSettings, utils) {
+.factory('$table', ['$tableRepository', '$gridSettings', 'utils', '$window',
+    function ($tableRepository, $gridSettings, utils, $window) {
         return {
             /**
              *
@@ -37,7 +37,12 @@ angular
                     sortingOrder: ['desc', 'asc'],
                     //filter changed event
                     // see: https://www.ag-grid.com/javascript-grid-events/
+                    onGridReady: function (event) {
+                        console.log("onGridReady", event)
+                    },
+
                     onColumnPinned: function (event) {
+                        console.log("onColumnPinned", event);
                         var column = event.column;
                         var field = column.colDef.field;
                         var pinned = event.pinned;
@@ -64,7 +69,16 @@ angular
                                 });
                             }
                         }
-                    }
+                    },
+                    onRowEditingStarted: function (event) {
+                        console.log("onRowEditingStarted", event);
+                    },
+                    onCellEditingStopped: function (event) {
+                        console.log("cellEditingStopped", event);
+                    },
+                    onCellEditingStarted: function(event) {
+                        console.log('cellEditingStarted', event);
+                    },
                 };
 
                 var $gridData = {};
@@ -104,13 +118,17 @@ angular
                                 cellClass: colSetting.isNumber ? 'ui-cell-align-right' : 'ui-cell-align-left',
                                 enableTooltip: true,
                                 tooltipField: colSetting.field, //show tolltip
-                                cellRenderer: function (params) { return $gridSettings.cellRenderer(colSetting, params) },
                                 headerCellTemplate: $gridSettings.headerCellTemplate,
                                 sort: colSetting.field == tableSettings.defaultSort ? tableSettings.direction : undefined,
                                 cellFilter: colSetting.isNumber ? 'number' : 'string',
                                 pinned: colSetting.field == 'symbol' ? 'left' : colSetting.pinned,
                                 suppressSorting: colSetting.field == 'sellSignal',
+                                editable: colSetting.editable,
                             };
+
+                            if (!colSetting.editable) {
+                                def.cellRenderer = function (params) { return $gridSettings.cellRenderer(colSetting, params) }
+                            }
 
                             def.cellClass = function (params) {
                                 // Get cell style
