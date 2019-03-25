@@ -18,6 +18,7 @@ angular
              */
             ready: function (handler) {
                 $scope.gridMainOptions.api.onGridReady(function () {
+                    console.log("Grid Ready");
                     handler();
                 })
             },
@@ -70,15 +71,10 @@ angular
                             }
                         }
                     },
-                    onRowEditingStarted: function (event) {
-                        console.log("onRowEditingStarted", event);
+                    onCellValueChanged: function (event) {
+                        console.log("onCellValueChanged", event);
                     },
-                    onCellEditingStopped: function (event) {
-                        console.log("cellEditingStopped", event);
-                    },
-                    onCellEditingStarted: function(event) {
-                        console.log('cellEditingStarted', event);
-                    },
+
                 };
 
                 var $gridData = {};

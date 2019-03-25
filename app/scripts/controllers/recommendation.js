@@ -17,7 +17,7 @@ angular.module('superstockApp')
             Ref, sellDataProvider, $window,
             tableSettings, $tableRepository, $table, common) {
             $rootScope.link = tableSettings.name;
-            $window.ga('send', 'pageview', "Tổng hợp");
+            $window.ga('send', 'pageview', "recomendation");
             var uid = auth.$getAuth().uid;
 
             common.syncMarketSummary($scope);
@@ -47,4 +47,6 @@ angular.module('superstockApp')
                 }, symbols)
             }
 
+            $scope.personalStocks = "VND,SSI";
+            $scope.filterPersonalStocks();
         }]);

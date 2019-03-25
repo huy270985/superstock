@@ -82,6 +82,9 @@ angular
                 var field = params.colDef.field;
                 if (field == 'symbol')
                     console.debug('Render cell', field, params.data);
+                if (colSetting.editable) {
+                    return null;
+                }
                 switch(field) {
                     case 'symbol2':
                         /*
