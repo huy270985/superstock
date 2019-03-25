@@ -24,17 +24,21 @@ angular.module('superstockApp')
             common.syncTradingDate($scope);
             common.clickSymbolPopupDetails($scope);
 
-            const table = $table.create($rootScope, $scope, tableSettings, uid);
+            const table = $table.create($rootScope, $scope, tableSettings, uid, {
+                onGridReady: function () {
+                    var colSettings = sellDataProvider.colSettings();
+                    table.setColSettings(colSettings);
+                    $scope.personalStocks = "VND,SSI";
+                    $scope.filterPersonalStocks();
+                },
 
-            setTimeout(function () {
-                var colSettings = sellDataProvider.colSettings();
-                table.setColSettings(colSettings);
-            // why we need a timeout? Because ag-grid is not ready right way.
-            // there is a gridReady event to know when the grid finishes initilization
-            // but I don't know how to yet
-            }, 200);
+                onCellValueChanged: function (event) {
+                    console.log("onCellValueChanged", event);
+                },
 
-            $scope.filterPersonalStocks = function() {
+            });
+
+            $scope.filterPersonalStocks = function () {
                 var symbols = $scope.personalStocks.split(",");
                 sellDataProvider.watch({
                     'changed': function (key, data) {
@@ -44,9 +48,9 @@ angular.module('superstockApp')
                     'removed': function (key) {
                         table.removed(key);
                     }
-                }, symbols)
+                }, symbols);
+
+                table.changed('XXX', {})
             }
 
-            $scope.personalStocks = "VND,SSI";
-            $scope.filterPersonalStocks();
         }]);

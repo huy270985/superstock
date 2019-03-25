@@ -22,7 +22,7 @@ angular
                     handler();
                 })
             },
-            create: function ($rootScope, $scope, tableSettings, uid) {
+            create: function ($rootScope, $scope, tableSettings, uid, eventHandlers) {
 
                 //Setup ag-grid
                 $scope.gridMainOptions = {
@@ -39,7 +39,7 @@ angular
                     //filter changed event
                     // see: https://www.ag-grid.com/javascript-grid-events/
                     onGridReady: function (event) {
-                        console.log("onGridReady", event)
+                        "onGridReady" in eventHandlers && eventHandlers.onGridReady(event);
                     },
 
                     onColumnPinned: function (event) {
@@ -72,7 +72,7 @@ angular
                         }
                     },
                     onCellValueChanged: function (event) {
-                        console.log("onCellValueChanged", event);
+                        "onCellValueChanged" in eventHandlers && eventHandlers.onCellValueChanged(event);
                     },
 
                 };
@@ -141,6 +141,10 @@ angular
                         if ($scope.gridMainOptions.api) {
                             $scope.gridMainOptions.api.setColumnDefs(columnDefs);
                         }
+                    },
+
+                    addNewRow: function () {
+                        $scope.gridMainOptions.api.updateRowData({ add: {}})
                     },
 
                     getHeaderConfig: function (colSettings) {

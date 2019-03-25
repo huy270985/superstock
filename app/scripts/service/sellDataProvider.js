@@ -62,6 +62,7 @@ angular
                             title: "Mã",
                             type: "",
                             width: 120,
+                            editable: true,
                         },
                         {
                             field: "quantity",
