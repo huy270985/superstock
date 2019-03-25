@@ -143,10 +143,6 @@ angular
                         }
                     },
 
-                    addNewRow: function () {
-                        $scope.gridMainOptions.api.updateRowData({ add: {}})
-                    },
-
                     getHeaderConfig: function (colSettings) {
                         return {
                             idLabel: 'Mã',

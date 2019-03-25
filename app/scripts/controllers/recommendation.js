@@ -50,7 +50,7 @@ angular.module('superstockApp')
                     }
                 }, symbols);
 
-                table.changed('XXX', {})
+                table.changed(Date.now(), {})
             }
 
         }]);
