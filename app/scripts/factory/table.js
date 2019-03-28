@@ -105,6 +105,15 @@ angular
                 }
 
                 return {
+                    getData: function () {
+                        return $gridData;
+                    },
+
+                    refresh: function () {
+                        var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
+                        $scope.gridMainOptions.api.setRowData(rowData);
+                    },
+
                     setColSettings: function (colSettings) {
                         var columnDefs = colSettings.map(function (colSetting) {
                             //Setup column data

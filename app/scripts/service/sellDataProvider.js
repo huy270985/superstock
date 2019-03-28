@@ -91,7 +91,7 @@ angular
                             isNumber: true,
                             title: "KL",
                             type: "number",
-                            width: 100,
+                            width: 60,
                             editable: true,
                         },
                         {
@@ -100,7 +100,7 @@ angular
                             isNumber: true,
                             title: "Giá vốn",
                             type: "number",
-                            width: 100,
+                            width: 90,
                             editable: true,
                         },
                         {
@@ -109,16 +109,24 @@ angular
                             isNumber: true,
                             title: "Giá",
                             type: "number",
-                            width: 100,
+                            width: 90,
                         },
 
+                        {
+                            field: "weight",
+                            format: "percent:3:3:280",
+                            isNumber: true,
+                            title: "% \nphân bổ",
+                            type: "percent",
+                            width: 90,
+                        },
                         {
                             field: "pnl",
                             format: "percent:3:3:280",
                             isNumber: true,
                             title: "Lỗ lãi",
                             type: "percent",
-                            width: 100,
+                            width: 90,
                         },
                         {
                             field: "cutLoss",
@@ -126,7 +134,7 @@ angular
                             isNumber: true,
                             title: "Bán \ncắt lỗ",
                             type: "number",
-                            width: 100,
+                            width: 90,
                         },
                         {
                             field: "take_profit",
@@ -134,7 +142,7 @@ angular
                             isNumber: true,
                             title: "Bán \nchặn lãi",
                             type: "number",
-                            width: 100,
+                            width: 90,
                         },
                         {
                             field: "two_down",
@@ -142,7 +150,7 @@ angular
                             isNumber: true,
                             title: "Giảm \nliên tục",
                             type: "number",
-                            width: 100,
+                            width: 90,
                         },
                         {
                             field: "broken_trend",
@@ -150,7 +158,7 @@ angular
                             isNumber: true,
                             title: "Gãy trend",
                             type: "number",
-                            width: 100,
+                            width: 90,
                         },
                         {
                             field: "delete",

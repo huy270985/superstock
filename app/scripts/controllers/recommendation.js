@@ -24,9 +24,19 @@ angular.module('superstockApp')
             common.syncTradingDate($scope);
             common.clickSymbolPopupDetails($scope);
 
-            function updateRecord(data) {
+            function recomputeRecord(data) {
                 data.cutLoss = data.costPrice * 0.96;
                 data.pnl = (data.close - data.costPrice) / data.costPrice * 100;
+            }
+
+            function updatePortfolioDistribution(portfolio) {
+                var total = Object.keys(portfolio)
+                    .map(function (key) { return portfolio[key].quantity * portfolio[key].close })
+                    .reduce(function (prev, curr) { return prev + curr });
+                for (var key in portfolio) {
+                    var value = portfolio[key].quantity * portfolio[key].close
+                    portfolio[key].weight = value / total * 100
+                }
             }
 
             const table = $table.create($rootScope, $scope, tableSettings, uid, {
@@ -49,19 +59,22 @@ angular.module('superstockApp')
                         sellDataProvider.subscribe({
                             changed: function (_, newData) {
                                 // id of the row is independent from symbol now
-                                newData.id = data.id;
-                                newData.quantity = +data.quantity || 0;
-                                newData.costPrice = +data.costPrice || 0;
-                                updateRecord(newData);
-                                table.changed(newData.id, newData);
+                                data.close = newData.close;
+                                data.take_profit = newData.take_profit;
+                                data.two_down = newData.two_down;
+                                data.broken_trend = newData.broken_trend;
+                                recomputeRecord(data);
+                                updatePortfolioDistribution(table.getData());
+                                table.refresh();
                             }
                         }, newSymbol)
                     }
 
                     if (event.colDef.field == "costPrice") {
                         var data = event.data;
-                        updateRecord(data);
-                        table.changed(data.id, data);
+                        recomputeRecord(data);
+                        updatePortfolioDistribution(table.getData());
+                        table.refresh();
                     }
                 },
 
