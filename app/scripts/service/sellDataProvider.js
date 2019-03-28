@@ -114,6 +114,10 @@ angular
                             type: "number",
                             width: 100,
                         },
+                        {
+                            field: "delete",
+                            width: 20,
+                        }
                     ];
 
                 }

@@ -36,6 +36,7 @@ angular
                     headerHeight: 50,
                     overlayLoadingTemplate: '<span class="ag-overlay-loading-center">Đang xử lý dữ liệu...</span>',
                     sortingOrder: ['desc', 'asc'],
+                    angularCompileRows: true,
                     //filter changed event
                     // see: https://www.ag-grid.com/javascript-grid-events/
                     onGridReady: function (event) {
@@ -110,7 +111,7 @@ angular
                             var def = {
                                 field: colSetting.field, //field name
                                 width: colSetting.width, //column width
-                                headerName: colSetting.title, //column title
+                                headerName: colSetting.title || "", //column title
                                 cellClass: colSetting.isNumber ? 'ui-cell-align-right' : 'ui-cell-align-left',
                                 enableTooltip: true,
                                 tooltipField: colSetting.field, //show tolltip
@@ -124,6 +125,12 @@ angular
 
                             if (!colSetting.editable) {
                                 def.cellRenderer = function (params) { return $gridSettings.cellRenderer(colSetting, params) }
+                            }
+
+                            if (colSetting.field == "delete") {
+                                def.cellRenderer = function (params) {
+                                    return '<i class="icon-trash cell-btn-remove" style="cursor:pointer" title="Delete this record" ng-click="deleteRecord(data,'+params.node.id+')">'
+                                }
                             }
 
                             def.cellClass = function (params) {
@@ -167,6 +174,7 @@ angular
 
                     added: function (key, data) {
                         console.debug('Record added', key, data);
+                        data.id = key;
                         $gridData[key] = data;
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });

@@ -29,7 +29,7 @@ angular.module('superstockApp')
                     var colSettings = sellDataProvider.colSettings();
                     table.setColSettings(colSettings);
                     $scope.personalStocks = "VND,SSI";
-                    $scope.filterPersonalStocks();
+                    $scope.newRow();
                 },
 
                 onCellValueChanged: function (event) {
@@ -38,19 +38,15 @@ angular.module('superstockApp')
 
             });
 
-            $scope.filterPersonalStocks = function () {
-                var symbols = $scope.personalStocks.split(",");
-                sellDataProvider.watch({
-                    'changed': function (key, data) {
-                        console.log("update row", key, data)
-                        table.changed(key, data)
-                    },
-                    'removed': function (key) {
-                        table.removed(key);
-                    }
-                }, symbols);
+            $scope.newRow = function () {
+                var id = table.added(Date.now(), {})
+            }
 
-                table.changed(Date.now(), {})
+            $scope.deleteRecord = function (data, rowIndex) {
+                console.debug("deleteRecord", data, rowIndex);
+                table.removed(data.id);
+                // $scope.gridMainOptions.api.rowData.splice(selected.rowIndex, 1);
+                // $scope.gridMainOptions.api.setRowData($scope.grid.rowData)
             }
 
         }]);
