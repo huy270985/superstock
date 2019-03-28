@@ -24,6 +24,11 @@ angular.module('superstockApp')
             common.syncTradingDate($scope);
             common.clickSymbolPopupDetails($scope);
 
+            function updateRecord(data) {
+                data.cutLoss = data.costPrice * 0.96;
+                data.pnl = (data.close - data.costPrice) / data.costPrice * 100;
+            }
+
             const table = $table.create($rootScope, $scope, tableSettings, uid, {
                 onGridReady: function () {
                     var colSettings = sellDataProvider.colSettings();
@@ -34,6 +39,30 @@ angular.module('superstockApp')
 
                 onCellValueChanged: function (event) {
                     console.log("onCellValueChanged", event);
+                    var data = event.data;
+
+                    if (event.colDef.field == "symbol") {
+                        var newSymbol = event.newValue;
+                        var oldSymbol = event.oldValue;
+                        // subscribe
+                        sellDataProvider.unsubscribe(oldSymbol);
+                        sellDataProvider.subscribe({
+                            changed: function (_, newData) {
+                                // id of the row is independent from symbol now
+                                newData.id = data.id;
+                                newData.quantity = +data.quantity || 0;
+                                newData.costPrice = +data.costPrice || 0;
+                                updateRecord(newData);
+                                table.changed(newData.id, newData);
+                            }
+                        }, newSymbol)
+                    }
+
+                    if (event.colDef.field == "costPrice") {
+                        var data = event.data;
+                        updateRecord(data);
+                        table.changed(data.id, data);
+                    }
                 },
 
             });
