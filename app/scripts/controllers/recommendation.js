@@ -12,16 +12,17 @@
 angular.module('superstockApp')
     .controller('RecommendationCtrl', ['$rootScope', '$scope', 'auth',
         'Ref', 'sellDataProvider', '$window',
-        'tableSettings', '$tableRepository', '$table', 'common',
+        'tableSettings', '$tableRepository', '$table', 'common', 'utils',
         function ($rootScope, $scope, auth,
             Ref, sellDataProvider, $window,
-            tableSettings, $tableRepository, $table, common) {
+            tableSettings, $tableRepository, $table, common, utils) {
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "recomendation");
             var uid = auth.$getAuth().uid;
             common.syncMarketSummary($scope);
             common.syncTradingDate($scope);
             common.clickSymbolPopupDetails($scope);
+
 
             function recomputeRecord(data) {
                 data.cutLoss = data.costPrice * 0.96;
@@ -30,7 +31,7 @@ angular.module('superstockApp')
 
             function updatePortfolioDistribution(portfolio) {
                 var total = Object.keys(portfolio)
-                    .map(function (key) { return portfolio[key].quantity * portfolio[key].close })
+                    .map(function (key) { return portfolio[key].quantity * portfolio[key].close || 0})
                     .reduce(function (prev, curr) { return prev + curr });
                 for (var key in portfolio) {
                     var value = portfolio[key].quantity * portfolio[key].close
@@ -43,7 +44,9 @@ angular.module('superstockApp')
                     var colSettings = sellDataProvider.colSettings();
                     table.setColSettings(colSettings);
                     $scope.personalStocks = "VND,SSI";
-                    $scope.newRow();
+                    for (var i = 0; i < 20; i++) {
+                        $scope.newRow();
+                    }
                 },
 
                 onCellValueChanged: function (event) {
@@ -51,7 +54,8 @@ angular.module('superstockApp')
                     var data = event.data;
 
                     if (event.colDef.field == "symbol") {
-                        var newSymbol = event.newValue;
+                        var newSymbol = event.newValue.toUpperCase();
+                        data.symbol = newSymbol;
                         var oldSymbol = event.oldValue;
                         // subscribe
                         sellDataProvider.unsubscribe(oldSymbol);
@@ -64,16 +68,20 @@ angular.module('superstockApp')
                                 data.broken_trend = newData.broken_trend;
                                 recomputeRecord(data);
                                 updatePortfolioDistribution(table.getData());
-                                table.refresh();
+                                utils.debounce(function () {
+                                    table.refresh();
+                                }, 200)
                             }
                         }, newSymbol)
                     }
 
-                    if (event.colDef.field == "costPrice") {
+                    if (event.colDef.field == "costPrice" || event.colDef.field == "quantity") {
                         var data = event.data;
                         recomputeRecord(data);
                         updatePortfolioDistribution(table.getData());
-                        table.refresh();
+                        utils.debounce(function () {
+                            table.refresh();
+                        }, 200)
                     }
                 },
 
