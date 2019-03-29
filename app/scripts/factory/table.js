@@ -40,7 +40,7 @@ angular
                     //filter changed event
                     // see: https://www.ag-grid.com/javascript-grid-events/
                     onGridReady: function (event) {
-                        "onGridReady" in eventHandlers && eventHandlers.onGridReady(event);
+                        eventHandlers && "onGridReady" in eventHandlers && eventHandlers.onGridReady(event);
                     },
 
                     onColumnPinned: function (event) {

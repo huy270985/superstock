@@ -47,7 +47,7 @@ angular.module('superstockApp')
                             table.changed(childSnapshot.key, data);
                         },
                         removed: function (oldSnapshot) {
-                            table.remove(oldSnapshot.key);
+                            table.removed(oldSnapshot.key);
                         }
                     }
                 );

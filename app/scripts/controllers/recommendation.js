@@ -19,7 +19,6 @@ angular.module('superstockApp')
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "recomendation");
             var uid = auth.$getAuth().uid;
-
             common.syncMarketSummary($scope);
             common.syncTradingDate($scope);
             common.clickSymbolPopupDetails($scope);
