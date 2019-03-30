@@ -171,9 +171,15 @@ angular
                         }
                     },
 
+                    /**
+                     * This function should only be used in the first time the data load
+                     * will clear internal data storage of this table
+                     */
                     loaded: function (data) {
-                        console.log('Firebase loaded', data);
-                        //loaded data
+                        $gridData = {};
+                        for (var i in data) {
+                            $gridData[data[i].id] = data[i];
+                        }
                         $scope.gridMainOptions.api.setRowData(data);
                     },
 

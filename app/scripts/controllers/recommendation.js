@@ -10,12 +10,14 @@
  *      Mã cp / khối lượng/ giá vốn/ % phân bổ/ % lãi lỗ/ bán cắt lỗ/bán chặn lãi/giảm liên tục/gãy xu hướng
  */
 angular.module('superstockApp')
-    .controller('RecommendationCtrl', ['$rootScope', '$scope', 'auth',
+    .controller('RecommendationCtrl', ['$rootScope', '$scope', 'auth', 'currentAuth',
         'Ref', 'sellDataProvider', '$window',
         'tableSettings', '$tableRepository', '$table', 'common', 'utils',
-        function ($rootScope, $scope, auth,
+        '$portfolioRepository',
+        function ($rootScope, $scope, auth, currentAuth,
             Ref, sellDataProvider, $window,
-            tableSettings, $tableRepository, $table, common, utils) {
+            tableSettings, $tableRepository, $table, common, utils,
+            $portfolioRepository) {
             $rootScope.link = tableSettings.name;
             $window.ga('send', 'pageview', "recomendation");
             var uid = auth.$getAuth().uid;
@@ -43,15 +45,21 @@ angular.module('superstockApp')
                 onGridReady: function () {
                     var colSettings = sellDataProvider.colSettings();
                     table.setColSettings(colSettings);
-                    $scope.personalStocks = "VND,SSI";
-                    for (var i = 0; i < 20; i++) {
-                        $scope.newRow();
-                    }
+                    $portfolioRepository.loadAll(currentAuth.uid).then(function (data) {
+                        console.log("RecommendationCtrl: User portoflio loaded", data);
+                        if (data.length === 0) {
+                            $scope.newRow();
+                        }
+                        else {
+                            table.loaded(data);
+                        }
+                    });
                 },
 
                 onCellValueChanged: function (event) {
                     console.log("onCellValueChanged", event);
                     var data = event.data;
+                    $portfolioRepository.saveEntry(currentAuth.uid, data);
 
                     if (event.colDef.field == "symbol") {
                         var newSymbol = event.newValue.toUpperCase();
@@ -93,7 +101,10 @@ angular.module('superstockApp')
 
             $scope.deleteRecord = function (data, rowIndex) {
                 console.debug("deleteRecord", data, rowIndex);
-                table.removed(data.id);
+                $portfolioRepository.deleteEntry(currentAuth.uid, data.id)
+                    .then(function () {
+                        table.removed(data.id);
+                    })
                 // $scope.gridMainOptions.api.rowData.splice(selected.rowIndex, 1);
                 // $scope.gridMainOptions.api.setRowData($scope.grid.rowData)
             }
