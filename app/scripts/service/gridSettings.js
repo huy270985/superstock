@@ -129,6 +129,7 @@ angular
                                     value = value + '%';
                                 }
                             }
+                            value = value || '-'; // prevent undefined
                             return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                         }
                         return '<div data-symbol="' + params.data.symbol + '" title="' + params.value + '">' + params.value + '</div>';
