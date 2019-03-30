@@ -11,45 +11,6 @@ angular
             var subscribed = {};
             return {
                 /**
-                 * Watching list of symbol for changes of sell signal
-                 * Will unwatch previous call
-                 * @param {list of string} symbols
-                 * @param {{'changed': func()}} handler
-                 */
-                watch: function (handler, symbols) {
-                    // unsubscribe previous symbol
-                    for (var symbol in subscribed) {
-                        subscribed[symbol].unwatch();
-                        console.debug("Unsubscribed ", symbol);
-                        handler['removed'] && handler['removed'](symbol)
-                    }
-                    subscribed = {};
-                    for (var i in symbols) {
-                        var symbol = symbols[i];
-
-                        var unwatch = function watch(symbol) {
-                            subscribed[symbol] = {};
-                            var obj = $firebaseObject(Ref.child('sell_signals/' + symbol));
-                            return obj.$watch(function (event) {
-                                console.log("Data changed", event, obj, unwatch);
-                                if (obj.data) {
-                                    var snapshot = obj.data
-                                    snapshot.symbol = event.key
-                                    handler['changed'] && handler['changed'](event.key, snapshot)
-                                }
-                                else { // this is the only way we know the node itself is destroyed
-                                    console.log('The node it self is destroyed', event.key)
-                                }
-                            });
-                        }(symbol);
-
-                        if (unwatch != undefined) {
-                            subscribed[symbol].unwatch = unwatch;
-                        }
-                    }
-                },
-
-                /**
                  * similar to watch() but only target 1 symbol
                  * @param {{'changed': func(key, data)}} handler
                  * @param {string: symbol to subscribe} symbol

@@ -41,6 +41,36 @@ angular.module('superstockApp')
                 }
             }
 
+            function recomputeAndRefereshTable(data, table) {
+                recomputeRecord(data);
+                updatePortfolioDistribution(table.getData());
+                utils.debounce(function () {
+                    table.refresh();
+                }, 200);
+            }
+
+            // auto add new row for user after editing
+            // so he doesn't have to click "Add Row"
+            function prepareEmptyRowToEdit(table) {
+                var lastRecord = table.getLastRecord();
+                if (lastRecord.symbol) {
+                    table.newRow();
+                }
+            }
+
+            function subscribeSellDataForRow(row, table) {
+                sellDataProvider.subscribe({
+                    changed: function (_, newData) {
+                        // id of the row is independent from symbol now
+                        row.close = newData.close;
+                        row.take_profit = newData.take_profit;
+                        row.two_down = newData.two_down;
+                        row.broken_trend = newData.broken_trend;
+                        recomputeAndRefereshTable(row, table);
+                    }
+                }, row.symbol);
+            }
+
             const table = $table.create($rootScope, $scope, tableSettings, uid, {
                 onGridReady: function () {
                     var colSettings = sellDataProvider.colSettings();
@@ -48,10 +78,19 @@ angular.module('superstockApp')
                     $portfolioRepository.loadAll(currentAuth.uid).then(function (data) {
                         console.log("RecommendationCtrl: User portoflio loaded", data);
                         if (data.length === 0) {
-                            $scope.newRow();
+                            table.newRow();
                         }
                         else {
                             table.loaded(data);
+                            prepareEmptyRowToEdit(table);
+                            for (var i in data) {
+                                /**
+                                 * Here 2 row may contain same symbol so we may subscribe
+                                 * to 1 symbol's sell data twice
+                                 * this may not be efficient but keep the logic flow simpler
+                                 */
+                                subscribeSellDataForRow(data[i], table);
+                            }
                         }
                     });
                 },
@@ -67,37 +106,17 @@ angular.module('superstockApp')
                         var oldSymbol = event.oldValue;
                         // subscribe
                         sellDataProvider.unsubscribe(oldSymbol);
-                        sellDataProvider.subscribe({
-                            changed: function (_, newData) {
-                                // id of the row is independent from symbol now
-                                data.close = newData.close;
-                                data.take_profit = newData.take_profit;
-                                data.two_down = newData.two_down;
-                                data.broken_trend = newData.broken_trend;
-                                recomputeRecord(data);
-                                updatePortfolioDistribution(table.getData());
-                                utils.debounce(function () {
-                                    table.refresh();
-                                }, 200)
-                            }
-                        }, newSymbol)
+                        subscribeSellDataForRow(data, table);
                     }
 
                     if (event.colDef.field == "costPrice" || event.colDef.field == "quantity") {
-                        var data = event.data;
-                        recomputeRecord(data);
-                        updatePortfolioDistribution(table.getData());
-                        utils.debounce(function () {
-                            table.refresh();
-                        }, 200)
+                        recomputeAndRefereshTable(event.data, table);
                     }
+
+                    prepareEmptyRowToEdit(table);
                 },
 
             });
-
-            $scope.newRow = function () {
-                var id = table.added(Date.now(), {})
-            }
 
             $scope.deleteRecord = function (data, rowIndex) {
                 console.debug("deleteRecord", data, rowIndex);
@@ -105,8 +124,6 @@ angular.module('superstockApp')
                     .then(function () {
                         table.removed(data.id);
                     })
-                // $scope.gridMainOptions.api.rowData.splice(selected.rowIndex, 1);
-                // $scope.gridMainOptions.api.setRowData($scope.grid.rowData)
             }
 
         }]);

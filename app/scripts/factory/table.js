@@ -109,6 +109,25 @@ angular
                         return $gridData;
                     },
 
+                    /**
+                     * Return the last record, may be useful to check an create an new record
+                     * everytime the user fill the last row with data
+                     */
+                    getLastRecord: function () {
+                        console.log("table getLastRecord()", this);
+                        var keys = Object.keys($gridData)
+                        return $gridData[keys[keys.length - 1]];
+                    },
+
+                    /**
+                     * Add an empty row to the table,
+                     * this function is useful if you want to append a pending row
+                     * for user to edit
+                     */
+                    newRow: function () {
+                        return this.added(Date.now(), {})
+                    },
+
                     refresh: function () {
                         var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
                         $scope.gridMainOptions.api.setRowData(rowData);
