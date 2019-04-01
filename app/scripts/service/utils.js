@@ -80,7 +80,7 @@ angular
                         return stock.EPS >= 3000 && stock.newPoint >= 6;
                     }
 
-                    var classList = ['ag-cell-orange-bg'];
+                    var classList = [];
                     if (selectedSyle && selectedSyle != '' && field != 'symbol')
                         classList.push('ag-cell-focus-bg');
 
