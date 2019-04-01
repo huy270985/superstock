@@ -29,6 +29,9 @@ angular.module('superstockApp')
             function recomputeRecord(data) {
                 data.cutLoss = data.costPrice * 0.96;
                 data.pnl = (data.close - data.costPrice) / data.costPrice * 100;
+                data.pnlValue = (data.close - data.costPrice) * data.quantity * 1000;
+                data.totalCost = data.costPrice * data.quantity * 1000;
+                data.totalValue = +data.quantity * +data.close * 1000;
             }
 
             function updatePortfolioDistribution(portfolio) {

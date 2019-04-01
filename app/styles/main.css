@@ -263,7 +263,7 @@ img.information-icon {
 }
 
 .grid-cell-green {
-    color: #090
+    color: green;
 }
 
 .grid-cell-purple {
@@ -271,7 +271,7 @@ img.information-icon {
 }
 
 .grid-cell-red {
-    color: #C00
+    color: red;
 }
 
 .grid-cell-fill {
@@ -558,7 +558,7 @@ img.information-icon {
     width: 100%;
     margin: 0 auto;
     padding: 5px 40px;
-    background: #6AA84F; font-weight: bold;
+    background: #FFFF; font-weight: bold;
 }
 
 .header-title > h4 {

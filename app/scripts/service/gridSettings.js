@@ -47,7 +47,9 @@ angular
 
             headerCellTemplate: function(params) {
                 function _getHeaderColorClass(field) {
-                    if (field == 'signal1' || field == 'symbol2' || field == 'signal2')
+                    if (field == 'signal1' || field == 'symbol2' || field == 'signal2' ||
+                        field == 'cutLoss' || field == 'take_profit' || field == 'two_down' || field == 'broken_trend' ||
+                        field == 'delete')
                         return 'ag-header-cell-green';
                     if (field == 'sellSignal') {
                         return 'ag-header-cell-red';
@@ -128,6 +130,12 @@ angular
                                     value = $filter('number')(params.value, 2);
                                     value = value + '%';
                                 }
+                            }
+                            else if (colSetting.type === 'number') {
+                                value = $filter('number')(params.value, 2);
+                            }
+                            else if (colSetting.type === 'bigNum') {
+                                value = $filter('number')(params.value, 0);
                             }
                             value = value || '-'; // prevent undefined
                             return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';

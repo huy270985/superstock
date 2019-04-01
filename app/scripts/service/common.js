@@ -15,7 +15,7 @@ angular
                 * Get market summary data
                 */
                 syncMarketSummary: function($scope) {
-                    $scope.headerTitle = { content: "XEM CÁCH DÙNG BẢNG GIÁ TẠI: HTTP://HUNGCANSLIM.COM/BANGGIA <br>MỌI QUY TẮC ĐỀU LÀ VÔ NGHĨA, NẾU BẠN KHÔNG TUÂN THỦ!" }
+                    $scope.headerTitle = { content: "XEM CÁCH DÙNG BẢNG GIÁ TẠI: <a target='_blank' href='HTTP://HUNGCANSLIM.COM/BANGGIA'>HTTP://HUNGCANSLIM.COM/BANGGIA</a> <br>MỌI QUY TẮC ĐỀU LÀ VÔ NGHĨA, NẾU BẠN KHÔNG TUÂN THỦ!" }
                     // utils.getMarketSummary().then(function (data) {
                     //     $scope.headerTitle = data;
                     // }).catch(function (ex) {

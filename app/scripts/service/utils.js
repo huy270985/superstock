@@ -146,6 +146,15 @@ angular
                                 classList.push('grid-cell-red');
                             }
                             break;
+                        case 'oldPoint':
+                            /**
+                             * oldPoint is actually TT EPS cung ky now?
+                             */
+                            if (value >= 30) {
+                                classList.push('ag-cell-fill-bg');
+                                classList.push('ag-cell-purple-color');
+                            }
+                            break;
                         case 'newPoint':
                             /**
                             * When this field has value and
@@ -268,6 +277,11 @@ angular
                                 classList.push('ag-cell-fill-bg');
                             }
                             break;
+                        case 'pnl':
+                        case 'pnlValue':
+                            value > 0 ? classList.push('grid-cell-green') : classList.push('grid-cell-red');
+                            break;
+
                     }
                     return classList;
                 },
