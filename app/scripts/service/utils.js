@@ -125,7 +125,7 @@ angular
                             * When this field has value and greater than 5.000.000.000
                             * background and forceground(purple) will be filled and
                             */
-                            if (value >= 5e9) {
+                            if (value >= 20e9) {
                                 classList.push('ag-cell-purple-color');
                                 classList.push('ag-cell-fill-bg');
                             }
@@ -219,7 +219,7 @@ angular
                                     classList.push('ag-cell-fill-bg');
                                 }
                             }
-                            classList.push('ag-cell-green-bg');
+                            // classList.push('ag-cell-green-bg');
                             classList.push('text-center');
                             break;
 
@@ -247,7 +247,7 @@ angular
                                 classList.push('grid-cell-green');
                                 classList.push('ag-cell-fill-bg');
                             }
-                            classList.push('ag-cell-green-bg');
+                            // classList.push('ag-cell-green-bg');
                             classList.push('text-center');
                             break;
 
