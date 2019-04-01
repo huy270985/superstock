@@ -23,6 +23,7 @@ angular.module('superstockApp')
             common.clickSymbolPopupDetails($scope);
 
             const table = $table.create($rootScope, $scope, tableSettings, uid);
+            $table.createSellSymbolTable('grid-market-options');
 
             $tableRepository.loadColSettings(uid, tableSettings.name).then(function (colSettings) {
                 table.setColSettings(colSettings);

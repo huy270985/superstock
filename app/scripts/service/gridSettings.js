@@ -11,7 +11,7 @@ angular
                     {
                         headerName: "Báo bán",
                         field: "sellSignal",
-                        width: 300,
+                        width: 70,
                         headerCellTemplate: function () {
                             return (
                                 '<div class="ag-header-cell ag-header-cell-red ag-header-cell-sortable ag-header-cell-sorted-none">' +

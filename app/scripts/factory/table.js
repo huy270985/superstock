@@ -80,30 +80,6 @@ angular
 
                 var $gridData = {};
 
-                var gridDiv = document.querySelector('#grid-market-options');
-                if (gridDiv) {
-                    $scope.gridMarketOptions = $gridSettings.getGridMarketOptions();
-                    new agGrid.Grid(gridDiv, $scope.gridMarketOptions);
-                    utils.watchSellSymbols(function (arr) {
-                        console.log('Sell symbols updated', arr);
-                        var data = arr.map(function (item) {
-                            return { sellSignal: item }
-                        });
-                        if ($scope.gridMarketOptions.api) {
-                            $scope.gridMarketOptions.api.setRowData(data);
-                        }
-                        /**
-                         * Set height for sellSignal
-                         * Old code using pinLeft height,
-                         * which will result in 0 height when there is no data for the name table
-                         */
-                        var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
-                        var $gridMarket = $('#grid-market-options').find('.ag-body-viewport');
-                        $gridMarket.height($agBody.height());
-                        $gridMarket.css('background', '#F4CCCC');
-                    });
-                }
-
                 return {
                     getData: function () {
                         return $gridData;
@@ -241,7 +217,36 @@ angular
                     },
                 }
 
-            }
+            },
+
+            createSellSymbolTable: function (divId) {
+                var id = '#' + divId;
+                var gridDiv = document.querySelector(id);
+                if (gridDiv) {
+                    var sellSymbolOptions = $gridSettings.getGridMarketOptions();
+                    new agGrid.Grid(gridDiv, sellSymbolOptions);
+                    console.log("new grid for sell symbols")
+                    utils.watchSellSymbols(function (arr) {
+                        console.log('Sell symbols updated', arr);
+                        var data = arr.map(function (item) {
+                            return { sellSignal: item }
+                        });
+                        if (sellSymbolOptions.api) {
+                            sellSymbolOptions.api.setRowData(data);
+                        }
+                        /**
+                         * Set height for sellSignal
+                         * Old code using pinLeft height,
+                         * which will result in 0 height when there is no data for the name table
+                         */
+                        var $agBody = $('div[ng-grid="gridMainOptions"]').find('.ag-body');
+                        var $gridMarket = $(id).find('.ag-body-viewport');
+                        $gridMarket.height($agBody.height());
+                        $gridMarket.css('background', '#F4CCCC');
+                    });
+                }
+
+            },
         }
     }]
 )
