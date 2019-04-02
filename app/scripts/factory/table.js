@@ -173,8 +173,9 @@ angular
                     loaded: function (data) {
                         $gridData = {};
                         for (var i in data) {
-                            $gridData[data[i].id] = data[i];
+                            $gridData[data[i].symbol] = data[i];
                         }
+                        console.debug("table.js - loaded", data, $gridData);
                         $scope.gridMainOptions.api.setRowData(data);
                     },
 
@@ -183,12 +184,13 @@ angular
                     },
 
                     added: function (key, data) {
-                        console.debug('Record added', key, data);
                         data.id = key;
                         $gridData[key] = data;
+                        console.debug("table.js - added", key || "undefined", data, Object.keys($gridData), $gridData);
                         utils.debounce(function () {
                             var rowData = Object.keys($gridData).map(function (key) { return $gridData[key] });
                             $scope.gridMainOptions.api.setRowData(rowData);
+                            console.debug("table.js - added debounce", rowData);
                         }, 100);
                     },
 

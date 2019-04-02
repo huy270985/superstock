@@ -37,17 +37,21 @@ angular.module('superstockApp')
                     },
 
                     function loaded(data) {
+                        console.debug("main.js - table data loaded", data);
                         table.loaded(data);
                     },
 
                     {
                         added: function (data, childSnapshot, id) {
+                            console.debug("main.js - table data added", childSnapshot.key, data);
                             table.added(childSnapshot.key, data);
                         },
                         changed: function (data, childSnapshot, id) {
+                            console.debug("main.js - table data changed", childSnapshot.key, data);
                             table.changed(childSnapshot.key, data);
                         },
                         removed: function (oldSnapshot) {
+                            console.debug("main.js - table data removed", childSnapshot.key, data);
                             table.removed(oldSnapshot.key);
                         }
                     }
