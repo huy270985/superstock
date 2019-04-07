@@ -132,7 +132,8 @@ angular
 
                             if (colSetting.field == "delete") {
                                 def.cellRenderer = function (params) {
-                                    return '<i class="icon-trash cell-btn-remove" style="cursor:pointer" title="Delete this record" ng-click="deleteRecord(data,'+params.node.id+')">'
+                                    return '<div style="cursor:pointer" ng-click="deleteRecord(data,'+params.node.id+')">X</div>'
+                                    // return '<i class="icon-trash cell-btn-remove" style="cursor:pointer" title="Delete this record" ng-click="deleteRecord(data,'+params.node.id+')">'
                                 }
                             }
 

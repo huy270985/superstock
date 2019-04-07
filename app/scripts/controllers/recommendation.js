@@ -101,7 +101,6 @@ angular.module('superstockApp')
                 onCellValueChanged: function (event) {
                     console.log("onCellValueChanged", event);
                     var data = event.data;
-                    $portfolioRepository.saveEntry(currentAuth.uid, data);
 
                     if (event.colDef.field == "symbol") {
                         var newSymbol = event.newValue.toUpperCase();
@@ -111,6 +110,9 @@ angular.module('superstockApp')
                         sellDataProvider.unsubscribe(oldSymbol);
                         subscribeSellDataForRow(data, table);
                     }
+
+                    // save entry after uppercase to standardize symbol
+                    $portfolioRepository.saveEntry(currentAuth.uid, data);
 
                     if (event.colDef.field == "costPrice" || event.colDef.field == "quantity") {
                         recomputeAndRefereshTable(event.data, table);
