@@ -47,13 +47,12 @@ angular
 
             headerCellTemplate: function(params) {
                 function _getHeaderColorClass(field) {
-                    if (field == 'signal1' || field == 'symbol2' || field == 'signal2' ||
-                        field == 'cutLoss' || field == 'take_profit' || field == 'two_down' || field == 'broken_trend' ||
-                        field == 'delete')
+                    if (field == 'signal1' || field == 'symbol2' || field == 'signal2')
                         return 'ag-header-cell-green';
-                    if (field == 'sellSignal') {
+                    if (field == 'sellSignal' ||
+                        field == 'cutLoss' || field == 'take_profit' || field == 'two_down' || field == 'broken_trend'
+                    )
                         return 'ag-header-cell-red';
-                    }
                     return '';
                 }
 
