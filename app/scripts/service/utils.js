@@ -72,6 +72,7 @@ angular
 
                     var field = params.colDef.field;
                     var value = params.value;
+                    var data = params.data;
 
                     /**
                     Util to determine if a strong is truely strong
@@ -280,6 +281,12 @@ angular
                         case 'pnl':
                         case 'pnlValue':
                             value > 0 ? classList.push('grid-cell-green') : classList.push('grid-cell-red');
+                            break;
+                        case 'cutLoss':
+                        case 'two_down':
+                        case 'broken_trend':
+                        case 'take_profit':
+                            value >= data.close && classList.push('ag-cell-red-bg');
                             break;
 
                     }
