@@ -116,7 +116,6 @@ angular
                                 field: colSetting.field, //field name
                                 width: colSetting.width, //column width
                                 headerName: colSetting.title || "", //column title
-                                cellClass: colSetting.isNumber ? 'ui-cell-align-right' : 'ui-cell-align-left',
                                 enableTooltip: true,
                                 tooltipField: colSetting.field, //show tolltip
                                 headerCellTemplate: $gridSettings.headerCellTemplate,
@@ -173,7 +172,9 @@ angular
                     loaded: function (data) {
                         $gridData = {};
                         for (var i in data) {
-                            $gridData[data[i].symbol] = data[i];
+                            // main table use symbol, while personal portfolio will use just id
+                            var key = data[i].id || data[i].symbol;
+                            $gridData[key] = data[i];
                         }
                         console.debug("table.js - loaded", data, $gridData);
                         $scope.gridMainOptions.api.setRowData(data);
