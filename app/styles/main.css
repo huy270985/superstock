@@ -432,7 +432,7 @@ img.information-icon {
 }
 
 .ag-header-cell.ag-header-cell-red {
-    background: #FF0000;
+    background: rgb(223, 39, 39);
 }
 
 .ag-header-cell-text {
