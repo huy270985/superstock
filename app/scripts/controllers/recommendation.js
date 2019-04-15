@@ -129,7 +129,12 @@ angular.module('superstockApp')
                     }
 
                     // save entry after uppercase to standardize symbol
-                    $portfolioRepository.saveEntry(currentAuth.uid, data);
+                    $portfolioRepository.saveEntry(currentAuth.uid, {
+                        id: data.id,
+                        symbol: data.symbol,
+                        quantity: data.quantity,
+                        costPrice: data.costPrice,
+                    });
 
                     if (event.colDef.field == "costPrice" || event.colDef.field == "quantity") {
                         recomputeAndRefereshTable(event.data, table);

@@ -20,6 +20,9 @@ angular
                     var obj = $firebaseObject(Ref.child('sell_signals/' + symbol));
                     var unwatch = obj.$watch(function (event) {
                         var snapshot = obj.data;
+                        if (!snapshot) {
+                            return;
+                        }
                         snapshot.symbol = event.key;
                         handler['changed'] && handler['changed'](event.key, snapshot);
                     });
