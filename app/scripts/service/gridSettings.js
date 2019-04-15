@@ -50,7 +50,7 @@ angular
                     if (field == 'signal1' || field == 'symbol2' || field == 'signal2')
                         return 'ag-header-cell-green';
                     if (field == 'sellSignal' ||
-                        field == 'cutLoss' || field == 'take_profit' || field == 'two_down' || field == 'broken_trend'
+                        field == 'cutLoss' || field == 'take_profit' || field == 'two_down' || field == 'min_T4'
                     )
                         return 'ag-header-cell-red';
                     return '';

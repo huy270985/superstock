@@ -28,6 +28,15 @@ angular.module('superstockApp')
 
             function recomputeRecord(data) {
                 data.cutLoss = data.costPrice * 0.96;
+                // công thức 2: giá giảm 4% từ đỉnh giá cao nhất 5 phiên gần nhất,
+                // và giá hiện tại > giá vốn:
+                // GIÁ CHẶN LÃI
+                data.take_profit = data.close > data.costPrice ? data.raw_take_profit : null;
+                // Công thức 3: phiên hôm qua giảm >=3% và mở cửa cao hơn đóng cửa,
+                // và phiên hôm nay giảm >= 3 % tiếp và cũng mở cửa cao hơn đóng cửa,
+                // và giá hiện tại > giá vốn: GIẢM 2 NẾN ĐỎ
+                data.two_down = data.close > data.costPrice ? data.raw_two_down : null;
+                data.min_T4 = data.close > data.costPrice ? data.raw_min_T4 : null;
                 data.pnl = (data.close - data.costPrice) / data.costPrice * 100;
                 data.pnlValue = (data.close - data.costPrice) * data.quantity * 1000;
                 data.totalCost = data.costPrice * data.quantity * 1000;
@@ -44,8 +53,9 @@ angular.module('superstockApp')
                 }
             }
 
-            function recomputeAndRefereshTable(data, table) {
-                recomputeRecord(data);
+            function recomputeAndRefereshTable(row, table) {
+                console.debug('recomputeAndRefereshTable()', row, table);
+                recomputeRecord(row);
                 updatePortfolioDistribution(table.getData());
                 utils.debounce(function () {
                     table.refresh();
@@ -61,15 +71,22 @@ angular.module('superstockApp')
                 }
             }
 
+
+
             function subscribeSellDataForRow(row, table) {
                 sellDataProvider.subscribe({
                     changed: function (_, newData) {
                         // id of the row is independent from symbol now
-                        row.close = newData.close;
-                        row.take_profit = newData.take_profit;
-                        row.two_down = newData.two_down;
-                        row.broken_trend = newData.broken_trend;
-                        recomputeAndRefereshTable(row, table);
+                        var rows = table.getRowHasSymbol(row.symbol);
+                        for (var i in rows) {
+                            rows[i].close = +newData.close;
+                            // we store data to 'raw_' so that we can replace it later
+                            // see recomputeRecord
+                            rows[i].raw_take_profit = +newData.take_profit;
+                            rows[i].raw_two_down = +newData.two_down;
+                            rows[i].raw_min_T4 = +newData.min_T4;
+                            recomputeAndRefereshTable(rows[i], table);
+                        }
                     }
                 }, row.symbol);
             }

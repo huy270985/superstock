@@ -284,7 +284,7 @@ angular
                             break;
                         case 'cutLoss':
                         case 'two_down':
-                        case 'broken_trend':
+                        case 'min_T4':
                         case 'take_profit':
                             value >= data.close && classList.push('ag-cell-red-bg');
                             break;

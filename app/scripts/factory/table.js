@@ -86,6 +86,15 @@ angular
                     },
 
                     /**
+                     * Filter rows that has matched symbol
+                     * @param {required} symbol
+                     */
+                    getRowHasSymbol: function (symbol) {
+                        return Object.values($gridData)
+                            .filter(function (row) { return row.symbol == symbol });
+                    },
+
+                    /**
                      * Return the last record, may be useful to check an create an new record
                      * everytime the user fill the last row with data
                      */
