@@ -143,7 +143,7 @@ angular
                             isNumber: true,
                             title: "Thấp nhất\n4 phiên",
                             type: "number",
-                            width: 80,
+                            width: 90,
                         },
                         {
                             field: "delete",
