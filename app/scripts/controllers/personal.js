@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc function
- * @name superstockApp.controller:RecommendationCtrl
+ * @name superstockApp.controller:PersonalCtrl
  * @description
- * # RecommendationCtrl
+ * # PersonalCtrl
  * Controller of the superstockApp
  * Cột
  *      Mã cp / khối lượng/ giá vốn/ % phân bổ/ % lãi lỗ/ bán cắt lỗ/bán chặn lãi/giảm liên tục/gãy xu hướng
  */
 angular.module('superstockApp')
-    .controller('RecommendationCtrl', ['$rootScope', '$scope', 'auth', 'currentAuth',
+    .controller('PersonalCtrl', ['$rootScope', '$scope', 'auth', 'currentAuth',
         'Ref', 'sellDataProvider', '$window',
         'tableSettings', '$tableRepository', '$table', 'common', 'utils',
         '$portfolioRepository',
@@ -29,14 +29,14 @@ angular.module('superstockApp')
             function recomputeRecord(data) {
                 data.cutLoss = data.costPrice * 0.96;
                 // công thức 2: giá giảm 4% từ đỉnh giá cao nhất 5 phiên gần nhất,
-                // và giá hiện tại > giá vốn:
+                // và giá chặn lãi > giá vốn:
                 // GIÁ CHẶN LÃI
-                data.take_profit = data.close > data.costPrice ? data.raw_take_profit : null;
+                data.take_profit = data.raw_take_profit > data.costPrice ? data.raw_take_profit : null;
                 // Công thức 3: phiên hôm qua giảm >=3% và mở cửa cao hơn đóng cửa,
                 // và phiên hôm nay giảm >= 3 % tiếp và cũng mở cửa cao hơn đóng cửa,
                 // và giá hiện tại > giá vốn: GIẢM 2 NẾN ĐỎ
                 data.two_down = data.close > data.costPrice ? data.raw_two_down : null;
-                data.min_T4 = data.close > data.costPrice ? data.raw_min_T4 : null;
+                data.min_T10 = data.close > data.costPrice ? data.raw_min_T10 : null;
                 data.pnl = (data.close - data.costPrice) / data.costPrice * 100;
                 data.pnlValue = (data.close - data.costPrice) * data.quantity * 1000;
                 data.totalCost = data.costPrice * data.quantity * 1000;
@@ -84,7 +84,7 @@ angular.module('superstockApp')
                             // see recomputeRecord
                             rows[i].raw_take_profit = +newData.take_profit;
                             rows[i].raw_two_down = +newData.two_down;
-                            rows[i].raw_min_T4 = +newData.min_T4;
+                            rows[i].raw_min_T10 = +newData.min_T10;
                             recomputeAndRefereshTable(rows[i], table);
                         }
                     }

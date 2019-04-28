@@ -284,7 +284,7 @@ angular
                             break;
                         case 'cutLoss':
                         case 'two_down':
-                        case 'min_T4':
+                        case 'min_T10':
                         case 'take_profit':
                             value >= data.close && classList.push('ag-cell-red-bg');
                             break;
@@ -296,19 +296,24 @@ angular
                 getMarketSummary: function () {
                     /*
                     * Get sell signals data
-                    * From link: https://superstock.firebaseio.com/market_summary.json
                     */
                     var deferred = $q.defer();
                     var result = {};
-                    $http.get('https://superstock.firebaseio.com/market_summary.json', {}).then(function (data) {
+                    $http.get('https://price-sync-227313.firebaseio.com/market_summary.json', {}).then(function (data) {
                         if (data && data.data) {
                             var rs = data.data;
                             var result = {
                                 color: rs.color,
-                                content: data.data.data ? data.data.data : '',
+                                content: data.data.data ? data.data.data.content : '',
                                 timestamp: data.data,
                             }
                             result.content = result.content.replace('\n', '<br />');
+                            var pattern = /(HTTP:\/\/.*)\b/
+                            var addr = result.content.match(pattern)
+                            if (addr && addr.length == 2) {
+                                addr = addr[0].trim()
+                                result.content = result.content.replace(pattern, '<a target="_blank" href="' + addr + '">LINK</a>');
+                            }
                             deferred.resolve(result);
                         }
                     }, function (err) {

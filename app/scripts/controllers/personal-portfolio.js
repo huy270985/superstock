@@ -4,16 +4,17 @@
  * @ngdoc function
  * @name superstockApp.controller:PersonalPortfolioCtrl
  * @description
+ * @deprecated, replaced by PersonalCtrl
  * #PersonalPortfolioCtrl
  * Controller of the superstockApp
  */
 angular.module('superstockApp')
     .controller('PersonalPortfolioCtrl', ['$rootScope', '$scope', 'auth', '$firebaseArray',
-        '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce', 
+        '$firebaseObject', 'Ref', 'draw', 'uiGridConstants', '$sce',
         'utils', 'currentAuth', '$window', '$compile', '$filter', '$timeout',
         'ngMaterial',
         function ($rootScope, $scope, auth, $firebaseArray,
-            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils, 
+            $firebaseObject, Ref, draw, uiGridConstants, $sce, utils,
             currentAuth, $window, $compile, $filter, $timeout, $ngMaterial) {
 
   function DemoCtrl ($timeout, $q, $log) {

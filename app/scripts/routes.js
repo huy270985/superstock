@@ -146,9 +146,9 @@ angular.module('superstockApp')
                 }
             })
 
-            .when('/recommendation', {
-                templateUrl: 'views/recommendation.html',
-                controller: 'RecommendationCtrl',
+            .when('/personal', {
+                templateUrl: 'views/personal.html',
+                controller: 'PersonalCtrl',
                 resolve: {
                     "currentAuth": ["auth", function (auth) {
                         return auth.$waitForSignIn();
@@ -159,7 +159,7 @@ angular.module('superstockApp')
                             "defaultSort": "priceChange",
                             "direction": "desc",
                             "hideSymbol": true,
-                            "name": "recommendation",
+                            "name": "personal",
                         }
                     },
                 }

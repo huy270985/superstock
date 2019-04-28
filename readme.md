@@ -49,7 +49,7 @@ The data is stored in Firebase with these endpoints:
 Default URL to access: [http://localhost:9000/](http://localhost:9000/)
 
 Market summary:
-- https://superstock.firebaseio.com/market_summary.json
+- https://<project-id>.firebaseio.com/market_summary.json
   {
     'data': 'actual text',
     'color': '#ff9900',

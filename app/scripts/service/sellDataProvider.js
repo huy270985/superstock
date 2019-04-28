@@ -141,7 +141,7 @@ angular
                             width: 80,
                         },
                         {
-                            field: "min_T4",
+                            field: "min_T10",
                             format: "number:3:3:280",
                             isNumber: true,
                             title: "Thấp nhất\n4 phiên",
