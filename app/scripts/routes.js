@@ -133,7 +133,7 @@ angular.module('superstockApp')
                 }
             })
 
-            .when('/personal', {
+            .when('/personal-portfolio', {
                 templateUrl: 'views/personal-portfolio.html',
                 controller: 'FullStockCtrl',
                 resolve: {
@@ -141,7 +141,7 @@ angular.module('superstockApp')
                         return auth.$waitForSignIn();
                     }],
                     "link": function() {
-                        return "personal";
+                        return "personal-portfolio";
                     }
                 }
             })

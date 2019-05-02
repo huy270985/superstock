@@ -396,7 +396,7 @@ angular.module('superstockApp')
                             if ($rootScope.link === 'full') {
                                 $scope.gridOptions.api.setRowData(rowData);
                             }
-                            else if ($rootScope.link === 'personal') {
+                            else if ($rootScope.link === 'personal-portfolio') {
                                 $scope.fullData = rowData;
                                 $scope.filterPersonalStocks();
                             }
