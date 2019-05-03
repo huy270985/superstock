@@ -24,8 +24,9 @@ angular.module('superstockApp')
             var filterMode = false;
             $rootScope.filterList = {};
 
+            var personalPortfolio = "/personalPortfolio";
             // firebase integration for personalStocks
-            var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/portfolio'));
+            var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + personalPortfolio ));
             portfolio.$loaded(function(data) {
                 $scope.personalStocks = data.$value;
             });
@@ -74,7 +75,7 @@ angular.module('superstockApp')
                 /**
                 User personal portfolio
                 */
-                var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + '/portfolio'));
+                var portfolio = $firebaseObject(Ref.child('users/' + currentAuth.uid + personalPortfolio));
                 portfolio.$loaded(
                     function(data) {
                         console.log('User portfolio loaded', data);
