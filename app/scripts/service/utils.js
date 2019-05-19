@@ -417,11 +417,13 @@ angular
                                                     delete cellData.z;
                                             }
                                             if (config[key].format.indexOf('percent') > -1) {
-                                                cellData.t = 's';
+                                                cellData.t = 'n';
                                                 var value = parseFloat(cellData.v);
                                                 if (!isNaN(value)) {
-                                                    value = value.toFixed(2);
-                                                    cellData.v = value + '%';
+                                                    value = (value / 100).toFixed(4);
+                                                    cellData.v = value;
+                                                    // value = value.toFixed(2); // uncomment this if we want % display in Excel
+                                                    // cellData.v = value + '%';
                                                 } else {
                                                     cellData.v = '';
                                                 }
