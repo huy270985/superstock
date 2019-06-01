@@ -343,12 +343,11 @@ angular
 
                 getCompanyInformation: function (id) {
                     /*
-                    * Get market summary data
-                    * From link: https://superstock.firebaseio.com/profile/{{id}}.json
+                    * Get company profile data from Firebase
                     */
                     var deferred = $q.defer();
                     var result = [];
-                    $http.get('https://superstock.firebaseio.com/profile/' + id + '.json', {}).then(function (data) {
+                    $http.get('https://price-sync-227313.firebaseio.com/profile/' + id + '.json', {}).then(function (data) {
                         if (data && data.data && data.data.data) {
                             if (data && data.data && data.data.data) {
                                 var rs = data.data.data;
