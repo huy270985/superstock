@@ -54,6 +54,7 @@ angular
                             break;
                         case 'roe':
                             if (value < 10) classList.push("grid-cell-red");
+                            if (value > 20) classList.push('grid-cell-purple');
                             else classList.push("grid-cell-green");
                             break;
                         case 'fxEffect':
@@ -90,6 +91,14 @@ angular
                     if (params.value && colSetting.isType && colSetting.isType('percent'))
                         classList.push('percent');
                     switch (field) {
+                        case 'roe':
+                            if (value < 10) classList.push("grid-cell-red");
+                            if (value > 20) {
+                                classList.push('grid-cell-purple');
+                                classList.push('ag-cell-fill-bg');
+                            }
+                            else classList.push("grid-cell-green");
+                            break;
                         case 'symbol':
                             /**
                             * When this field has value
