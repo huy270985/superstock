@@ -120,7 +120,7 @@ angular
                             '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
                     default:
                         var value = '';
-                        if (colSetting.isNumber) {
+                        if (colSetting.isNumber && params.value !== 'Bản thu phí') {
                             value = $filter('number')(params.value);
                             if (colSetting.type === 'percent') {
                                 if (isNaN(parseFloat(params.value))) {

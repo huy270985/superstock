@@ -34,7 +34,7 @@ angular
             obj.symbol2 = txt;
             obj.Canslim = txt;
             obj.power = txt;
-            obj.symbol = txt;
+            obj.volumeChange = txt;
             return obj;
         }
 
