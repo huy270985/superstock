@@ -118,6 +118,12 @@ angular
                             '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">' +
                             '<img class="information-icon" data-symbol="' + id +
                             '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
+                    case 'signal2':
+                        var value = params.value;
+                        if (value) {
+                            value = params.data.symbol;
+                        }
+                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
                     default:
                         var value = '';
                         if (colSetting.isNumber && params.value !== 'Bản thu phí') {
