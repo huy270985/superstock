@@ -120,10 +120,15 @@ angular
                             '" data-industry = "' + params.node.data.industry + '" src="./images/icon-information.png" />' + '</div>';
                     case 'signal2':
                         var value = params.value;
+                        var chart_html = '';
                         if (value) {
                             value = params.data.symbol;
+                            chart_html = '<img class="chart-icon" data-symbol="' + params.data.symbol +
+                            '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">'
                         }
-                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value + '</div>';
+                        return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value +
+                            chart_html +
+                            '</div>';
                     default:
                         var value = '';
                         if (colSetting.isNumber && params.value !== 'Bản thu phí') {
