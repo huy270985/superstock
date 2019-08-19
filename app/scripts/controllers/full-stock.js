@@ -733,7 +733,7 @@ angular.module('superstockApp')
                 $(document).on('click', '.chart-icon', function () {
                     $('#myModal').modal('show');
                     $scope.stockInfo = $(this).data('symbol') + ' - ' + $(this).data('industry');
-                    $scope.iSrc = 'https://banggia.vndirect.com.vn/chart/?symbol=' + $(this).data('symbol');
+                    $scope.iSrc = 'https://dchart.vndirect.com.vn/?symbol=' + $(this).data('symbol');
                     $scope.iSrcTrust = $sce.trustAsResourceUrl($scope.iSrc);
                 });
 
