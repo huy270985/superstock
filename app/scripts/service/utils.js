@@ -264,7 +264,12 @@ angular
                                 //     classList.push('grid-cell-green');
                                 // }
                                 classList.push('grid-cell-green');
-                                classList.push('ag-cell-fill-bg');
+                                if (value == 'Điểm chú ý') {
+                                    classList.push('ag-cell-fill-bg-yellow');
+                                }
+                                else {
+                                    classList.push('ag-cell-fill-bg');
+                                }
                             }
                             // classList.push('ag-cell-green-bg');
                             classList.push('text-center');

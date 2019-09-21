@@ -451,6 +451,10 @@ img.information-icon {
     background: #B7E1CD;
 }
 
+.ag-cell-fill-bg-yellow {
+    background: yellow;
+}
+
 .ag-cell-purple-color {
     color: #90F;
 }
