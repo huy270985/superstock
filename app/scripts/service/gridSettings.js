@@ -121,10 +121,13 @@ angular
                     case 'signal2':
                         var value = params.value;
                         var chart_html = '';
-                        if (value) {
+                        if (value == 'Điểm bùng nổ') {
                             value = params.data.symbol;
                             chart_html = '<img class="chart-icon" data-symbol="' + params.data.symbol +
                             '" data-industry = "' + params.node.data.industry + '" src="./images/icon-graph.png">'
+                        }
+                        if (value == "Điểm chú ý") {
+                            value = "";
                         }
                         return '<div data-symbol="' + params.data.symbol + '" title="' + value + '">' + value +
                             chart_html +
