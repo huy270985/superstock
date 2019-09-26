@@ -284,7 +284,7 @@ angular
                              * Fix for volumeChange
                              * volumeChange is data which is a total value from server
                              */
-                            if (value >= 30 && $rootScope.link == 'main') {
+                            if (value >= 30) {
                                 classList.push('ag-cell-purple-color');
                                 classList.push('ag-cell-fill-bg');
                             }
