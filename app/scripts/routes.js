@@ -74,7 +74,7 @@ angular.module('superstockApp')
                     "tableSettings": function() {
                         return {
                             "gridDataSource": "summary_data",
-                            "defaultSort": "totalValue",
+                            "defaultSort": "volumeChange",
                             "direction": "desc",
                             "name": "main",
                         }

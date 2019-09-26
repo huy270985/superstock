@@ -79,7 +79,7 @@ angular
                     Util to determine if a strong is truely strong
                     */
                     function is_strong_stock(stock) {
-                        return stock.EPS >= 3000 && stock.newPoint >= 6;
+                        return stock.EPS >= 3000 && stock.roe >= 20;
                     }
 
                     var classList = [];
@@ -185,7 +185,7 @@ angular
                             classList.push('text-center');
                             break;
                         case 'power':
-                            if (value >= 9) {
+                            if (value >= 8) {
                                 classList.push('ag-cell-purple-color');
                                 classList.push('ag-cell-fill-bg');
                             } else if (value >= 7) {
@@ -257,12 +257,9 @@ angular
                                 Turn off purple
                                 By Hung's request: 2017-01-11
                                 */
-                                // if (is_strong_stock(params.data)) {
-                                //     classList.push('ag-cell-purple-color');
-                                // }
-                                // else{
-                                //     classList.push('grid-cell-green');
-                                // }
+                                if (is_strong_stock(params.data)) {
+                                    classList.push('ag-cell-purple-color');
+                                }
                                 classList.push('grid-cell-green');
                                 if (value == 'Điểm chú ý') {
                                     classList.push('ag-cell-fill-bg-yellow');
@@ -302,6 +299,10 @@ angular
                         case 'take_profit':
                             value >= data.close && classList.push('ag-cell-red-bg');
                             break;
+                        case 'priceChange':
+                            if (value >= 2 && value <= 4) {
+                                classList.push('ag-cell-fill-bg');
+                            }
 
                     }
                     return classList;
