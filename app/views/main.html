@@ -1,13 +1,31 @@
-<div class="header-title" style="border-bottom: solid 1px #000000; background: {{headerTitle.color}};">
-    <div class="header-timestamp">
-        <h4>Hôm nay: {{tradingDate}}</h4>
-        <h6 class="ag-cell-red-color" ng-show="true">
-            <div>NGÀY HẾT HẠN: {{user.account.expiredDate.toLocaleDateString('vi-VI')}}, <a href="http://hungcanslim.com/gia">GIA HẠN</a></div>
-        </h6>
+<div class="row">
+    <div class="header-title" style="border-bottom: solid 1px #000000; background: {{headerTitle.color}};">
+        <div class="header-timestamp">
+            <h4>Hôm nay: {{tradingDate}}</h4>
+            <h6 class="ag-cell-red-color" ng-show="true">
+                <div>NGÀY HẾT HẠN: {{user.account.expiredDate.toLocaleDateString('vi-VI')}}, <a href="http://hungcanslim.com/gia">GIA HẠN</a></div>
+            </h6>
+        </div>
+        <h4 class="ag-cell-purple-color" style="padding-right: 200px" ng-bind-html="headerTitle.content"></h4>
     </div>
-    <h4 class="ag-cell-purple-color" style="padding-right: 200px" ng-bind-html="headerTitle.content"></h4>
 </div>
-<div class="header-title">
+
+<div class="row">
+    <div class="col-md-4">
+        <div style="height: 50%">
+            <iframe src="https://vn.investingwidgets.com/live-indices?theme=lightTheme&amp;hideTitle=true&amp;roundedCorners=true&amp;pairs=166,27,175,53094,178,179,959206" width="100%0" height="300" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+        </div>
+    </div>
+    <!-- iFrame market stats section -->
+    <div class="col-md-8">
+        <div style="height: 300px">
+            <iframe src="https://marketwatch.vndirect.com.vn/topmostindex.htm?lang=vi"
+            width="80%" title="Marketwatch" height="100%" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>
+
+<div class="header-title col-md-8">
     <h4 style="font-size: 18px;">Các mã cp đáng chú ý nhất phiên</h4>
 </div>
 <div class="grid-area">
