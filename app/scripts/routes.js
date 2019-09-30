@@ -92,7 +92,7 @@ angular.module('superstockApp')
                     "tableSettings": function() {
                         return {
                             "gridDataSource": "investment_data",
-                            "defaultSort": "power",
+                            "defaultSort": "volumeChange",
                             "direction": "desc",
                             "hideSymbol": true,
                             "name": "investment",
