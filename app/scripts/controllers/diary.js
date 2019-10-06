@@ -36,7 +36,7 @@ angular.module('superstockApp')
                 { field: "pnl", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ tiền", type: "number", width: 100, },
                 { field: "buyDate", format: "number:3:3:280", isNumber: true, title: "Ngày mua", type: "", width: 90, editable: true, },
                 { field: "sellDate", format: "number:3:3:280", isNumber: true, title: "Ngày bán", type: "", width: 90, editable: true, },
-                { field: "note", format: "number:3:3:280", isNumber: true, title: "Ghi chú", type: "", width: 90, editable: true, },
+                { field: "note", format: "number:3:3:280", isNumber: true, title: "Ghi chú", type: "", width: 400, editable: true, },
                 { field: "delete", width: 20, },
             ]
 
