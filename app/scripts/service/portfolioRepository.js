@@ -35,14 +35,23 @@ angular
                 }
                 return res;
             }
+
+            // Extending this repository to accept other data location
+            // By changing the name, we can have multiple location storing different user records type
+            var _name = 'portfolio';
+
             return {
+                setName: function (name) {
+                    _name = name;
+                },
+
                 /**
                  * One portfolio may have multiple entries with the same symbol
                  * @param {one portfolio entry, index by .id attribute} record
                  */
                 saveEntry: function (uid, record) {
                     if (!record.id) { return; }
-                    var $entry = $firebaseObject(Ref.child('users/' + uid + '/portfolio/data/' + record.id));
+                    var $entry = $firebaseObject(Ref.child('users/' + uid + '/' + _name + '/data/' + record.id));
                     $entry.$value = clean(record);
                     $entry.$save()
                         .then(function () {
@@ -56,7 +65,7 @@ angular
                 deleteEntry: function (uid, recordId) {
                     if (!recordId || !uid) { return; }
                     var deferred = $q.defer();
-                    var $entry = $firebaseObject(Ref.child('users/' + uid + '/portfolio/data/' + recordId));
+                    var $entry = $firebaseObject(Ref.child('users/' + uid + '/' + _name + '/data/' + recordId));
                     $entry.$remove()
                         .then(function () {
                             console.debug("$portfolioRepository: Delete entry success", { uid: uid, $entry: $entry });
@@ -74,7 +83,7 @@ angular
                  */
                 loadAll: function (uid) {
                     var deferred = $q.defer();
-                    var $portfolio = $firebaseObject(Ref.child('users/' + uid + '/portfolio'));
+                    var $portfolio = $firebaseObject(Ref.child('users/' + uid + '/' + _name));
                     $portfolio.$loaded()
                         .then(function (data) {
                             console.log("Data loaded", $portfolio);
