@@ -165,6 +165,25 @@ angular.module('superstockApp')
                 }
             })
 
+            .when('/diary', {
+                templateUrl: 'views/personal.html',
+                controller: 'DiaryCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }],
+                    "tableSettings": function() {
+                        return {
+                            "gridDataSource": "summary_data",
+                            "defaultSort": "priceChange",
+                            "direction": "desc",
+                            "hideSymbol": true,
+                            "name": "diary",
+                        }
+                    },
+                }
+            })
+
             .when('/market-stats', {
                 templateUrl: 'views/market-stats.html',
                 controller: 'MarketStatsCtrl',
