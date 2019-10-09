@@ -29,21 +29,34 @@ angular.module('superstockApp')
 
             var _colSettings = [
                 { field: "symbol", format: "", isNumber: false, title: "Mã", type: "", width: 80, editable: true, },
+                { field: "close", format: "number:3:3:280", isNumber: true, title: "Giá hiện tại", type: "number", width: 70, editable: true, },
                 { field: "quantity", format: "number:3:3:280", isNumber: true, title: "KL", type: "number", width: 70, editable: true, },
                 { field: "buyPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nmua", type: "number", width: 70, editable: true, },
                 { field: "sellPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nbán", type: "number", width: 70, editable: true, },
                 { field: "pnlPercent", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ %", type: "number", width: 100, },
-                { field: "pnl", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ tiền", type: "number", width: 100, },
+                { field: "pnl", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ tiền", type: "bigNum", width: 100, },
                 { field: "buyDate", format: "number:3:3:280", isNumber: true, title: "Ngày mua", type: "", width: 90, editable: true, },
                 { field: "sellDate", format: "number:3:3:280", isNumber: true, title: "Ngày bán", type: "", width: 90, editable: true, },
                 { field: "note", format: "number:3:3:280", isNumber: true, title: "Ghi chú", type: "", width: 400, editable: true, },
                 { field: "delete", width: 20, },
             ]
 
+            function subscribeSellDataForRow(row, table) {
+                sellDataProvider.subscribe({
+                    changed: function (_, newData) {
+                        // id of the row is independent from symbol now
+                        var rows = table.getRowHasSymbol(row.symbol);
+                        for (var i in rows) {
+                            rows[i].close = +newData.close;
+                            recomputeAndRefereshTable(rows[i], table);
+                        }
+                    }
+                }, row.symbol);
+            }
 
             function recomputeRecord(data) {
                 data.pnlPercent = (data.sellPrice - data.buyPrice) / data.buyPrice * 100;
-                data.pnl = (data.sellPrice - data.buyPrice) * data.quantity;
+                data.pnl = (data.sellPrice - data.buyPrice) * data.quantity * 1000;
             }
 
             function recomputeAndRefereshTable(row, table) {
@@ -76,9 +89,13 @@ angular.module('superstockApp')
                             table.loaded(data);
                             prepareEmptyRowToEdit(table);
                             for (var i in data) {
-                                recomputeRecord(data[i]);
+                                /**
+                                 * Here 2 row may contain same symbol so we may subscribe
+                                 * to 1 symbol's sell data twice
+                                 * this may not be efficient but keep the logic flow simpler
+                                 */
+                                subscribeSellDataForRow(data[i], table);
                             }
-                            table.refresh();
                         }
                     });
                 },
@@ -90,6 +107,10 @@ angular.module('superstockApp')
                     if (event.colDef.field == "symbol") {
                         var newSymbol = event.newValue.toUpperCase();
                         data.symbol = newSymbol;
+                        var oldSymbol = event.oldValue;
+                        // subscribe
+                        sellDataProvider.unsubscribe(oldSymbol);
+                        subscribeSellDataForRow(data, table);
                     }
 
                     // save entry after uppercase to standardize symbol
