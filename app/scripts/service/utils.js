@@ -291,6 +291,7 @@ angular
                             break;
                         case 'pnl':
                         case 'pnlValue':
+                        case 'pnlPercent':
                             value > 0 ? classList.push('grid-cell-green') : classList.push('grid-cell-red');
                             break;
                         case 'cutLoss':
@@ -303,6 +304,7 @@ angular
                             if (value >= 2 && value <= 4) {
                                 classList.push('ag-cell-fill-bg');
                             }
+                            break;
 
                     }
                     return classList;

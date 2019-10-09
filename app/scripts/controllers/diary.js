@@ -29,7 +29,7 @@ angular.module('superstockApp')
 
             var _colSettings = [
                 { field: "symbol", format: "", isNumber: false, title: "Mã", type: "", width: 80, editable: true, },
-                { field: "close", format: "number:3:3:280", isNumber: true, title: "Giá hiện tại", type: "number", width: 70, editable: true, },
+                { field: "close", format: "number:3:3:280", isNumber: true, title: "Giá \nhiện tại", type: "number", width: 70, editable: true, },
                 { field: "quantity", format: "number:3:3:280", isNumber: true, title: "KL", type: "number", width: 70, editable: true, },
                 { field: "buyPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nmua", type: "number", width: 70, editable: true, },
                 { field: "sellPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nbán", type: "number", width: 70, editable: true, },
