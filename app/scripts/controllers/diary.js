@@ -55,8 +55,9 @@ angular.module('superstockApp')
             }
 
             function recomputeRecord(data) {
-                data.pnlPercent = (data.sellPrice - data.buyPrice) / data.buyPrice * 100;
-                data.pnl = (data.sellPrice - data.buyPrice) * data.quantity * 1000;
+                var effectiveSellPrice = data.sellPrice ? data.sellPrice : data.close;
+                    data.pnlPercent = (effectiveSellPrice - data.buyPrice) / data.buyPrice * 100;
+                data.pnl = (effectiveSellPrice - data.buyPrice) * data.quantity * 1000;
             }
 
             function recomputeAndRefereshTable(row, table) {
