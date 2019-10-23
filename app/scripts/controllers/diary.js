@@ -30,6 +30,7 @@ angular.module('superstockApp')
             var _colSettings = [
                 { field: "symbol", format: "", isNumber: false, title: "Mã", type: "", width: 80, editable: true, },
                 { field: "close", format: "number:3:3:280", isNumber: true, title: "Giá \nhiện tại", type: "number", width: 70, editable: true, },
+                { field: "cutLoss", format: "number:3:3:280", isNumber: true, title: "Giá \ncắt lỗ", type: "number", width: 70, editable: true, },
                 { field: "quantity", format: "number:3:3:280", isNumber: true, title: "KL", type: "number", width: 70, editable: true, },
                 { field: "buyPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nmua", type: "number", width: 70, editable: true, },
                 { field: "sellPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nbán", type: "number", width: 70, editable: true, },
@@ -58,6 +59,7 @@ angular.module('superstockApp')
                 var effectiveSellPrice = data.sellPrice ? data.sellPrice : data.close;
                     data.pnlPercent = (effectiveSellPrice - data.buyPrice) / data.buyPrice * 100;
                 data.pnl = (effectiveSellPrice - data.buyPrice) * data.quantity * 1000;
+                data.cutLoss = data.buyPrice ? data.buyPrice * 0.96 : "";
             }
 
             function recomputeAndRefereshTable(row, table) {
