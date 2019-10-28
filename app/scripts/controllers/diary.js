@@ -34,11 +34,11 @@ angular.module('superstockApp')
                 { field: "quantity", format: "number:3:3:280", isNumber: true, title: "KL", type: "number", width: 70, editable: true, },
                 { field: "buyPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nmua", type: "number", width: 70, editable: true, },
                 { field: "sellPrice", format: "number:3:3:280", isNumber: true, title: "Giá \nbán", type: "number", width: 70, editable: true, },
-                { field: "pnlPercent", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ %", type: "number", width: 100, },
-                { field: "pnl", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ tiền", type: "bigNum", width: 100, },
+                { field: "pnlPercent", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ %", type: "number", width: 90, },
+                { field: "pnl", format: "number:3:3:280", isNumber: true, title: "Lãi lỗ tiền", type: "bigNum", width: 90, },
                 { field: "buyDate", format: "number:3:3:280", isNumber: true, title: "Ngày mua", type: "", width: 90, editable: true, },
                 { field: "sellDate", format: "number:3:3:280", isNumber: true, title: "Ngày bán", type: "", width: 90, editable: true, },
-                { field: "note", format: "number:3:3:280", isNumber: true, title: "Ghi chú", type: "", width: 400, editable: true, },
+                { field: "note", format: "text", isNumber: false, title: "Ghi chú", type: "", width: 500, editable: true, },
                 { field: "delete", width: 20, },
             ]
 
