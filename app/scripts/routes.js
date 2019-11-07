@@ -120,6 +120,26 @@ angular.module('superstockApp')
                 }
             })
 
+            .when('/long_term', {
+                templateUrl: 'views/main.html',
+                controller: 'MainCtrl',
+                resolve: {
+                    "currentAuth": ["auth", function (auth) {
+                        return auth.$waitForSignIn();
+                    }],
+                    "tableSettings": function() {
+                        return {
+                            "gridDataSource": "long_term_data",
+                            "defaultSort": "priceChange",
+                            "direction": "desc",
+                            "hideSymbol": true,
+                            "name": "long_term",
+                        }
+                    },
+                }
+            })
+
+
             .when('/full', {
                 templateUrl: 'views/full-stock.html',
                 controller: 'FullStockCtrl',
