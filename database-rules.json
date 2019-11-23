@@ -38,7 +38,7 @@
       ".write": true
     },
     "superstock": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
     "longterm": {
       ".read": true
@@ -69,13 +69,13 @@
       ".write": "auth.admin === true"
     },
     "summary_data": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
     "investment_data": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
     "market_low_data": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
     "summary_headers": {
       ".read": true
@@ -102,17 +102,17 @@
       ".read": true
     },
     "long_term_data": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
     "test": {
       ".read": true,
       ".write": true
     },
     "stats": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
     "sell_signals": {
-      ".read": "root.child('users').child(auth.uid).child('account/active').val() === true"
+      ".read": "auth != null"
     },
   }
 }
