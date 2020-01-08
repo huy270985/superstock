@@ -1,0 +1,118 @@
+{
+  "rules": {
+    "users": {
+      ".indexOn": [
+        "account/active"
+      ],
+      ".read": "root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      "$uid": {
+        ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true"
+      }
+    },
+    "campaign": {
+      ".write": "root.child('users').child(auth.uid).child('isAdmin').val() === true"
+    },
+    "superstock_format": {
+      ".read": true
+    },
+    "superstock_titles": {
+      ".read": true
+    },
+    "superstock_headers": {
+      ".read": true
+    }, "Fields": {
+      ".read": true
+    },
+    "Đầy Đủ": {
+      ".read": true
+    },
+    "Realtime": {
+      ".read": true
+    },
+    "Aggregate": {
+      ".read": true
+    },
+    "location": {
+      ".read": true,
+      ".write": true
+    },
+    "superstock": {
+      ".read": "auth != null"
+    },
+    "longterm": {
+      ".read": true
+    },
+    "longterm_data": {
+      ".read": true
+    },
+    "longterm_headers": {
+      ".read": true
+    },
+    "longterm_titles": {
+      ".read": true
+    },
+    "shortterm_data": {
+      ".read": true
+    },
+    "shortterm_headers": {
+      ".read": true
+    },
+    "shortterm_titles": {
+      ".read": true
+    },
+    "shortterm": {
+      ".read": true
+    },
+    "stocks": {
+      ".read": true,
+      ".write": "auth.admin === true"
+    },
+    "summary_data": {
+      ".read": "auth != null"
+    },
+    "investment_data": {
+      ".read": "auth != null"
+    },
+    "market_low_data": {
+      ".read": "auth != null"
+    },
+    "summary_headers": {
+      ".read": true
+    },
+    "summary_format": {
+      ".read": true
+    },
+    "summary_titles": {
+      ".read": true
+    },
+    "profile": {
+      ".read": true
+    },
+    "market_stats": {
+      ".read": true
+    },
+    "market_summary": {
+      ".read": true
+    },
+    "trading_date": {
+      ".read": true
+    },
+    "sell_symbols": {
+      ".read": true
+    },
+    "long_term_data": {
+      ".read": "auth != null"
+    },
+    "test": {
+      ".read": true,
+      ".write": true
+    },
+    "stats": {
+      ".read": "auth != null"
+    },
+    "sell_signals": {
+      ".read": "auth != null"
+    },
+  }
+}
