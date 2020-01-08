@@ -1,3 +1,18 @@
+<div class="header-title">
+    <div class="personal-stock">
+        <p>Điền danh mục bạn quan tâm vào đây</p>
+    </div>
+    <div class="personal-stock">
+        <button ng-click="filterPersonalStocks()">Cập nhật</button>
+    </div>
+    <div class="personal-stock">
+        <textarea ng-model="personalStocks"></textarea>
+    </div>
+    <div class="personal-stock-title">
+        <h4>Danh mục</h4>
+    </div>
+</div>
+
 <div ng-grid="gridOptions" ag-grid="gridOptions" class="ag-fresh" style="height: 100%;"></div>
 <!--<div id="full-stock" ui-grid="gridOptions" class="grid" ui-grid-auto-resize ui-grid-pinning style="height:100%"></div>-->
 <div id="result">
@@ -46,4 +61,25 @@
     .ui-grid-header-cell input {
         color: black !important;
     }
+
+    .personal-stock {
+        display: block;
+        float: left;
+    }
+
+    .personal-stock button {
+        height: 30px;
+    }
+
+    .personal-stock textarea {
+        resize: horizontal;
+        width: 500px;
+        height: 30px;
+    }
+
+    .personal-stock-title {
+        text-align: center;
+        clear: both;
+    }
+
 </style>
